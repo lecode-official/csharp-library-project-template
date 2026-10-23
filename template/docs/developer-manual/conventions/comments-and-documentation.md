@@ -57,7 +57,14 @@ A plain comment inside a method body is not prose — it explains a non-obvious 
 
 Do not write a comment that only restates what the code already says. If removing it would not confuse a future reader, it should not be there.
 
+## The Test Project Is Not Exempt
+
+Every test class and every test method carries a documentation comment too, and `GenerateDocumentationFile` is enabled on the test project so that a missing one on a `public` member fails the build — which reaches every test, since xUnit requires them to be public.
+
+A test method's name already states its scenario and expected outcome in short form, so its `<summary>` does not repeat that. It explains **why the scenario matters and what the assertion is protecting against**, for the benefit of someone who has not memorized the naming convention. See [testing](testing.md).
+
 ## Related
 
 - [C# style](csharp-style.md) — the surrounding style rules, including where regions go.
 - [Markdown style](markdown-style.md) — the prose punctuation rule these comments share.
+- [Testing](testing.md) — the test project's own documentation requirement.

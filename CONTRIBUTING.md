@@ -14,7 +14,7 @@ Fork the repository and work on a feature branch. Pull requests are always welco
 
 - **Follow the conventions of the side you change.** Root files follow the [conventions](docs/conventions/README.md) of this repository. Files in the template body follow the generated project's own conventions, plus what the root conventions add about writing them as templates — see [authoring](docs/project-template/authoring.md).
 - **Keep the documentation in step.** A new question, file, or convention is not done until the articles that describe it are updated — see the list in [`AGENTS.md`](AGENTS.md#keep-the-documentation-up-to-date), which applies to human contributors just as much.
-- **Verify the change by rendering the template**, not only by linting it. Render a project, then run its Release build (see [testing](docs/conventions/testing.md)). A file can be valid as a template and broken once rendered.
+- **Verify the change by rendering the template**, not only by linting it. Render a project, then run its linters, its Release build, and its tests (see [testing](docs/conventions/testing.md)). A file can be valid as a template and broken once rendered.
 - **Run `npm run lint` before opening the pull request.** It checks this repository's own files.
 - **Write commit messages by [the template's rules](docs/conventions/commit-messages.md)**, including whether the change affects projects generated from the template.
 

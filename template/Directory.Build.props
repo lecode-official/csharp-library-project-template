@@ -1,7 +1,8 @@
 <Project>
     <!--
         Holds the build settings that every project in the repository shares; MSBuild only imports the "Directory.Build.props" closest to a project,
-        so "source/Directory.Build.props" imports this file explicitly before adding its own output redirection (see Architecture)
+        so "source/Directory.Build.props" and "tests/unit-tests/Directory.Build.props" import this file explicitly before adding their own output
+        redirection (see Architecture)
     -->
 
     <!-- Continuous Integration -->

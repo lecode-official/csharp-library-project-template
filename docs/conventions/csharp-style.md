@@ -1,6 +1,6 @@
 # C# Style
 
-This article covers how the C# files added to the template body are styled. The root of this repository holds no C# at all: every `.cs`, `.csproj` and `.slnx` file lives under [`template/source/`](../../template/source/), and becomes the generated project's code.
+This article covers how the C# files added to the template body are styled. The root of this repository holds no C# at all: every `.cs`, `.csproj` and `.slnx` file lives under [`template/source/`](../../template/source/) or [`template/tests/`](../../template/tests/), and becomes the generated project's code.
 
 ## The Generated Project's Rules Apply Unchanged
 
@@ -19,7 +19,7 @@ The reason is that the body's C# is the only C# a generated project starts with.
 
 Only a few answers are safe inside C# code, because a placeholder is substituted textually and the result has to compile for every answer a consumer might give:
 
-- **`[[ root_namespace ]]` is the one placeholder that becomes an identifier.** It appears in namespace declarations and `using` directives, and the sample app's namespace derives from it as `[[ root_namespace ]].SampleApp`. Its `help` string asks for PascalCase without spaces, which is what makes it a valid identifier.
+- **`[[ root_namespace ]]` is the one placeholder that becomes an identifier.** It appears in namespace declarations and `using` directives, and the sample app's and the unit tests' namespaces derive from it as `[[ root_namespace ]].SampleApp` and `[[ root_namespace ]].UnitTests`. Its `help` string asks for PascalCase without spaces, which is what makes it a valid identifier.
 - **`[[ product_name ]]` never becomes an identifier.** It may contain spaces and dots. It is fine inside a string literal, as the sample app's `Greet("[[ product_name ]]")` shows, and in project and assembly names, which are allowed to contain spaces.
 - **Anything else stays out of code.** If a C# file seems to need another answer, it usually belongs in the project file instead, where the answers already feed `AssemblyTitle`, `Product`, `PackageId` and the rest (see [questions](../project-template/questions.md)).
 
@@ -27,7 +27,7 @@ A placeholder inside a documentation comment changes that line's rendered width,
 
 ## Ship Placeholders, Not Features
 
-The C# in the body exists so that a freshly generated project builds, packs and documents itself on day one. It is deliberately minimal: the library is a single placeholder class, and the sample app calls it.
+The C# in the body exists so that a freshly generated project builds, tests, packs and documents itself on day one. It is deliberately minimal: the library is a single placeholder class, the sample app calls it, and the test project tests it.
 
 Anything added to it has to be something every generated library wants, because every consumer either keeps it or deletes it. A type that only some libraries need is a type most consumers delete by hand after every render, and a type they keep is one the template now has to maintain for them through `copier update`.
 
@@ -47,4 +47,4 @@ So compiling happens in a render:
 - [Comments and documentation](comments-and-documentation.md) — the documentation-comment wording and placement rules.
 - [Line length](line-length.md) — what a placeholder does to a line's width.
 - [File and naming conventions](file-and-naming-conventions.md) — placeholders in the file names around the code.
-- [Testing](testing.md) — rendering a change to the C# in the body.
+- [Testing](testing.md) — the test that goes with every type in the body.

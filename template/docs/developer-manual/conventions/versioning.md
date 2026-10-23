@@ -39,7 +39,7 @@ The version lives in one manifest, and nowhere else by default:
 - **`CHANGELOG.md`** — the release's own heading and date line.
 - **Any version literal in the source** — a version a running program reports about itself.
 
-The sample app deliberately carries **no** version: it is not published, and sets `IsPackable` to `false`, so a version on them would be a number nobody reads and everybody forgets to bump.
+The sample app and the unit test project deliberately carry **no** version: neither is published, both set `IsPackable` to `false`, so a version on them would be a number nobody reads and everybody forgets to bump.
 
 A repository that later grows a second publishable library raises both together, even when only one of them changed, so that one number identifies one state of the whole repository. State that here if it happens.
 

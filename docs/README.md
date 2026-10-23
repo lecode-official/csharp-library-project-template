@@ -18,7 +18,7 @@ This is the documentation for the template itself: how it is laid out, what it a
    7. [Git Workflow](conventions/git-workflow.md) — who runs which Git command, and rendering without committing.
    8. [Versioning](conventions/versioning.md) — the template's version, its tags, and its changelog.
    9. [Dependency Management](conventions/dependency-management.md) — exact pins on both sides.
-   10. [Testing](conventions/testing.md) — rendering as the test suite.
+   10. [Testing](conventions/testing.md) — rendering as the test suite, and the tests the body ships.
 3. [Tooling](tooling/README.md) — the tools used to work on the template.
    1. [Developer Setup](tooling/developer-setup.md) — Node.js, Copier, and what a render needs.
    2. [Visual Studio Code Integration](tooling/editor-integration.md) — the root's shared and local editor configuration.

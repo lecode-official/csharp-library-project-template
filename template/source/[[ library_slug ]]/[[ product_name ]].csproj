@@ -70,4 +70,13 @@
         -->
         <PackageReference Include="SauceControl.InheritDoc" Version="2.0.2" PrivateAssets="all" />
     </ItemGroup>
+
+    <!-- Internals Visibility -->
+    <ItemGroup>
+        <!--
+            Grants the unit test project access to internal members, so that internal types can be unit tested directly instead of only indirectly
+            through the public surface that wraps them
+        -->
+        <InternalsVisibleTo Include="[[ product_name ]] Unit Tests" />
+    </ItemGroup>
 </Project>

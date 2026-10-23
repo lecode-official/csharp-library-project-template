@@ -5,6 +5,7 @@ This manual is for people working on the [[ product_name ]] codebase itself: whe
 1. [Architecture](architecture.md)
 2. [Tooling](tooling/README.md)
    1. [Developer Setup](tooling/developer-setup.md)
+   2. [Testing and Code Coverage](tooling/testing-and-code-coverage.md)
 3. [Conventions](conventions/README.md)
    1. [C# Style](conventions/csharp-style.md)
    2. [Comments and Documentation Comments](conventions/comments-and-documentation.md)
@@ -13,4 +14,5 @@ This manual is for people working on the [[ product_name ]] codebase itself: whe
    5. [Commit Messages](conventions/commit-messages.md)
    6. [Git Workflow](conventions/git-workflow.md)
    7. [Versioning](conventions/versioning.md)
+   8. [Testing](conventions/testing.md)
 4. [Contributing](contribution-guide.md)

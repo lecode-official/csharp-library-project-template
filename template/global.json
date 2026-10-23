@@ -10,5 +10,12 @@
 
         // Never resolve a preview SDK, even when one is installed and is newer than the pinned version
         "allowPrerelease": false
+    },
+
+    // Runs "dotnet test" on Microsoft.Testing.Platform instead of the legacy VSTest runner; xUnit v3 test projects are Microsoft.Testing.Platform
+    // applications, which the .NET 10 SDK no longer runs through VSTest (see Testing and Code Coverage); in this mode, "dotnet test" takes the
+    // solution or project through "--solution" or "--project" instead of a positional argument
+    "test": {
+        "runner": "Microsoft.Testing.Platform"
     }
 }

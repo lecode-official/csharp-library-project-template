@@ -26,10 +26,10 @@ The generated project is complete but not yet a repository:
 cd my-new-library
 git init
 dotnet restore "source/<Product Name>.slnx"
-dotnet build "source/<Product Name>.slnx"
+dotnet test --solution "source/<Product Name>.slnx"
 ```
 
-Everything should pass immediately. The library that ships is a placeholder class whose only job is to make that true — replace it with the real thing.
+Everything should pass immediately. The library that ships is a placeholder class whose only job is to make that true — replace it, and its test, with the real thing.
 
 ## Updating a Project
 
@@ -75,7 +75,7 @@ Some files every project keeps, but fills with its own content. The template onl
 
 Copier creates a listed file when the project is generated, and never touches it again in an update. A template change to one of them can neither conflict with the project's own content nor bring back a placeholder the project has long replaced.
 
-The catch is deletion. When a listed file does not exist, Copier creates it, and it does so on every update, so a project that deletes a listed file gets it back with the next `copier update`. Without an entry, an update leaves a deletion alone. That is why only files a project keeps belong in the list, and why the placeholder `Greeter` class is deliberately absent from it: a project deletes it when it replaces it with the real thing, and an entry would bring it back on every update.
+The catch is deletion. When a listed file does not exist, Copier creates it, and it does so on every update, so a project that deletes a listed file gets it back with the next `copier update`. Without an entry, an update leaves a deletion alone. That is why only files a project keeps belong in the list, and why the placeholder `Greeter` class and its `GreeterTests` are deliberately absent from it: a project deletes them when it replaces them with the real thing, and an entry would bring them back on every update.
 
 A consumer who does want a template change to a listed file can still pull it in by hand. Render a fresh project at the new version with the project's own answers, outside the project, and compare the file with the project's copy:
 

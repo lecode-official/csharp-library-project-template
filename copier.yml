@@ -51,7 +51,7 @@ _exclude:
 # project is generated, but never touches them again in an update, and a template change to one of them can neither conflict with the project's own
 # content nor bring back a placeholder the project has long replaced (see docs/project-template/rendering-and-updating.md); only files a project
 # keeps belong here, because Copier also re-creates a listed file that a project has deleted, on every update, which is why the placeholder
-# "Greeter" class is deliberately absent: a project deletes it, and without an entry here, an update leaves the deletion alone
+# "Greeter" class and its tests are deliberately absent: a project deletes them, and without an entry here, an update leaves the deletion alone
 _skip_if_exists:
   - /README.md
   - /CHANGELOG.md
@@ -109,8 +109,8 @@ library_slug:
 root_namespace:
   type: str
   help: >-
-    The root namespace of the library, in PascalCase and without spaces (e.g., "CliNetCore" or "LeCode.CliNetCore"). The sample app derives its own
-    namespace from it.
+    The root namespace of the library, in PascalCase and without spaces (e.g., "CliNetCore" or "LeCode.CliNetCore"). The sample app and the unit test
+    project derive their own namespaces from it.
   validator: >-
     [% if not root_namespace | regex_search('^[A-Z][A-Za-z0-9]*(\\.[A-Z][A-Za-z0-9]*)*$') %]The root namespace must consist of one or more PascalCase
     identifiers separated by dots, each starting with an uppercase letter and containing only letters and digits.[% endif %]

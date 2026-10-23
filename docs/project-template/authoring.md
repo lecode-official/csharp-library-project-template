@@ -54,7 +54,7 @@ copier copy --defaults --vcs-ref HEAD --data product_name="Render Test" --data r
     . /tmp/render-test
 
 cd /tmp/render-test
-dotnet build "source/Render Test.slnx" --configuration Release
+dotnet test --solution "source/Render Test.slnx" --configuration Release
 ```
 
 Then check the things that only a render reveals:

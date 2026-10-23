@@ -5,4 +5,7 @@
     <Folder Name="/sample-app/">
         <Project Path="sample-app/[[ product_name ]] Sample App.csproj" />
     </Folder>
+    <Folder Name="/unit-tests/">
+        <Project Path="../tests/unit-tests/[[ product_name ]] Unit Tests.csproj" />
+    </Folder>
 </Solution>

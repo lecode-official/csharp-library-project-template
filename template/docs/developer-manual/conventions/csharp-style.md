@@ -94,3 +94,4 @@ Indentation and basic whitespace come from [`.editorconfig`](../../../.editorcon
 - [Architecture](../architecture.md) — where these files live in the repository.
 - [File and naming conventions](file-and-naming-conventions.md) — what the files and directories around them are called.
 - [Markdown style](markdown-style.md) — the punctuation rule for prose versus plain comments governs both.
+- [Testing](testing.md) — how these rules apply to the test project.
