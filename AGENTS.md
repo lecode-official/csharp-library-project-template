@@ -42,7 +42,7 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 - **Adding or upgrading a dependency, at the root or in the body** → [docs/conventions/dependency-management.md](docs/conventions/dependency-management.md).
 - **Installing what working on the template needs** → [docs/tooling/developer-setup.md](docs/tooling/developer-setup.md).
 - **Formatting, linting, spell checking, or the editor setup** → [docs/tooling/](docs/tooling/README.md).
-- **The Claude Code hooks** → [docs/tooling/claude-code-hooks.md](docs/tooling/claude-code-hooks.md).
+- **The Claude Code hooks, at the root or in the body** → [docs/tooling/claude-code-hooks.md](docs/tooling/claude-code-hooks.md).
 - **The conventions the *generated* project follows** → [template/docs/developer-manual/](template/docs/developer-manual/README.md). Those are the rules for the code the template emits, and they are what a change to `template/` has to keep satisfying.
 
 ## Keep the Documentation up to Date

@@ -2,7 +2,7 @@
 
 This article covers what to install before building, testing, linting, or formatting [[ product_name ]] locally.
 
-Not every section is needed for every task: Visual Studio Code is optional, and Python is only needed to build the documentation website locally.
+Not every section is needed for every task: Visual Studio Code is optional, Python is only needed to build the documentation website locally, and `jq` only to let the Claude Code hooks run.
 
 ## Node.js and npm
 
@@ -68,6 +68,10 @@ Without a virtual environment, `pip` either installs the packages globally, wher
 
 Activate the environment in every new shell before running the documentation commands, and `deactivate` when done.
 
+## jq for the Claude Code Hooks
+
+The [Claude Code hooks](claude-code-hooks.md) read the path of the edited file with [`jq`](https://jqlang.org/), so install it through the system's package manager, for example `brew install jq` on macOS or `sudo apt install jq` on Debian and Ubuntu. Without it, the hooks do not fail. They silently do nothing.
+
 ## Related
 
 - [Editor integration](editor-integration.md) — the shared and local settings mechanism.
@@ -76,3 +80,4 @@ Activate the environment in every new shell before running the documentation com
 - [Continuous integration](continuous-integration.md) — the versions to match locally.
 - [Testing and code coverage](testing-and-code-coverage.md) — running the tests once everything is installed.
 - [Documentation website](documentation-website.md) — building the site locally.
+- [Claude Code hooks](claude-code-hooks.md) — what `jq` is needed for.

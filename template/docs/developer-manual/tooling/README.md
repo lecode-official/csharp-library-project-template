@@ -8,9 +8,10 @@ This section gives an overview of the tools used for development, including code
 4. [Markdown Linting (MarkdownLint)](linting-markdownlint.md)
 5. [Spell Checking (CSpell)](spell-checking-cspell.md)
 6. [Static Code Analysis](static-code-analysis.md)
-7. [Continuous Integration](continuous-integration.md)
-8. [Testing and Code Coverage](testing-and-code-coverage.md)
-9. [Documentation Website](documentation-website.md)
+7. [Claude Code Hooks](claude-code-hooks.md)
+8. [Continuous Integration](continuous-integration.md)
+9. [Testing and Code Coverage](testing-and-code-coverage.md)
+10. [Documentation Website](documentation-website.md)
 
 Formatting and linting are kept strictly separate: **one formatter owns all formatting, and the linters only check quality.** No lint rule that would reformat code is ever added.
 

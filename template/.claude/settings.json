@@ -1,0 +1,40 @@
+{
+    "permissions": {
+        "allow": ["Agent"]
+    },
+    "hooks": {
+        "PostToolUse": [
+            {
+                "matcher": "Edit|Write|NotebookEdit",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "f=$(jq -r '.tool_input.file_path // .tool_input.notebook_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*) ;; *) exit 0;; esac; case \"$f\" in \"\"|\"$CLAUDE_PROJECT_DIR\"/build/*|*/node_modules/*|*.svg) exit 0;; esac; [ -x node_modules/.bin/dprint ] || exit 0; [ -f \"$f\" ] && npx dprint fmt \"$f\" 2>&1; true",
+                        "statusMessage": "Formatting (dprint)..."
+                    },
+                    {
+                        "type": "command",
+                        "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*) ;; *) exit 0;; esac; case \"$f\" in *.md) ;; *) exit 0;; esac; case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/build/*|*/node_modules/*) exit 0;; esac; [ -x node_modules/.bin/markdownlint-cli2 ] || exit 0; if [ -f \"$f\" ]; then out=$(npx markdownlint-cli2 \"$f\" 2>&1); [ $? -ne 0 ] && { echo \"$out\" >&2; exit 2; }; fi; true",
+                        "statusMessage": "Linting Markdown (markdownlint)..."
+                    },
+                    {
+                        "type": "command",
+                        "command": "f=$(jq -r '.tool_input.file_path // .tool_input.notebook_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*) ;; *) exit 0;; esac; case \"$f\" in \"\"|\"$CLAUDE_PROJECT_DIR\"/build/*|*/node_modules/*|*.svg) exit 0;; esac; [ -x node_modules/.bin/cspell ] || exit 0; if [ -f \"$f\" ]; then out=$(npx cspell lint --no-progress \"$f\" 2>&1); [ $? -ne 0 ] && { echo \"$out\" >&2; exit 2; }; fi; true",
+                        "statusMessage": "Spell checking (CSpell)..."
+                    }
+                ]
+            }
+        ],
+        "Stop": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "[ -f \"source/[[ product_name ]].slnx\" ] || exit 0; command -v dotnet >/dev/null 2>&1 || exit 0; out=$(dotnet build \"source/[[ product_name ]].slnx\" --configuration Release 2>&1); if [ $? -ne 0 ]; then echo \"$out\" >&2; exit 2; fi",
+                        "statusMessage": "Building the solution..."
+                    }
+                ]
+            }
+        ]
+    }
+}
