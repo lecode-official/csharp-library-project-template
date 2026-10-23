@@ -24,7 +24,7 @@ Copier copies a file verbatim if it cannot read it as a template, so binary file
 
 1. Put it under [`template/`](../../template/), at the path it should have in the generated project.
 2. Use `[[ answer_name ]]` for anything project-specific. If the value is not a question yet, add one — see [questions](questions.md).
-3. If it is a Markdown article, list it in the generated project's documentation index, **and** the relevant section index. Both are hand-maintained.
+3. If it is a Markdown article, list it in the generated project's [documentation index](../../template/docs/README.md), **and** the relevant section index. Both are hand-maintained.
 4. Render and check.
 
 ## Verifying a Change
@@ -37,7 +37,7 @@ A file can be valid as a template and invalid once rendered. Linting the templat
 # worth making deliberately rather than by accident
 copier copy --defaults --vcs-ref HEAD --data product_name="Render Test" --data root_namespace=RenderTest \
     --data product_description="A scratch render." --data author="Example" \
-    --data repository_url=https://example.com/x \
+    --data repository_url=https://example.com/x --data maintainer_url=https://example.com \
     . /tmp/render-test
 ```
 

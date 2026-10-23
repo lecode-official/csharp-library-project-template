@@ -1,0 +1,51 @@
+# AGENTS.md
+
+Guidance for AI assistants working on [[ product_name ]]. Humans should read the [documentation](docs/README.md) too.
+
+## What This Project Is
+
+[[ product_description ]]
+
+Start from [docs/developer-manual/architecture.md](docs/developer-manual/architecture.md).
+
+## Golden Rules
+
+- **Match the surrounding code and the documented conventions** ([docs/developer-manual/conventions/](docs/developer-manual/conventions/README.md)). This code is heavily and consistently documented — follow it.
+- **Markdown headings are title case** at every level, in every file ([docs/developer-manual/conventions/markdown-style.md](docs/developer-manual/conventions/markdown-style.md)). Preserve the real casing of code spans, brand names (`dprint`), and acronyms.
+- **Wrap code in backticks** in prose everywhere — the docs, this file, and commit messages. XML documentation comments are the one exception: they are XML, not Markdown, so use `<see cref="..."/>` for identifiers and `<c>` for code instead.
+- **Prose uses periods, not semicolons.** In prose — the docs, XML documentation comments, this file — end each sentence with a period rather than joining two with a semicolon. Plain `//` comments do the reverse: sentences are separated by semicolons and the last one takes no terminal punctuation.
+- **Files and directories are kebab-case**, except well-known and tool-mandated names ([docs/developer-manual/conventions/file-and-naming-conventions.md](docs/developer-manual/conventions/file-and-naming-conventions.md)).
+- **Write commit messages by the rules** ([docs/developer-manual/conventions/commit-messages.md](docs/developer-manual/conventions/commit-messages.md)) — the 50/72 rule, a title-cased, past-tense subject, and a prose body. State whether AI was involved and, if it was, what exactly the AI did. When you did any of the work, add a co-author trailer with your tool's no-reply address that names the exact model and version you are, not just the product, for example:
+
+  ```text
+  Co-Authored-By: Claude Opus 5.5 Medium <noreply@anthropic.com>
+  ```
+
+- **Never run a Git command that changes state or history unless asked for that exact thing** — `git commit`, `git push`, `git tag`, `git rebase`, `git reset`, `git cherry-pick`, and `git add`/`git restore --staged` alike. Edit the files and stop. Each instruction authorizes only itself: "write a commit message" means write it and stop, so the user can review it before anything is committed, and "commit this" does not authorize a push ([docs/developer-manual/conventions/git-workflow.md](docs/developer-manual/conventions/git-workflow.md)).
+- **The staging area is the user's review record**, not a step on the way to a commit. Staging or unstaging on their behalf destroys it.
+
+## When Working on X, Read Y
+
+- **Repository layout, the solution, the projects** → [docs/developer-manual/architecture.md](docs/developer-manual/architecture.md).
+- **Markdown and documentation style** → [docs/developer-manual/conventions/markdown-style.md](docs/developer-manual/conventions/markdown-style.md).
+- **Naming a new file or directory** → [docs/developer-manual/conventions/file-and-naming-conventions.md](docs/developer-manual/conventions/file-and-naming-conventions.md).
+- **Writing commit messages** → [docs/developer-manual/conventions/commit-messages.md](docs/developer-manual/conventions/commit-messages.md).
+- **Committing, pushing, rebasing, or anything else touching Git** → [docs/developer-manual/conventions/git-workflow.md](docs/developer-manual/conventions/git-workflow.md).
+- **Opening an issue, submitting a pull request, the AI-contribution policy** → [CONTRIBUTING.md](CONTRIBUTING.md).
+- **How consumers use the library** → [docs/user-manual/](docs/user-manual/README.md), starting with [getting started](docs/user-manual/getting-started.md).
+
+## Conventions in Brief
+
+Markdown headings are title case everywhere, and prose ends sentences with periods. Plain code comments do the reverse. Full detail: [docs/developer-manual/conventions/](docs/developer-manual/conventions/README.md).
+
+## Keep the Documentation up to Date
+
+**This is important.** Whenever you change, add, remove, or discover something about the project, update the relevant [`docs/`](docs/README.md) article **and** this `AGENTS.md` in the same change:
+
+- Keep the "When Working on X" routing table above accurate.
+- Keep the indexes accurate — every article must be listed. An article is listed in the index of its manual, the [Developer Manual index](docs/developer-manual/README.md) or the [User Manual index](docs/user-manual/README.md), and an article in the conventions section also in that section's index, [conventions](docs/developer-manual/conventions/README.md). The [documentation index](docs/README.md) lists only the two manuals.
+- A change to the public API updates the User Manual (how consumers use it), not only the Developer Manual (how the codebase itself is built) — the two serve different audiences, and the same change often needs a separate edit to each.
+- If a change introduces a topic that does not fit an existing article, add a new small, single-topic article, link it from the relevant index, and reference it here if relevant.
+- If a change invalidates something a doc says, fix the doc — do not leave it stale.
+
+Treat the docs as part of the code: a change is not done until the docs and this file reflect it.

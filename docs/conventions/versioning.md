@@ -18,7 +18,9 @@ The template follows [Semantic Versioning](https://semver.org), measured against
 
 When a change is several of these, the highest one wins. Updating a project is always a merge, so err on the side of the higher number when in doubt.
 
-## Where the Version Lives
+## The Template's Version Is Not the Body's
+
+The body carries a version number of its own: the first release in `template/CHANGELOG.md`. That is the **generated project's** starting version, not the template's. A template release never touches it. It only changes when the template decides that new projects should start at a different version, which is a body change like any other.
 
 The template's own version lives at the root: in the tag, in the root [`CHANGELOG.md`](../../CHANGELOG.md), and in the `version` field of the root [`package.json`](../../package.json). All three carry the same number, and they are raised together, in the branch, before the pull request. A bump that is left for after the merge is a bump that eventually does not happen.
 

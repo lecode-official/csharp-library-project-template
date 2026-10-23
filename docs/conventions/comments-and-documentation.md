@@ -16,7 +16,7 @@ The same goes for links. A body file never links to anything outside `template/`
 
 ## C# Documentation Comments
 
-The C# in the body follows these rules for its documentation comments:
+The C# in the body follows the generated project's [comments and documentation comments](../../template/docs/developer-manual/conventions/comments-and-documentation.md) article unchanged:
 
 - Every type and every member, including `private` ones and the test project's, has an XML documentation comment.
 - The wording is fixed: `Represents a ...` for types, `Contains ...` for fields and constants, a third-person verb for methods, `Gets ...` or `Gets or sets ...` for properties.
@@ -57,9 +57,10 @@ Whatever the kind, a comment explains a non-obvious *why*: a hidden constraint, 
 ## Where an Article Goes
 
 - **An article about the template** goes under the root's [`docs/`](../README.md), in the section it belongs to, and is listed in [`docs/README.md`](../README.md), in its section's `README.md`, and in the root [`README.md`](../../README.md).
-- **An article for the generated project** goes under `template/docs/`, and is listed in the generated project's documentation index and its section index (see [authoring](../project-template/authoring.md#adding-a-file-to-the-body)).
+- **An article for the generated project** goes under [`template/docs/`](../../template/docs/README.md), and is listed in the generated project's documentation index and its section index (see [authoring](../project-template/authoring.md#adding-a-file-to-the-body)).
 
 ## Related
 
 - [Markdown style](markdown-style.md) — the rules for the articles themselves.
 - [Line length](line-length.md) — how far a comment is filled.
+- [Comments and documentation comments](../../template/docs/developer-manual/conventions/comments-and-documentation.md) — the generated project's full rule set.

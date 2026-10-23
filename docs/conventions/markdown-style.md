@@ -4,7 +4,7 @@ This article covers the conventions for Markdown in this repository: the article
 
 ## The Same Rules on Both Sides
 
-The root's Markdown and the body's Markdown follow the same conventions, because the body's Markdown becomes a generated project's documentation. In short:
+The root's Markdown follows the same conventions as the generated project's [Markdown style](../../template/docs/developer-manual/conventions/markdown-style.md), and the body's Markdown follows them because it becomes that project's documentation. In short:
 
 - **Headings are title case**, at every level, in every file. Capitalize the first and last word and every major word. Keep articles, coordinating conjunctions and short prepositions lowercase unless they are first or last. Apply the same to each part of a hyphenated compound: `Two-Level Layout`.
 - **Title case never overrides a name's real casing.** Code spans stay verbatim, tool names keep their own casing even as the first word (`## dprint Owns Formatting`), and acronyms stay as they are.
@@ -38,3 +38,4 @@ Each root article is small and covers a single topic, opens with a one-sentence 
 - [Comments and documentation](comments-and-documentation.md) — which side an article belongs on, and where it is listed.
 - [Line length](line-length.md) — the exempt case.
 - [Authoring](../project-template/authoring.md) — the table problem in context.
+- [Markdown style](../../template/docs/developer-manual/conventions/markdown-style.md) — the generated project's full rule set.

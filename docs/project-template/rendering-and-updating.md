@@ -64,7 +64,8 @@ It leaves a file you deleted deleted, even when the template changed that file, 
 
 Some files every project keeps, but fills with its own content. The template only provides a starting point for them, so `_skip_if_exists` in [`copier.yml`](../../copier.yml) lists them:
 
-- `README.md` at the root of the project.
+- `README.md`, `CHANGELOG.md` and `CONTRIBUTORS.md` at the root of the project.
+- `docs/user-manual/getting-started.md`.
 
 Copier creates a listed file when the project is generated, and never touches it again in an update. A template change to one of them can neither conflict with the project's own content nor bring back a placeholder the project has long replaced.
 
