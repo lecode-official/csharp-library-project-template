@@ -1,19 +1,24 @@
 # Developer Manual
 
-This manual is for people working on the [[ product_name ]] codebase itself: where things live, how the code is styled, and how the project is built and tested.
+This manual is for people working on the [[ product_name ]] codebase itself: where things live, how the code is styled, and how the project is built, linted, and formatted.
 
 1. [Architecture](architecture.md)
 2. [Tooling](tooling/README.md)
    1. [Developer Setup](tooling/developer-setup.md)
-   2. [Testing and Code Coverage](tooling/testing-and-code-coverage.md)
+   2. [Code Formatting (dprint)](tooling/formatting-dprint.md)
+   3. [Markdown Linting (MarkdownLint)](tooling/linting-markdownlint.md)
+   4. [Spell Checking (CSpell)](tooling/spell-checking-cspell.md)
+   5. [Testing and Code Coverage](tooling/testing-and-code-coverage.md)
 3. [Conventions](conventions/README.md)
    1. [C# Style](conventions/csharp-style.md)
    2. [Comments and Documentation Comments](conventions/comments-and-documentation.md)
    3. [Markdown Style](conventions/markdown-style.md)
-   4. [File and Naming Conventions](conventions/file-and-naming-conventions.md)
-   5. [Commit Messages](conventions/commit-messages.md)
-   6. [Git Workflow](conventions/git-workflow.md)
-   7. [Versioning](conventions/versioning.md)
-   8. [Dependency Management](conventions/dependency-management.md)
-   9. [Testing](conventions/testing.md)
+   4. [Line Length](conventions/line-length.md)
+   5. [File and Naming Conventions](conventions/file-and-naming-conventions.md)
+   6. [Commit Messages](conventions/commit-messages.md)
+   7. [Git Workflow](conventions/git-workflow.md)
+   8. [Git Blame](conventions/git-blame.md)
+   9. [Versioning](conventions/versioning.md)
+   10. [Dependency Management](conventions/dependency-management.md)
+   11. [Testing](conventions/testing.md)
 4. [Contributing](contribution-guide.md)

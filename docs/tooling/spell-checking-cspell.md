@@ -1,6 +1,6 @@
 # Spell Checking (CSpell)
 
-This article covers the spell checking of the template's own files.
+This article covers spell checking, at the root and in the template body.
 
 ## The Root's Configuration
 
@@ -23,6 +23,7 @@ When a legitimate technical term or proper noun is flagged, add it to the `words
 Add a word to the configuration of the side it appears on:
 
 - A word in the root's files goes into the root's [`.cspell.json`](../../.cspell.json).
+- A word in a body file goes into [`template/.cspell.json`](../../template/.cspell.json), where every generated project inherits it. That list holds only the vocabulary of the generated project's toolchain, since each project adds its own domain vocabulary on top. A word that only a template author would ever write does not belong there, which is one more reason the template's reasoning lives at the root (see [comments and documentation](../conventions/comments-and-documentation.md#two-audiences)).
 
 A word that appears on both sides goes into both lists.
 
@@ -34,3 +35,4 @@ A generated project spell-checks its files after substitution, so every answer t
 
 - [MarkdownLint](linting-markdownlint.md) — the companion Markdown linter.
 - [Tooling](README.md) — the full tool set.
+- [Spell checking (CSpell)](../../template/docs/developer-manual/tooling/spell-checking-cspell.md) — the generated project's spell-checker setup.

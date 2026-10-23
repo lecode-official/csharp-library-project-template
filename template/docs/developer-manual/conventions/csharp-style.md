@@ -86,12 +86,16 @@ Every project enables `<Nullable>enable</Nullable>` and `<ImplicitUsings>enable<
 
 ## Formatting
 
-Indentation and basic whitespace come from [`.editorconfig`](../../../.editorconfig) (4 spaces and no tabs, in `.csproj` and `.slnx` files too, LF line endings, and the 150-character maximum line length), which most editors, including Visual Studio Code, apply automatically.
+C# **is** formatted by [dprint](../tooling/formatting-dprint.md), through the Roslyn plugin configured in [`dprint.json`](../../../dprint.json). The plugin drives whitespace, newlines, and indentation only — it has no equivalent of the `csharp_style_*` or `dotnet_*` analyzer preferences. `.csproj` and `.slnx` files are formatted too, as XML, through an explicit association in the same configuration.
+
+Indentation and basic whitespace also come from [`.editorconfig`](../../../.editorconfig) (4 spaces and no tabs, in `.csproj` and `.slnx` files too, LF line endings, and the 150-character maximum line length), which most editors, including Visual Studio Code, apply automatically.
 
 ## Related
 
 - [Comments and documentation comments](comments-and-documentation.md) — the required wording for every documentation comment.
 - [Architecture](../architecture.md) — where these files live in the repository.
 - [File and naming conventions](file-and-naming-conventions.md) — what the files and directories around them are called.
+- [Line length](line-length.md) — the 150-character limit, which is also a lower limit for comments.
 - [Markdown style](markdown-style.md) — the punctuation rule for prose versus plain comments governs both.
+- [Formatting (dprint)](../tooling/formatting-dprint.md) — the formatter and its Roslyn plugin.
 - [Testing](testing.md) — how these rules apply to the test project.

@@ -17,14 +17,14 @@ This is the documentation for the template itself: how it is laid out, what it a
    6. [Commit Messages](conventions/commit-messages.md) — the 50/72 rule, AI disclosure, and tag messages.
    7. [Git Workflow](conventions/git-workflow.md) — who runs which Git command, and rendering without committing.
    8. [Versioning](conventions/versioning.md) — the template's version, its tags, and its changelog.
-   9. [Dependency Management](conventions/dependency-management.md) — exact pins on both sides.
+   9. [Dependency Management](conventions/dependency-management.md) — exact pins on both sides, and keeping shared tools in step.
    10. [Testing](conventions/testing.md) — rendering as the test suite, and the tests the body ships.
 3. [Tooling](tooling/README.md) — the tools used to work on the template.
    1. [Developer Setup](tooling/developer-setup.md) — Node.js, Copier, and what a render needs.
    2. [Visual Studio Code Integration](tooling/editor-integration.md) — the root's shared and local editor configuration.
-   3. [Code Formatting (dprint)](tooling/formatting-dprint.md) — the root's formatter.
-   4. [Markdown Linting (MarkdownLint)](tooling/linting-markdownlint.md) — the Markdown linting of the root.
-   5. [Spell Checking (CSpell)](tooling/spell-checking-cspell.md) — the spell checking of the root.
+   3. [Code Formatting (dprint)](tooling/formatting-dprint.md) — the root's formatter, and formatting the body in a render.
+   4. [Markdown Linting (MarkdownLint)](tooling/linting-markdownlint.md) — the two Markdown configurations.
+   5. [Spell Checking (CSpell)](tooling/spell-checking-cspell.md) — the two spelling configurations, and which one a word belongs in.
    6. [Claude Code Hooks](tooling/claude-code-hooks.md) — the root's hooks.
 
 Start with [template structure](project-template/template-structure.md) if you have not worked on this repository before. The split between the root and `template/` is the thing that makes everything else make sense.

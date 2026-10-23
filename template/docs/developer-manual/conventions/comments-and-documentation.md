@@ -66,5 +66,6 @@ A test method's name already states its scenario and expected outcome in short f
 ## Related
 
 - [C# style](csharp-style.md) — the surrounding style rules, including where regions go.
+- [Line length](line-length.md) — how far a comment is filled before it is broken.
 - [Markdown style](markdown-style.md) — the prose punctuation rule these comments share.
 - [Testing](testing.md) — the test project's own documentation requirement.

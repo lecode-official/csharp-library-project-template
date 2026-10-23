@@ -24,10 +24,11 @@ The staging area is not a step on the way to a commit here, it is how a reviewer
 
 ## When a Rebase Was Asked For
 
-Rewriting history moves every commit after the one that changed, which invalidates anything that recorded a commit identifier. After a rebase, check whether a recorded identifier still points at a commit on the branch, and correct it in the commit that records it.
+Rewriting history moves every commit after the one that changed, which invalidates anything that recorded a commit identifier — [`.git-blame-ignore-revs`](git-blame.md) above all. After a rebase, check whether a recorded identifier still points at a commit on the branch, and correct it in the commit that records it.
 
 ## Related
 
 - [Commit messages](commit-messages.md) — what a message should say once you are asked to write one.
+- [Git blame](git-blame.md) — the revisions that blame skips.
 - [Versioning](versioning.md) — the version bump that happens in the branch, before the pull request.
 - [Contribution guide](../contribution-guide.md) — the process a change goes through.

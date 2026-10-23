@@ -31,15 +31,17 @@ The C# in the body exists so that a freshly generated project builds, tests, pac
 
 Anything added to it has to be something every generated library wants, because every consumer either keeps it or deletes it. A type that only some libraries need is a type most consumers delete by hand after every render, and a type they keep is one the template now has to maintain for them through `copier update`.
 
-## Nothing Compiles a Body File in Place
+## Nothing Formats or Compiles a Body File in Place
 
 A C# file in the body is not valid C# until it is rendered: `namespace [[ root_namespace ]];` does not parse. The root's [dprint configuration](../tooling/formatting-dprint.md) excludes `template/` for that reason, and the root's [Claude Code hooks](../tooling/claude-code-hooks.md) skip it too. Your editor's C# extension will report diagnostics against these files that mean nothing.
 
-So compiling happens in a render:
+So formatting and compiling happen in a render:
 
 1. Render a project, as described in [authoring](../project-template/authoring.md#verifying-a-change).
-2. Run `dotnet build` in the rendered project.
-3. Port any fix back into the template file by hand.
+2. Run `npm run format` and `dotnet build` in the rendered project.
+3. Port any change the formatter made back into the template file by hand.
+
+A body file that the generated project's own `dprint check` would reformat is a defect in the template, even if no tool in this repository reports it, because every generated project then fails its linters in a file nobody touched.
 
 ## Related
 

@@ -13,16 +13,18 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 ## Golden Rules
 
 - **Match the surrounding code and the documented conventions** ([docs/developer-manual/conventions/](docs/developer-manual/conventions/README.md)). This code is heavily and consistently documented — follow it.
-- **Run the tests before finishing**, with `dotnet test --solution "source/[[ product_name ]].slnx"`.
+- **Formatting is owned by dprint** ([docs/developer-manual/tooling/formatting-dprint.md](docs/developer-manual/tooling/formatting-dprint.md)), which covers C#, XML (including `.csproj` and `.slnx`), Markdown, JSON, YAML, and TOML. Run `npm run format` before finishing. The Roslyn plugin drives whitespace only, so every structural convention below is a review-time matter, not something a tool catches.
+- **Run `npm run lint` and `npm test` before finishing.** The docs and this file are Markdown and are linted too.
 - **C# structure**: file-scoped namespaces, `#region` blocks on every type in the documented order, an XML documentation comment on **every member, including `private` ones**, `<inheritdoc/>` where a member implements or overrides, `sealed` classes by default, explicit `this.` on member access, expression-bodied members where the implementation is a single expression, and `camelCase` private fields with no underscore. Full detail: [C# style](docs/developer-manual/conventions/csharp-style.md).
 - **Nullable reference types and implicit usings are enabled everywhere.** Write genuinely null-safe code rather than silencing the analyzer with `!`.
 - **Markdown headings are title case** at every level, in every file ([docs/developer-manual/conventions/markdown-style.md](docs/developer-manual/conventions/markdown-style.md)). Preserve the real casing of code spans, brand names (`dprint`), and acronyms.
 - **Wrap code in backticks** in prose everywhere — the docs, this file, and commit messages. XML documentation comments are the one exception: they are XML, not Markdown, so use `<see cref="..."/>` for identifiers and `<c>` for code instead.
 - **Prose uses periods, not semicolons.** In prose — the docs, XML documentation comments, this file — end each sentence with a period rather than joining two with a semicolon. Plain `//` comments do the reverse: sentences are separated by semicolons and the last one takes no terminal punctuation.
+- **No line exceeds 150 characters, and none stops short of it either** — comments, documentation comments, and split string literals are filled up to the limit and broken only when the next word does not fit ([docs/developer-manual/conventions/line-length.md](docs/developer-manual/conventions/line-length.md)). Markdown is exempt: never hard-wrap prose.
 - **Files and directories are kebab-case**, except well-known and tool-mandated names. Inside a C# project's own source tree they switch to PascalCase, one type per file. The project and solution files are named after the product, spaces included ([docs/developer-manual/conventions/file-and-naming-conventions.md](docs/developer-manual/conventions/file-and-naming-conventions.md)).
 - **Every dependency is pinned to an exact version — never a range.** Package versions live in `Directory.Packages.props` (Central Package Management), never in a project file. Every project sets `RestorePackagesWithLockFile`, so a package change must be followed by `dotnet restore` and the resulting `packages.lock.json` files committed alongside it ([docs/developer-manual/conventions/dependency-management.md](docs/developer-manual/conventions/dependency-management.md)).
-- **Every new feature is unit tested, in the same change.** A bug fix adds a test that reproduces the bug. Test classes mirror the source namespace and folder and are named `<TypeName>Tests`. `internal` types are tested directly through `InternalsVisibleTo`. Run the tests before finishing ([docs/developer-manual/conventions/testing.md](docs/developer-manual/conventions/testing.md)).
-- **Raise the version before opening a pull request**, in the library's `<Version>` property, and add the release to `CHANGELOG.md` ([docs/developer-manual/conventions/versioning.md](docs/developer-manual/conventions/versioning.md)).
+- **Every new feature is unit tested, in the same change.** A bug fix adds a test that reproduces the bug. Test classes mirror the source namespace and folder and are named `<TypeName>Tests`. `internal` types are tested directly through `InternalsVisibleTo`. Run `npm test` before finishing ([docs/developer-manual/conventions/testing.md](docs/developer-manual/conventions/testing.md)).
+- **Raise the version before opening a pull request**, in the library's `<Version>` property and the `"version"` field of `package.json` together, and add the release to `CHANGELOG.md` ([docs/developer-manual/conventions/versioning.md](docs/developer-manual/conventions/versioning.md)).
 - **Write commit messages by the rules** ([docs/developer-manual/conventions/commit-messages.md](docs/developer-manual/conventions/commit-messages.md)) — the 50/72 rule, a title-cased, past-tense subject, and a prose body. State whether AI was involved and, if it was, what exactly the AI did. When you did any of the work, add a co-author trailer with your tool's no-reply address that names the exact model and version you are, not just the product, for example:
 
   ```text
@@ -36,14 +38,17 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 
 - **Repository layout, the solution, the projects** → [docs/developer-manual/architecture.md](docs/developer-manual/architecture.md).
 - **C# source code** → [docs/developer-manual/conventions/csharp-style.md](docs/developer-manual/conventions/csharp-style.md) and [comments and documentation comments](docs/developer-manual/conventions/comments-and-documentation.md).
-- **Installing the SDK** → [docs/developer-manual/tooling/developer-setup.md](docs/developer-manual/tooling/developer-setup.md).
+- **Installing the SDK or Node.js** → [docs/developer-manual/tooling/developer-setup.md](docs/developer-manual/tooling/developer-setup.md).
+- **Linting, formatting, spell checking** → [docs/developer-manual/tooling/](docs/developer-manual/tooling/README.md).
 - **Markdown and documentation style** → [docs/developer-manual/conventions/markdown-style.md](docs/developer-manual/conventions/markdown-style.md).
+- **Line length, or filling a comment or a split string literal to the limit** → [docs/developer-manual/conventions/line-length.md](docs/developer-manual/conventions/line-length.md).
 - **Naming a new file or directory** → [docs/developer-manual/conventions/file-and-naming-conventions.md](docs/developer-manual/conventions/file-and-naming-conventions.md).
 - **Adding or upgrading a dependency** → [docs/developer-manual/conventions/dependency-management.md](docs/developer-manual/conventions/dependency-management.md).
 - **Writing or running unit tests, measuring code coverage** → [docs/developer-manual/conventions/testing.md](docs/developer-manual/conventions/testing.md) and [testing and code coverage](docs/developer-manual/tooling/testing-and-code-coverage.md).
 - **Writing commit messages** → [docs/developer-manual/conventions/commit-messages.md](docs/developer-manual/conventions/commit-messages.md).
 - **Releasing, or raising the version** → [docs/developer-manual/conventions/versioning.md](docs/developer-manual/conventions/versioning.md).
 - **Committing, pushing, rebasing, or anything else touching Git** → [docs/developer-manual/conventions/git-workflow.md](docs/developer-manual/conventions/git-workflow.md).
+- **A formatting-only commit, or `.git-blame-ignore-revs`** → [docs/developer-manual/conventions/git-blame.md](docs/developer-manual/conventions/git-blame.md).
 - **Opening an issue, submitting a pull request, the AI-contribution policy** → [CONTRIBUTING.md](CONTRIBUTING.md).
 - **How consumers use the library** → [docs/user-manual/](docs/user-manual/README.md), starting with [getting started](docs/user-manual/getting-started.md).
 

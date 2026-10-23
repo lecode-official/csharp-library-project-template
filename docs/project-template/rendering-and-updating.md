@@ -25,13 +25,14 @@ The generated project is complete but not yet a repository:
 ```shell
 cd my-new-library
 git init
+npm install
 dotnet restore "source/<Product Name>.slnx"
 dotnet test --solution "source/<Product Name>.slnx"
 ```
 
-`dotnet restore` resolves the pinned dependencies and writes the `packages.lock.json` of every project. [Dependency management](../conventions/dependency-management.md#no-lock-files-in-the-body) explains why the template does not ship them.
+This is the one time `npm install` is right in a generated project. The template ships no `package-lock.json`, so `npm ci` has nothing to install from yet, and `npm install` resolves the pinned dependencies and writes the lock file. `dotnet restore` does the same for the `packages.lock.json` of every project. [Dependency management](../conventions/dependency-management.md#no-lock-files-in-the-body) explains why the template does not ship them.
 
-**Commit all of the lock files with the first commit.** From then on the project restores in locked mode, which fails without them.
+**Commit all of the lock files with the first commit.** From then on the project installs with `npm ci` and restores in locked mode, which both fail without them.
 
 Everything should pass immediately. The library that ships is a placeholder class whose only job is to make that true — replace it, and its test, with the real thing.
 

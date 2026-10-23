@@ -17,14 +17,15 @@ One thing to watch: a heading that ends in `C#` reads to MarkdownLint as a close
 
 ## Placeholders in Body Markdown
 
-A Markdown file in the body is a template, and a placeholder in it is substituted before anyone reads it. That makes a few constructs unsafe:
+A Markdown file in the body is a template, and a placeholder in it is substituted before the generated project's linters ever see it. That makes a few constructs unsafe:
 
+- **Never put a placeholder inside a table.** dprint pads every cell to align a table's pipes, and it does so at the template's widths. Substitution then changes those widths, so the rendered table is misaligned and the generated project's own MarkdownLint reports `MD060`, in a file nobody touched. Use prose, a list, or a fenced code block instead, none of which is aligned. Tables at the root are fine, since they are never rendered.
 - **Never put a placeholder that may contain spaces in a link target.** `[[ product_name ]]` may contain spaces, and a raw space ends a Markdown link target. Link to the containing directory instead, and name the file in the link text, as in ``[`source/[[ product_name ]].slnx`](source/)``.
 - **A placeholder in a heading is fine** when the answer is a name, such as `# [[ product_name ]] Documentation`, because a name keeps its own casing under title case anyway.
 - **A placeholder in a code span is fine**, and is the usual way a body article shows a generated path or command.
 - **Never write a placeholder directly inside the brackets of a link or image label.** In `[[[ maintainer_name ]]]`, the template engine reads the first two brackets as the opening delimiter and the third one as the start of a list, so the answer renders as a Python list, `['Jane Doe']`. Build the label inside the expression instead, as in `[[ '[' ~ maintainer_name ~ ']' ]]([[ maintainer_url ]])`. The same goes for any other `[[[` in the body, including a regular expression in a script.
 
-Check the rendered Markdown in a render (see [authoring](../project-template/authoring.md#verifying-a-change)).
+The rendered Markdown is linted with the generated project's configuration, not this repository's, so check it in a render (see [authoring](../project-template/authoring.md#verifying-a-change)).
 
 ## Where Root Articles Differ
 

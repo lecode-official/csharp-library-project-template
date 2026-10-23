@@ -1,6 +1,6 @@
 # Dependency Management
 
-This article covers how dependencies — NuGet packages, the .NET SDK, and the local .NET tools — are pinned and locked in this repository.
+This article covers how dependencies — NuGet packages, but also the linters and the code formatter from [tooling](../tooling/README.md) — are pinned and locked in this repository.
 
 ## Exact Versions, Never Ranges
 
@@ -12,6 +12,8 @@ Every dependency is pinned to an exact version — never a floating range, a min
 
 not `Version="2.*"` or `Version="[2.0.2,)"`. A project file references the package without a version, `<PackageReference Include="SauceControl.InheritDoc" PrivateAssets="all" />`, so two projects can never depend on different versions of the same package. A package that every project needs, such as an analyzer, is declared as a `GlobalPackageReference` in the same file instead, and no project file mentions it at all. The same rule applies outside NuGet:
 
+- The dprint plugins in [`dprint.json`](../../../dprint.json) are pinned to an exact release URL.
+- `dprint`, `cspell`, its `@cspell/dict-*` dictionary packages, `markdownlint-cli2`, and `npm-run-all2` are pinned exactly in [`package.json`](../../../package.json).
 - [`global.json`](../../../global.json) pins the exact .NET SDK version.
 
 An upgrade is always a deliberate, visible change to a version string, never something that happens silently on the next restore.
@@ -49,6 +51,14 @@ Every restore audits the dependencies for known vulnerabilities, and [`Directory
 - **ReportGenerator**, which turns raw coverage data into a readable report (see [testing and code coverage](../tooling/testing-and-code-coverage.md)).
 
 Each tool's version is pinned exactly, with `"rollForward": false`. Upgrading one is `dotnet tool update <tool name> --version <exact version>`, followed by committing the manifest change.
+
+## Node.js Dependencies
+
+The linters and the code formatter are npm packages, declared as `devDependencies` in [`package.json`](../../../package.json) and locked in `package-lock.json`, together with `npm-run-all2`, whose `run-s` runs the linters one after the other for `npm run lint` (see [tooling](../tooling/README.md)). The Node.js version itself is pinned in [`.nvmrc`](../../../.nvmrc). `nvm use` selects it, and the continuous integration workflows read the same file, so the two cannot drift.
+
+Restore them with `npm ci`, never `npm install` — `npm ci` fails instead of silently updating the lock file when it would no longer match `package.json`, which is the same guarantee `--locked-mode` gives the NuGet restore. The only exception is the very first install, before any `package-lock.json` exists: `npm install` writes it, and it is committed straight away. The same goes for the `packages.lock.json` files, which the first `dotnet restore` writes.
+
+Install scripts are blocked by default. The one package that genuinely needs one, `dprint`, is listed explicitly in the `allowScripts` map, keyed by exact name and version. A version bump means updating that key too, or the script silently stops being allowed.
 
 ## Related
 

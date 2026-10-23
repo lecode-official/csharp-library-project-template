@@ -19,6 +19,12 @@ It also declares a global `using` for `Xunit`, so test files carry no `using Xun
 [`global.json`](../../../global.json) switches `dotnet test` to Microsoft.Testing.Platform (`"test": { "runner": "Microsoft.Testing.Platform" }`). The .NET 10 SDK no longer runs a Microsoft.Testing.Platform project through VSTest, and in this mode `dotnet test` takes the solution or the project through `--solution` or `--project` instead of a positional argument.
 
 ```shell
+npm test
+```
+
+or, equivalently, directly:
+
+```shell
 dotnet test --solution "source/[[ product_name ]].slnx"
 ```
 

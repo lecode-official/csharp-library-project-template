@@ -37,8 +37,23 @@ One consequence to keep in mind: `[` and `]` are character-class syntax in a glo
 
 1. Put it under [`template/`](../../template/), at the path it should have in the generated project.
 2. Use `[[ answer_name ]]` for anything project-specific. If the value is not a question yet, add one — see [questions](questions.md).
-3. If it is a Markdown article, list it in the generated project's [documentation index](../../template/docs/README.md), **and** the relevant section index. Both are hand-maintained.
-4. Render and check.
+3. If it is Markdown, remember that the generated project's own MarkdownLint and CSpell will check it, using the configuration in `template/.markdownlint.yml` and `template/.cspell.json`, not this repository's.
+4. If it is a Markdown article, list it in the generated project's [documentation index](../../template/docs/README.md), **and** the relevant section index. Both are hand-maintained.
+5. Render and check.
+
+## Avoid Markdown Tables with Placeholders
+
+dprint pads a Markdown table's cells to align its pipes. A placeholder inside a table is padded at its *template* width, and substitution then changes that width — so the rendered project has a misaligned table that its own MarkdownLint flags with `MD060`, in a file nobody touched.
+
+Put placeholders in prose, a list, or a fenced code block instead. None of those is aligned. This repository's own articles are free to use tables with placeholders in them, because they are never rendered. [Markdown style](../conventions/markdown-style.md#placeholders-in-body-markdown) covers the other places a placeholder is unsafe in Markdown.
+
+## Files That Are Both Templated and Formatted
+
+Every file in the body has to satisfy dprint twice: once as the template, and once as the rendered output. The two can disagree — the Markdown-table case above is the sharpest example, and the answers file is the other.
+
+[`template/.copier-answers.yml`](../../template/.copier-answers.yml) writes the recorded answers with a single expression piped through `to_nice_yaml` and then `trim`. The `trim` matters: `to_nice_yaml` ends its output with a newline and the template file ends with one of its own, so without it the rendered file would end with two and `dprint check` would fail in a generated project before anyone had touched the code.
+
+The generated project's own `dprint.json` therefore excludes the files whose formatting belongs to the tool that writes them — the answers file, and the npm and NuGet lock files. Note that the `**/*-lock.json` pattern does *not* match `packages.lock.json`, so both patterns are needed.
 
 ## Verifying a Change
 
@@ -54,6 +69,7 @@ copier copy --defaults --vcs-ref HEAD --data product_name="Render Test" --data r
     . /tmp/render-test
 
 cd /tmp/render-test
+npm install && npm run lint
 dotnet test --solution "source/Render Test.slnx" --configuration Release
 ```
 
