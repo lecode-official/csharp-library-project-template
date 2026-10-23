@@ -5,8 +5,9 @@ This is the documentation for the template itself: how it is laid out, what it a
 1. [Project Template](project-template/README.md) — the repository as a Copier template.
    1. [Template Structure](project-template/template-structure.md) — the two-level layout, and the four problems it solves.
    2. [Questions](project-template/questions.md) — every question, what it feeds, and how to add one.
-   3. [Rendering and Updating](project-template/rendering-and-updating.md) — generating a project, and keeping it in step with the template.
-   4. [Authoring](project-template/authoring.md) — the delimiters, adding a file, and verifying a change.
+   3. [Licensing](project-template/licensing.md) — how the `LICENSE` file is produced, and which licenses take a copyright substitution.
+   4. [Rendering and Updating](project-template/rendering-and-updating.md) — generating a project, and keeping it in step with the template.
+   5. [Authoring](project-template/authoring.md) — the delimiters, adding a file, and verifying a change.
 2. [Conventions](conventions/README.md) — how the files on both sides of the split are written.
    1. [Comments and Documentation](conventions/comments-and-documentation.md) — what the root and the body each explain, and how.
    2. [Markdown Style](conventions/markdown-style.md) — the shared Markdown rules, and placeholders in body Markdown.

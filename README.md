@@ -42,6 +42,8 @@ This repository is **not** itself a renderable project. It is split in two:
 ├── AGENTS.md           rules for working on the template
 ├── CONTRIBUTING.md     how to contribute, next to CODE_OF_CONDUCT.md, SECURITY.md, and CONTRIBUTORS.md
 ├── docs/               how the template works and how to change it
+├── licenses/           the vendored license texts the LICENSE file pulls from
+├── scripts/            maintenance scripts, run by hand
 └── template/           ← the template body; only this is ever rendered
 ```
 
@@ -54,6 +56,7 @@ The [documentation index](docs/README.md) lists every article. It is split into 
 - [Project template](docs/project-template/README.md) — the repository as a Copier template.
   - [Template structure](docs/project-template/template-structure.md) — the two-level layout, and the four problems it solves.
   - [Questions](docs/project-template/questions.md) — every question, what it feeds, and how to add one.
+  - [Licensing](docs/project-template/licensing.md) — how the `LICENSE` file is produced, and which licenses take a copyright substitution.
   - [Rendering and updating](docs/project-template/rendering-and-updating.md) — generating a project, and keeping it in step with the template.
   - [Authoring](docs/project-template/authoring.md) — the delimiters, adding a file, and verifying a change.
 - [Conventions](docs/conventions/README.md) — how the files on both sides of the split are written, styled, named, committed, and released.
@@ -84,4 +87,4 @@ Bug reports, feature requests, and changes to the template are all welcome. See 
 
 ## License
 
-The template repository is licensed under the MIT license (see [`LICENSE`](LICENSE)). That license covers the template itself, not the projects generated from it.
+The template repository is licensed under the MIT license (see [`LICENSE`](LICENSE)). That license covers the template itself, not the projects generated from it. A generated project gets the license chosen at render time, from the texts vendored in [`licenses/`](licenses/) — see [licensing](docs/project-template/licensing.md) for where each of those texts comes from and under what terms it is redistributed.

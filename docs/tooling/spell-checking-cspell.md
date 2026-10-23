@@ -14,7 +14,7 @@ It ignores `template/`, which the body's own configuration checks, `licenses/`, 
 npm run lint:cspell
 ```
 
-The script checks the root's Markdown, and [`copier.yml`](../../copier.yml). The editor extension and the Claude Code hook check every file you open or edit, so a word in a configuration file is flagged there even though the script does not cover it.
+The script checks the root's Markdown, [`copier.yml`](../../copier.yml) and the Python scripts under [`scripts/`](../../scripts/). The editor extension and the Claude Code hook check every file you open or edit, so a word in a configuration file is flagged there even though the script does not cover it.
 
 ## Handling Findings
 

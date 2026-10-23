@@ -37,4 +37,4 @@ A pull request that adds a contribution is expected to also update the records t
 
 ## Licensing of Contributions
 
-The template is licensed under the MIT license (see [`LICENSE`](LICENSE)). By contributing, you agree that your contribution is licensed under the same terms. This is not legal advice — read the [license file](LICENSE) for the actual terms.
+The template is licensed under the MIT license (see [`LICENSE`](LICENSE)). By contributing, you agree that your contribution is licensed under the same terms. This does not apply to the license texts vendored in [`licenses/`](licenses/), which carry their own terms (see [licensing](docs/project-template/licensing.md)). This is not legal advice — read the [license file](LICENSE) for the actual terms.

@@ -2,9 +2,9 @@
 # Copier only ever looks for "copier.*" at the root of the cloned template and never recurses into subdirectories, so a copy of this file inside
 # "template/" would be silently ignored and, worse, copied into every generated project as an ordinary file
 
-# The directory that holds the template body; everything outside it (this file, the repository's own README, AGENTS.md, docs, and linter
-# configuration) belongs to the template itself and is never copied into a generated project; this is what makes it possible to document the template
-# in the template, and to lint the template's own files with different settings than the files it generates
+# The directory that holds the template body; everything outside it (this file, the repository's own README, AGENTS.md, docs, linter configuration,
+# and the vendored license texts) belongs to the template itself and is never copied into a generated project; this is what makes it possible to
+# document the template in the template, and to lint the template's own files with different settings than the files it generates
 _subdirectory: template
 
 # The oldest Copier version the template supports; the template does not depend on a feature introduced in a specific release, so the floor is the
@@ -120,7 +120,7 @@ author:
 copyright_holder:
   type: str
   default: "[[ author ]]"
-  help: The copyright holder, used for the copyright notice in the project files.
+  help: The copyright holder, used for the copyright notice in the project files and, for some licenses, in the license text itself.
   validator: >-
     [% if not copyright_holder | trim %]The copyright holder must not be empty.[% elif copyright_holder | regex_search('["\\\\<>&]') %]The copyright
     holder must not contain double quotes, backslashes, or the characters "<", ">", and "&".[% endif %]
@@ -162,3 +162,21 @@ integration_branch:
     [% if not integration_branch | regex_search('^[A-Za-z0-9]([A-Za-z0-9._/-]*[A-Za-z0-9])?$') or '..' in integration_branch %]The integration branch
     must be a valid branch name made of letters, digits, dots, slashes, hyphens, and underscores.[% elif integration_branch == default_branch %]The
     integration branch must differ from the default branch.[% endif %]
+
+license:
+  type: str
+  default: LGPL-3.0-or-later
+  help: >-
+    The license the library is released under, given as an SPDX license identifier. It is written to the "LICENSE" file. Choose "UNLICENSED" for a
+    library that is not published publicly. It is a NuGet extension to the SPDX syntax that packs successfully but is rejected by nuget.org.
+  choices:
+    MIT: MIT
+    Apache License 2.0: Apache-2.0
+    BSD 2-Clause "Simplified" License: BSD-2-Clause
+    BSD 3-Clause "New" or "Revised" License: BSD-3-Clause
+    Mozilla Public License 2.0: MPL-2.0
+    GNU Lesser General Public License v3.0 or later: LGPL-3.0-or-later
+    GNU Lesser General Public License v3.0 only: LGPL-3.0-only
+    GNU General Public License v3.0 or later: GPL-3.0-or-later
+    GNU General Public License v3.0 only: GPL-3.0-only
+    Proprietary, all rights reserved: UNLICENSED

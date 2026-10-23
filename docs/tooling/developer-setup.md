@@ -20,6 +20,10 @@ The [Claude Code hooks](claude-code-hooks.md) that run these tools read the edit
 
 Rendering the template needs [Copier](https://copier.readthedocs.io/en/stable/#installation), at least the version `_min_copier_version` in [`copier.yml`](../../copier.yml) names. Install it as an isolated command-line tool rather than into a project's Python environment, for example with `pipx install copier` or `uv tool install copier`.
 
+## Python
+
+[`scripts/refresh-licenses.py`](../../scripts/refresh-licenses.py) needs Python, and only its standard library.
+
 ## Visual Studio Code
 
 Visual Studio Code is recommended, though not required. On first opening the repository it offers to install the extensions recommended in [`.vscode/extensions.json`](../../.vscode/extensions.json). Install all of them, and above all Workspace Config Plus, without which none of the shared editor configuration takes effect (see [editor integration](editor-integration.md)).
