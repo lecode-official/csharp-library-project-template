@@ -34,6 +34,7 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 
 - **Never run a Git command that changes state or history unless asked for that exact thing** — `git commit`, `git push`, `git tag`, `git rebase`, `git reset`, `git cherry-pick`, and `git add`/`git restore --staged` alike. Edit the files and stop. Each instruction authorizes only itself: "write a commit message" means write it and stop, so the user can review it before anything is committed, and "commit this" does not authorize a push ([docs/developer-manual/conventions/git-workflow.md](docs/developer-manual/conventions/git-workflow.md)).
 - **The staging area is the user's review record**, not a step on the way to a commit. Staging or unstaging on their behalf destroys it.
+- **Delegating to subagents is pre-approved.** [`.claude/settings.json`](.claude/settings.json) allows the agent tool by default, so use one whenever a task genuinely benefits from parallel or isolated work, without asking first.
 
 ## When Working on X, Read Y
 
@@ -43,6 +44,7 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 - **Linting, formatting, spell checking, editor setup** → [docs/developer-manual/tooling/](docs/developer-manual/tooling/README.md).
 - **An analyzer finding, or changing a rule's severity** → [docs/developer-manual/tooling/static-code-analysis.md](docs/developer-manual/tooling/static-code-analysis.md).
 - **The GitHub Actions workflows, a failing check, or Dependabot** → [docs/developer-manual/tooling/continuous-integration.md](docs/developer-manual/tooling/continuous-integration.md).
+- **The Claude Code hooks that run after you edit a file** → [docs/developer-manual/tooling/claude-code-hooks.md](docs/developer-manual/tooling/claude-code-hooks.md).
 - **The documentation website, its navigation, or the generated API reference** → [docs/developer-manual/tooling/documentation-website.md](docs/developer-manual/tooling/documentation-website.md).
 - **Markdown and documentation style** → [docs/developer-manual/conventions/markdown-style.md](docs/developer-manual/conventions/markdown-style.md).
 - **Line length, or filling a comment or a split string literal to the limit** → [docs/developer-manual/conventions/line-length.md](docs/developer-manual/conventions/line-length.md).

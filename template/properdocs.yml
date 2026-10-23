@@ -84,6 +84,7 @@ nav:
           - Markdown Linting (MarkdownLint): developer-manual/tooling/linting-markdownlint.md
           - Spell Checking (CSpell): developer-manual/tooling/spell-checking-cspell.md
           - Static Code Analysis: developer-manual/tooling/static-code-analysis.md
+          - Claude Code Hooks: developer-manual/tooling/claude-code-hooks.md
           - Continuous Integration: developer-manual/tooling/continuous-integration.md
           - Testing and Code Coverage: developer-manual/tooling/testing-and-code-coverage.md
           - Documentation Website: developer-manual/tooling/documentation-website.md

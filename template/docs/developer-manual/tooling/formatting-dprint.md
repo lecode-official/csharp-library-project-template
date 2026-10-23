@@ -30,7 +30,7 @@ Several JSON files in this repository are authored as JSONC, with `//` comments 
 
 [`global.json`](../../../global.json) is the one file in between. It carries `//` comments, and Visual Studio Code associates it with JSONC so that they are not reported as errors, but it is not listed in `jsonTrailingCommaFiles`, so dprint writes it without trailing commas. The same goes for [`.config/dotnet-tools.json`](../../../.config/dotnet-tools.json), which Visual Studio Code also treats as JSONC.
 
-Since `jsonTrailingCommaFiles` **replaces** the plugin's defaults rather than extending them, adding a new JSONC-style file means listing it there and keeping every existing entry in place. A file that is not listed has its trailing commas removed, which breaks nothing — but a file that *is* listed and is read by a strict JSON parser does break, which is why a web app manifest is deliberately absent from the list.
+Since `jsonTrailingCommaFiles` **replaces** the plugin's defaults rather than extending them, adding a new JSONC-style file means listing it there and keeping every existing entry in place. A file that is not listed has its trailing commas removed, which breaks nothing — but a file that *is* listed and is read by a strict JSON parser does break, which is why `.claude/settings.json` and a web app manifest are deliberately absent from the list.
 
 ## Related
 

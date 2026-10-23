@@ -1,6 +1,6 @@
 # Claude Code Hooks
 
-This article covers the Claude Code hooks in the root's [`.claude/settings.json`](../../.claude/settings.json), and which files reach them.
+This article covers the Claude Code hooks in the root's [`.claude/settings.json`](../../.claude/settings.json), which files reach them, and how they differ from the hooks the template body ships.
 
 ## What the Root's Hooks Do
 
@@ -22,10 +22,17 @@ Every hook ignores a file outside the repository, `"$CLAUDE_PROJECT_DIR"/*`, sin
 
 There is no `Stop` hook at the root, because the root has nothing to build.
 
-When changing a hook:
+## The Body's Hooks
+
+[`template/.claude/settings.json`](../../template/.claude/settings.json) is the **generated project's** hook configuration, and a template file like any other. It runs the same three tools with the generated project's own configuration files at its root, also needs `jq`, ignores files outside the project, and skips SVGs and build output. Build output there is `"$CLAUDE_PROJECT_DIR"/build/*`, anchored to the project directory so that the documentation website's scripts in `docs/build/` are still formatted and checked. It also adds a `Stop` hook that builds the solution with `--configuration Release`, the only configuration that treats warnings as errors, so that an assistant cannot end a turn with an analyzer warning that would fail continuous integration. That hook names the solution through `[[ product_name ]]`, which is substituted like any other placeholder, and quotes it, because the product name may contain spaces.
+
+A change to it changes the hooks of every project generated from now on. It is described from the generated project's side in its [Claude Code hooks](../../template/docs/developer-manual/tooling/claude-code-hooks.md) article, and verified in a render, where the hooks actually run.
+
+When changing a hook on either side:
 
 - Filter by path first and act second, so that an irrelevant file exits fast.
 - Guard every tool invocation, so that a missing tool makes the hook a silent no-op.
+- Keep the root's and the body's hooks alike where they do the same job, so that working on the template and working on a generated project feel the same.
 
 ## Project Instructions
 
@@ -35,3 +42,4 @@ Claude Code reads [`AGENTS.md`](../../AGENTS.md) as its project instructions fro
 
 - [Tooling](README.md) — the tools these hooks run.
 - [`AGENTS.md`](../../AGENTS.md) — the rules an assistant follows beyond what a hook can enforce.
+- [Claude Code hooks](../../template/docs/developer-manual/tooling/claude-code-hooks.md) — the generated project's hooks.

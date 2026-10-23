@@ -25,6 +25,6 @@ This is the documentation for the template itself: how it is laid out, what it a
    3. [Code Formatting (dprint)](tooling/formatting-dprint.md) — the root's formatter, and formatting the body in a render.
    4. [Markdown Linting (MarkdownLint)](tooling/linting-markdownlint.md) — the two Markdown configurations.
    5. [Spell Checking (CSpell)](tooling/spell-checking-cspell.md) — the two spelling configurations, and which one a word belongs in.
-   6. [Claude Code Hooks](tooling/claude-code-hooks.md) — the root's hooks.
+   6. [Claude Code Hooks](tooling/claude-code-hooks.md) — the root's hooks, and the hooks the body ships.
 
 Start with [template structure](project-template/template-structure.md) if you have not worked on this repository before. The split between the root and `template/` is the thing that makes everything else make sense.
