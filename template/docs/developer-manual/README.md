@@ -10,6 +10,7 @@ This manual is for people working on the [[ product_name ]] codebase itself: whe
    4. [Spell Checking (CSpell)](tooling/spell-checking-cspell.md)
    5. [Static Code Analysis](tooling/static-code-analysis.md)
    6. [Testing and Code Coverage](tooling/testing-and-code-coverage.md)
+   7. [Documentation Website](tooling/documentation-website.md)
 3. [Conventions](conventions/README.md)
    1. [C# Style](conventions/csharp-style.md)
    2. [Comments and Documentation Comments](conventions/comments-and-documentation.md)

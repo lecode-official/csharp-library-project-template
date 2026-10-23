@@ -36,6 +36,10 @@ This is the one time `npm install` is right in a generated project. The template
 
 Everything should pass immediately. The library that ships is a placeholder class whose only job is to make that true — replace it, and its test, with the real thing.
 
+A few things are worth doing early:
+
+- **Decide on the documentation website.** It works as soon as the Python dependencies are installed, but a project that will not publish one should delete `properdocs.yml`, `requirements.txt` and `docs/build/` rather than leave them to rot.
+
 ## Updating a Project
 
 The generated project's `.copier-answers.yml` records which template and which version it came from, plus every answer. That is what makes an update possible:

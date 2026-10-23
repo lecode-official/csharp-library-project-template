@@ -9,8 +9,8 @@
         Applies to every project under "source/"; redirects "bin/" and "obj/" out of each project's own folder and into
         "../build/<project folder name>/" instead, keeping the source tree free of build output (see Architecture); "$(MSBuildThisFileDirectory)" is
         "source/" itself here, so "../build/" lands the output at the repository root's "build/", alongside "tests/unit-tests"'s own
-        "Directory.Build.props"; "$([System.IO.Path]::GetFileName(...))" reads each project's own directory name at evaluation time, so this one file
-        covers every project under "source/" without listing them by name
+        "Directory.Build.props" and the documentation website's build output; "$([System.IO.Path]::GetFileName(...))" reads each project's own
+        directory name at evaluation time, so this one file covers every project under "source/" without listing them by name
     -->
     <PropertyGroup>
         <ProjectFolderName>$([System.IO.Path]::GetFileName('$(MSBuildProjectDirectory)'))</ProjectFolderName>

@@ -38,7 +38,7 @@ One consequence to keep in mind: `[` and `]` are character-class syntax in a glo
 1. Put it under [`template/`](../../template/), at the path it should have in the generated project.
 2. Use `[[ answer_name ]]` for anything project-specific. If the value is not a question yet, add one — see [questions](questions.md).
 3. If it is Markdown, remember that the generated project's own MarkdownLint and CSpell will check it, using the configuration in `template/.markdownlint.yml` and `template/.cspell.json`, not this repository's.
-4. If it is a Markdown article, list it in the generated project's [documentation index](../../template/docs/README.md), **and** the relevant section index. Both are hand-maintained.
+4. If it is a Markdown article, list it in the generated project's [documentation index](../../template/docs/README.md), the relevant section index, **and** the `nav` in `template/properdocs.yml`. All three are hand-maintained.
 5. Render and check.
 
 ## Avoid Markdown Tables with Placeholders

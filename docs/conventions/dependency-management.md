@@ -18,7 +18,7 @@ The root needs very little, and all of it is pinned:
 
 ## The Body's Dependencies
 
-Everything the body pins becomes a pin in every generated project, so the body follows the generated project's [dependency management](../../template/docs/developer-manual/conventions/dependency-management.md) rules unchanged: exact package versions declared once in `template/Directory.Packages.props`, `RestorePackagesWithLockFile` on every project, exact versions in `template/package.json` and `template/.config/dotnet-tools.json`, and a Node.js version pinned in `template/.nvmrc`.
+Everything the body pins becomes a pin in every generated project, so the body follows the generated project's [dependency management](../../template/docs/developer-manual/conventions/dependency-management.md) rules unchanged: exact package versions declared once in `template/Directory.Packages.props`, `RestorePackagesWithLockFile` on every project, exact versions in `template/package.json`, `template/requirements.txt` and `template/.config/dotnet-tools.json`, and a Node.js version pinned in `template/.nvmrc`.
 
 Two pins are not constants at all:
 

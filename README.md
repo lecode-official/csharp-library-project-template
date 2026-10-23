@@ -1,6 +1,6 @@
 # C# Library Project Template
 
-A [Copier](https://copier.readthedocs.io/) template for C# library projects. It generates a repository with a library, a sample app, an xUnit test project, a full set of conventions documentation, and the linting, formatting, editor and continuous integration setup that goes with them.
+A [Copier](https://copier.readthedocs.io/) template for C# library projects. It generates a repository with a library, a sample app, an xUnit test project, a published documentation website, a full set of conventions documentation, and the linting, formatting, editor and continuous integration setup that goes with them.
 
 ## Generating a Project
 
@@ -73,7 +73,7 @@ The [documentation index](docs/README.md) lists every article. It is split into 
 
 - **Copier 9.5.0 or newer**, the floor `copier.yml` declares with `_min_copier_version`.
 - **The .NET SDK** pinned by the generated project's `global.json`, to build what comes out.
-- **Node.js**, for the generated project's linters.
+- **Node.js and Python**, for the generated project's linters and its documentation website respectively.
 
 Working on the template's own files needs only Node.js, for the formatter and the linters that check them. Verifying a change to the template body also needs Copier and everything a render needs, the .NET SDK and Python (see [developer setup](docs/tooling/developer-setup.md)).
 

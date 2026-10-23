@@ -35,7 +35,7 @@ npm ci
 dotnet restore "source/[[ product_name ]].slnx"
 ```
 
-Use `npm ci` rather than `npm install` for a fresh clone, so that the exact locked versions are installed. See [developer setup](docs/developer-manual/tooling/developer-setup.md) for the full walkthrough.
+Use `npm ci` rather than `npm install` for a fresh clone, so that the exact locked versions are installed. See [developer setup](docs/developer-manual/tooling/developer-setup.md) for the full walkthrough, including the Python toolchain the documentation website needs.
 
 ### Building
 
@@ -65,7 +65,7 @@ See [testing and code coverage](docs/developer-manual/tooling/testing-and-code-c
 
 ### Dependencies
 
-Every dependency is pinned to an exact version — NuGet packages, the dprint plugins, the linters, and the .NET SDK itself. NuGet package versions are declared once, in `Directory.Packages.props`, and every project sets `RestorePackagesWithLockFile`, so a package change is followed by `dotnet restore` and the resulting `packages.lock.json` files are committed alongside it. See [dependency management](docs/developer-manual/conventions/dependency-management.md).
+Every dependency is pinned to an exact version — NuGet packages, the dprint plugins, the linters, the .NET SDK itself, and the Python packages that build the documentation website. NuGet package versions are declared once, in `Directory.Packages.props`, and every project sets `RestorePackagesWithLockFile`, so a package change is followed by `dotnet restore` and the resulting `packages.lock.json` files are committed alongside it. See [dependency management](docs/developer-manual/conventions/dependency-management.md).
 
 ### Code Formatting & Linting
 

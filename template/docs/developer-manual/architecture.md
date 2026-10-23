@@ -8,7 +8,7 @@ The repository is organized into a few top-level directories:
 
 - [`source/`](../../source/) — the source code of [[ product_name ]] itself, and the sample app that demonstrates it.
 - [`tests/`](../../tests/) — the unit tests.
-- [`docs/`](../README.md) — this documentation.
+- [`docs/`](../README.md) — this documentation, including the [documentation website](tooling/documentation-website.md)'s build scripts (`docs/build/`), wired in via [`properdocs.yml`](../../properdocs.yml).
 
 Top-level files round out the repository. [`README.md`](../../README.md) is the project's front door, [`CHANGELOG.md`](../../CHANGELOG.md) records what changed in each version, [`CONTRIBUTORS.md`](../../CONTRIBUTORS.md) lists everyone who has contributed, and [`LICENSE`](../../LICENSE) is the full text of the license. [`CONTRIBUTING.md`](../../CONTRIBUTING.md), [`CODE_OF_CONDUCT.md`](../../CODE_OF_CONDUCT.md) and [`SECURITY.md`](../../SECURITY.md) round out the community-facing files a repository host recognizes by name. [`global.json`](../../global.json) pins the exact .NET SDK version, and [`.config/dotnet-tools.json`](../../.config/dotnet-tools.json) is the local tool manifest — both follow the same exact-version-only rule as everything else (see [dependency management](conventions/dependency-management.md)). The configuration of the code formatter, the linters, and the static code analysis lives at the repository root too, where each tool discovers it on its own (see [tooling](tooling/README.md)).
 
@@ -24,11 +24,17 @@ All three target `[[ target_framework ]]`, and all three enable `<Nullable>` and
 
 All three also set `<GenerateDocumentationFile>`, each for its own reason:
 
-- **The library**, so that the XML documentation comments in the source (see [C# style](conventions/csharp-style.md)) ship alongside the compiled assembly and reach a consumer's editor tooltips.
+- **The library**, so that the XML documentation comments in the source (see [C# style](conventions/csharp-style.md)) ship alongside the compiled assembly and reach a consumer's editor tooltips — and so that the [documentation website](tooling/documentation-website.md) can generate its API reference from them.
 - **The test project**, so that a missing documentation comment on a test class or method fails the build.
 - **The sample app**, which is not documented for a consumer, because the analyzers need the documentation file all the same. Without it, the code-style rule IDE0005 cannot run in the build and StyleCop Analyzers turns its documentation rules off (SA0001), and both report that as an error (see [static code analysis](tooling/static-code-analysis.md)).
 
 The library also grants the test project access to its `internal` members through `InternalsVisibleTo`, so internal types can be unit tested directly (see [testing](conventions/testing.md)). Both the sample app and the test project set `<IsPackable>false</IsPackable>` — neither is published.
+
+## The Sample App Is Not Only a Sample
+
+The sample app earns its place twice. It demonstrates the library, and it is also what the [documentation website](tooling/documentation-website.md) builds in order to generate the API reference: a class library's own build output does not include its NuGet dependencies, and the documentation generator needs every dependency of the library assembly loadable by reflection. Building the sample app transitively builds the library and copies the assembly, its XML documentation file, and the full dependency closure into one output folder.
+
+Deleting the sample app therefore breaks the API reference. If it ever goes, the generator has to be pointed at something else that produces a complete output folder.
 
 ## Shared Build Settings
 
@@ -43,7 +49,7 @@ Two `Directory.Build.props` files redirect every project's `bin`/`obj` output ou
 - [`source/Directory.Build.props`](../../source/Directory.Build.props) covers every project under `source/`, using `$([System.IO.Path]::GetFileName($(MSBuildProjectDirectory)))` to read each project's own folder name at evaluation time, so the one file covers them all without listing them individually.
 - [`tests/unit-tests/Directory.Build.props`](../../tests/unit-tests/Directory.Build.props) covers the test project alone, so it hard-codes `build/unit-tests/` — there is only the one project under `tests/`, so the folder-name lookup would be needless indirection.
 
-The entire `build/` directory is generated and covered by [`.gitignore`](../../.gitignore) — nothing under it is ever committed.
+The documentation website builds into `build/documentation-website/` alongside them, via `site_dir` in [`properdocs.yml`](../../properdocs.yml). The entire `build/` directory is generated and covered by [`.gitignore`](../../.gitignore) — nothing under it is ever committed.
 
 ## Versioning and Licensing
 

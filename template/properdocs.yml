@@ -1,0 +1,102 @@
+# ProperDocs configuration for the [[ product_name ]] documentation website (see docs/developer-manual/tooling/documentation-website.md); "docs_dir"
+# points at the existing hand-written documentation tree instead of a dedicated "site" source folder, so this is the only configuration file the site
+# needs
+site_name: "[[ product_name ]] Documentation"
+site_description: "[[ product_description ]]"
+repo_url: "[[ repository_url ]]"
+docs_dir: docs
+
+# Builds the site into "build/documentation-website/" instead of the default "site/", so the built website sits alongside the .NET projects'
+# redirected build output under "build/"
+site_dir: build/documentation-website
+
+# The build scripts live inside "docs_dir" itself, in "build/", so the whole directory is excluded here; otherwise ProperDocs would copy the scripts
+# into the built site as static assets, the same as it would any other file under "docs_dir", and with them the "__pycache__" directory that Python
+# writes next to them as soon as the hooks are loaded
+exclude_docs: |
+  build/
+
+# Plain MkDocs "hooks" modules (not plugins, since neither needs an entry point, just an event function): "rewrite-repo-links.py" runs
+# "on_page_markdown" to rewrite links pointing outside "docs_dir" into absolute URLs at "repo_url", and "inject-api-reference-link.py" runs
+# "on_page_markdown" to append the "API Reference" entry to the overview page's list, since "docs/api" does not exist to link to until
+# "generate-api-docs.py" has run
+hooks:
+  - docs/build/rewrite-repo-links.py
+  - docs/build/inject-api-reference-link.py
+
+theme:
+  name: material
+
+  # Two palettes, each tied to a "prefers-color-scheme" media query, so the site opens in whichever scheme matches the visitor's operating system
+  # setting instead of always defaulting to light; the "toggle" on each lets a visitor override that for the rest of the session
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+  # Without this, Python-Markdown only recognizes a nested list item as nested when it is indented by a fixed 4 spaces, regardless of the width of the
+  # parent marker, so a 3-character ordered marker like "1. " followed by only 3 spaces of indent (the natural, minimal alignment) renders as a second
+  # top-level list instead of nesting; "nested_indent: 3" makes indentation relative to the parent marker's width instead, so the numbered indexes in
+  # the various "README.md" files nest correctly without reformatting any Markdown file
+  - mdx_truly_sane_lists:
+      nested_indent: 3
+
+plugins:
+  - search
+
+  # Generates the "api" section at build time from the C# XML documentation comments; nothing it produces is ever written to "docs/api" on disk
+  - gen-files:
+      scripts:
+        - docs/build/generate-api-docs.py
+
+  # Lets the "api" section's nav entry below (the "api/" line) point at a directory instead of a file; "generate-api-docs.py" writes that directory's
+  # "SUMMARY.md" itself, so the "api" section's nav is generated exactly like its pages are, without a ".pages" file anywhere; "nav_file" is left at
+  # its default, "SUMMARY.md", rather than renamed to "README.md" to match every other section's overview-page name: the option is global rather than
+  # per-directory, and it would make the plugin try to parse the hand-written "docs/README.md" as a literate nav list instead of using "nav" below
+  - literate-nav
+
+# The one hand-maintained navigation list for the site, instead of a ".pages" file per directory; adding, removing, or reordering an article means
+# editing this list, except the "api" entry, whose own nav comes from the generated "api/SUMMARY.md"
+nav:
+  - Overview: README.md
+  - User Manual:
+      - Overview: user-manual/README.md
+      - Getting Started: user-manual/getting-started.md
+  - Developer Manual:
+      - Overview: developer-manual/README.md
+      - Architecture: developer-manual/architecture.md
+      - Tooling:
+          - Overview: developer-manual/tooling/README.md
+          - Developer Setup: developer-manual/tooling/developer-setup.md
+          - Code Formatting (dprint): developer-manual/tooling/formatting-dprint.md
+          - Markdown Linting (MarkdownLint): developer-manual/tooling/linting-markdownlint.md
+          - Spell Checking (CSpell): developer-manual/tooling/spell-checking-cspell.md
+          - Static Code Analysis: developer-manual/tooling/static-code-analysis.md
+          - Testing and Code Coverage: developer-manual/tooling/testing-and-code-coverage.md
+          - Documentation Website: developer-manual/tooling/documentation-website.md
+      - Conventions:
+          - Overview: developer-manual/conventions/README.md
+          - C# Style: developer-manual/conventions/csharp-style.md
+          - Comments and Documentation Comments: developer-manual/conventions/comments-and-documentation.md
+          - Markdown Style: developer-manual/conventions/markdown-style.md
+          - Line Length: developer-manual/conventions/line-length.md
+          - File and Naming Conventions: developer-manual/conventions/file-and-naming-conventions.md
+          - Commit Messages: developer-manual/conventions/commit-messages.md
+          - Git Workflow: developer-manual/conventions/git-workflow.md
+          - Git Blame: developer-manual/conventions/git-blame.md
+          - Versioning: developer-manual/conventions/versioning.md
+          - Dependency Management: developer-manual/conventions/dependency-management.md
+          - Testing: developer-manual/conventions/testing.md
+      - Contributing: developer-manual/contribution-guide.md
+  - API Reference: api/

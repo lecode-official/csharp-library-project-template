@@ -20,7 +20,7 @@ The package targets `[[ target_framework ]]`.
 
 ## The First Call
 
-Replace this section with a walkthrough of the library's real entry point. The shape to aim for is a task-ordered narrative — what a consumer does first, then next — with a short fenced `csharp` block per step, rather than a reference listing of every type. The XML documentation comments, which a consumer sees in the editor, already cover the exhaustive surface, so this manual's job is to show the path through it.
+Replace this section with a walkthrough of the library's real entry point. The shape to aim for is a task-ordered narrative — what a consumer does first, then next — with a short fenced `csharp` block per step, rather than a reference listing of every type. The API reference, which the documentation website generates from the XML documentation comments every time it is built and links from its [overview page](../README.md), already covers the exhaustive surface, so this manual's job is to show the path through it. The reference only exists on the website, never in the repository itself.
 
 The type a freshly generated project ships with is a placeholder that exists so the build, the tests and this documentation all run end to end:
 
