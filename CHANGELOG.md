@@ -11,3 +11,4 @@ All notable changes to the C# library project template are documented here, newe
 - Added the Copier template: the core questions with their validators, and the split between the template repository and the template body in `template/`.
 - Added the `license` question, with ten vendored license texts and the script that refreshes them.
 - Added the documentation of the generated project: its read me, `AGENTS.md`, community files, changelog, and the developer and user manuals.
+- Added the C# solution of the generated project: the library, the sample app, and the pinned .NET SDK.

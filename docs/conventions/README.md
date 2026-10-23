@@ -2,15 +2,16 @@
 
 This section covers the conventions for authoring the template: how the files in this repository are written, styled, named, committed, and released.
 
-1. [Comments and Documentation](comments-and-documentation.md)
-2. [Markdown Style](markdown-style.md)
-3. [Line Length](line-length.md)
-4. [File and Naming Conventions](file-and-naming-conventions.md)
-5. [Commit Messages](commit-messages.md)
-6. [Git Workflow](git-workflow.md)
-7. [Versioning](versioning.md)
-8. [Dependency Management](dependency-management.md)
-9. [Testing](testing.md)
+1. [C# Style](csharp-style.md)
+2. [Comments and Documentation](comments-and-documentation.md)
+3. [Markdown Style](markdown-style.md)
+4. [Line Length](line-length.md)
+5. [File and Naming Conventions](file-and-naming-conventions.md)
+6. [Commit Messages](commit-messages.md)
+7. [Git Workflow](git-workflow.md)
+8. [Versioning](versioning.md)
+9. [Dependency Management](dependency-management.md)
+10. [Testing](testing.md)
 
 ## Two Sets of Files, One Set of Rules
 

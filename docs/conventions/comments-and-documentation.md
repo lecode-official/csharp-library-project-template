@@ -63,4 +63,5 @@ Whatever the kind, a comment explains a non-obvious *why*: a hidden constraint, 
 
 - [Markdown style](markdown-style.md) — the rules for the articles themselves.
 - [Line length](line-length.md) — how far a comment is filled.
+- [C# style](csharp-style.md) — the code these comments document.
 - [Comments and documentation comments](../../template/docs/developer-manual/conventions/comments-and-documentation.md) — the generated project's full rule set.

@@ -30,3 +30,4 @@ Each tool also has its own script, `lint:dprint`, `lint:markdownlint` and `lint:
 
 - [Conventions](../conventions/README.md) — what the tools and the reviewers enforce.
 - [Testing](../conventions/testing.md) — rendering a change.
+- [Tooling](../../template/docs/developer-manual/tooling/README.md) — the generated project's tooling, which the body configures.
