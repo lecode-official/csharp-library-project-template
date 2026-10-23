@@ -77,7 +77,7 @@ The default is rendered from `target_framework`, as `[% if target_framework == '
 
 1. Raise the version in the default, if the new SDK is the newest patch of the newest serviced band.
 2. Update the bands and the versions named in the `help` text, and drop a band that stopped receiving patches.
-3. Render a project with the new version (see [testing](../conventions/testing.md)).
+3. Render a project with the new version (see [testing](../conventions/testing.md)), and raise the SDK versions in the render matrix of [`.github/workflows/template.yml`](../../.github/workflows/template.yml) to match.
 
 ### `license`
 

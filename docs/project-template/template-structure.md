@@ -13,6 +13,7 @@ This article covers the two-level layout of this repository, and the problems it
 ├── docs/               these articles
 ├── licenses/           the vendored license texts
 ├── scripts/            maintenance scripts
+├── .github/            the template's own continuous integration and Dependabot
 ├── dprint.json         the template's own formatter configuration
 ├── .markdownlint.yml   the template's own Markdown linting
 ├── .cspell.json        the template's own spell checking

@@ -51,6 +51,7 @@ This repository is **not** itself a renderable project. It is split in two:
 ├── docs/               how the template works and how to change it
 ├── licenses/           the vendored license texts the LICENSE file pulls from
 ├── scripts/            maintenance scripts, run by hand
+├── .github/            the template repository's own continuous integration and Dependabot
 └── template/           ← the template body; only this is ever rendered
 ```
 
@@ -71,11 +72,15 @@ The [documentation index](docs/README.md) lists every article. It is split into 
 
 ## Requirements
 
-- **Copier 9.5.0 or newer**, the floor `copier.yml` declares with `_min_copier_version`.
+- **Copier 9.5.0 or newer**, the floor `copier.yml` declares with `_min_copier_version`. The template's continuous integration renders it with Copier 9.19.1.
 - **The .NET SDK** pinned by the generated project's `global.json`, to build what comes out.
 - **Node.js and Python**, for the generated project's linters and its documentation website respectively.
 
 Working on the template's own files needs only Node.js, for the formatter and the linters that check them. Verifying a change to the template body also needs Copier and everything a render needs, the .NET SDK and Python (see [developer setup](docs/tooling/developer-setup.md)).
+
+## Continuous Integration
+
+The [`Template`](.github/workflows/template.yml) workflow runs on every push and pull request. It lints this repository's own files, then renders the template body with several answer sets, which together cover every license, and runs each generated project's linters, tests and packaging, exactly as a consumer would on day one. [Testing](docs/conventions/testing.md#continuous-integration) covers what it checks, and why it does not replace rendering a change locally before pushing it.
 
 ## Use of AI
 

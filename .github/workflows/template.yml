@@ -1,0 +1,192 @@
+# The continuous integration of the template repository itself (see docs/conventions/testing.md); it lints the repository's own files, and then
+# renders the template body with several answer sets and runs every generated project's own linters, build, tests, and packaging, exactly as a
+# consumer would on day one; this workflow is not part of the template body, which brings its own workflows in "template/.github/workflows/"
+name: Template
+
+# Runs on every push to any branch, and on every pull request, so that a pull request from a fork is checked as well (see the condition on each job,
+# which keeps a pull request from a branch of this repository from being checked twice)
+on:
+  push:
+  pull_request:
+
+# Grants the workflow's token nothing but read access to the repository contents; neither linting nor rendering needs anything else
+permissions:
+  contents: read
+
+# Cancels a run that is still in progress when a newer commit is pushed to the same branch or pull request, since only the result for the newest
+# commit matters
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Every action is pinned to the full commit SHA of a release, with the version in a comment, because a tag can be moved to point at different code,
+# while a commit SHA cannot; Dependabot keeps the pins up to date (see .github/dependabot.yml)
+jobs:
+  # Lints the template repository's own files with the root configuration, and checks that no "if false" block crept back into the body (see
+  # AGENTS.md)
+  lint:
+    name: Lint Template Repository
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # The root has no ".nvmrc" of its own; the root and the body run the same tool versions (see docs/conventions/dependency-management.md), so the
+      # body's Node.js version is the root's as well
+      - name: Set Up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: template/.nvmrc
+
+      - name: Install Linters
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check for Conditional Blocks in the Body
+        if: ${{ !cancelled() }}
+        run: |
+          if grep -rn 'if false' template/; then
+            echo "::error::The template body contains an \"if false\" block (see docs/project-template/template-structure.md)"
+            exit 1
+          fi
+
+  # Renders the template body once per answer set and verifies the generated project; between them, the answer sets cover every license, both
+  # serviced SDK bands, and a product name with spaces and a dot, which is the answer most likely to break a file name or a quoted command
+  render:
+    name: Render (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+    timeout-minutes: 30
+
+    strategy:
+      # Every answer set runs to the end, even when another one fails, so that a single run shows every answer set a change breaks
+      fail-fast: false
+      matrix:
+        include:
+          # The default answers, which is also the one answer set that builds the documentation website
+          - name: Default Answers
+            product_name: Render Test
+            root_namespace: RenderTest
+            license: LGPL-3.0-or-later
+            dotnet_sdk_version: 10.0.402
+            build_documentation: true
+          - name: Spaces and Dots
+            product_name: Render.Test Library
+            root_namespace: RenderTest.Library
+            license: MIT
+            dotnet_sdk_version: 10.0.113
+          - name: Apache-2.0
+            license: Apache-2.0
+          - name: BSD-2-Clause
+            license: BSD-2-Clause
+          - name: BSD-3-Clause
+            license: BSD-3-Clause
+          - name: MPL-2.0
+            license: MPL-2.0
+          - name: LGPL-3.0-only
+            license: LGPL-3.0-only
+          - name: GPL-3.0-or-later
+            license: GPL-3.0-or-later
+          - name: GPL-3.0-only
+            license: GPL-3.0-only
+          - name: UNLICENSED
+            license: UNLICENSED
+
+    # The generated project is rendered into a directory of its own, next to the checkout, so that its tools never pick up the template repository's
+    # configuration files
+    env:
+      PRODUCT_NAME: ${{ matrix.product_name || 'Render Test' }}
+      ROOT_NAMESPACE: ${{ matrix.root_namespace || 'RenderTest' }}
+      DOTNET_SDK_VERSION: ${{ matrix.dotnet_sdk_version || '10.0.402' }}
+      RENDER_DIRECTORY: ${{ github.workspace }}/../render
+
+    steps:
+      # The full history is fetched, because Copier reads the template from the Git repository, and "--vcs-ref HEAD" refers to the checked-out commit
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Set Up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13.17"
+
+      # Copier is pinned to an exact version, like every other dependency (see docs/conventions/dependency-management.md)
+      - name: Install Copier
+        run: python -m pip install copier==9.19.1
+
+      # Renders the template without "--trust"; if Copier ever demands it, an unsafe feature has crept into the template, and the render fails here,
+      # which is exactly what should happen (see AGENTS.md)
+      - name: Render Template
+        run: >
+          copier copy --defaults --vcs-ref HEAD
+          --data product_name="$PRODUCT_NAME"
+          --data root_namespace="$ROOT_NAMESPACE"
+          --data product_description="A project rendered by the continuous integration of the template."
+          --data author="Continuous Integration"
+          --data repository_url=https://github.com/lecode-official/render-test
+          --data maintainer_url=https://github.com/lecode-official
+          --data license="${{ matrix.license }}"
+          --data dotnet_sdk_version="$DOTNET_SDK_VERSION"
+          . "$RENDER_DIRECTORY"
+
+      # The two placeholder checks from docs/project-template/authoring.md: no placeholder survived, and none was rendered as a Python list
+      - name: Check for Surviving Placeholders
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: |
+          status=0
+          if grep -rn '\[\[' .; then
+            echo "::error::A placeholder survived the render"
+            status=1
+          fi
+          if grep -rnE "\['[^']*'\]\(" .; then
+            echo "::error::A link label was rendered as a Python list (see docs/conventions/markdown-style.md)"
+            status=1
+          fi
+          exit $status
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: ${{ env.RENDER_DIRECTORY }}/.nvmrc
+
+      - name: Set Up .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: ${{ env.RENDER_DIRECTORY }}/global.json
+
+      # A freshly generated project has no "package-lock.json" yet, so it is installed with "npm install", which is what a consumer does first, too
+      - name: Lint Generated Project
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: |
+          npm install
+          npm run lint
+
+      # The Release configuration is what the generated project's own continuous integration builds, and the only configuration in which an analyzer
+      # warning fails the build
+      - name: Test Generated Project
+        if: ${{ !cancelled() }}
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: dotnet test --solution "source/$PRODUCT_NAME.slnx" --configuration Release
+
+      # Packs every packable project of the solution, which is only the library, and runs its package validation
+      - name: Pack Generated Project
+        if: ${{ !cancelled() }}
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: dotnet pack "source/$PRODUCT_NAME.slnx" --configuration Release
+
+      # Builds the documentation website in strict mode, exactly as the generated project's own "Docs" workflow does, so that a broken link or a
+      # missing hook script fails here
+      - name: Build Documentation Website
+        if: ${{ !cancelled() && matrix.build_documentation }}
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: |
+          dotnet tool restore
+          python -m pip install --requirement requirements.txt
+          properdocs build --strict

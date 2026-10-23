@@ -18,7 +18,7 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 - **Never add an `[% if false %]` block.** It is the workaround this layout exists to remove — documentation about the template belongs at the root, not hidden inside the body. `grep -rn "if false" template/` returning nothing is a check worth keeping.
 - **Never introduce an unsafe feature.** `_tasks`, `_migrations` and `_jinja_extensions` all force every consumer to render with `--trust`. The license handling deliberately uses a Jinja `include` instead, precisely to avoid that ([docs/project-template/licensing.md](docs/project-template/licensing.md)). If `copier copy` starts demanding `--trust`, something regressed.
 - **Follow the conventions of the side you are on.** Root files follow [docs/conventions/](docs/conventions/README.md). Body files follow the generated project's own [conventions](template/docs/developer-manual/conventions/README.md) to the letter, plus what [docs/conventions/](docs/conventions/README.md) adds about writing them as templates.
-- **Verify by rendering, not only by linting.** No linter in this repository checks the body, and no hook fires when you edit it. A file can be valid as a template and broken once rendered ([docs/conventions/testing.md](docs/conventions/testing.md)).
+- **Verify by rendering, not only by linting.** No linter in this repository checks the body, and no hook fires when you edit it. The `Template` workflow renders it, but only after a push, so render locally first. A file can be valid as a template and broken once rendered ([docs/conventions/testing.md](docs/conventions/testing.md)).
 - **Run `npm run lint` before finishing.** It checks this repository's own files, not the body's.
 - **Never run a Git command that changes state or history unless asked for that exact thing** — `git commit`, `git push`, `git rebase`, `git reset`, `git tag`, and `git add`/`git restore --staged`/`git mv`/`git rm` alike. Edit the files and stop. Each instruction authorizes only itself, and the staging area is the user's review record ([docs/conventions/git-workflow.md](docs/conventions/git-workflow.md)).
 - **Write commit messages by the rules** in [docs/conventions/commit-messages.md](docs/conventions/commit-messages.md), including what any AI involvement actually did and a co-author trailer that names the exact model and version, not just the product.
@@ -30,7 +30,8 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 - **Anything touching `LICENSE` or `licenses/`** → [docs/project-template/licensing.md](docs/project-template/licensing.md). Check its table before substituting anything into a license text.
 - **Adding a file to the body, or verifying a change** → [docs/project-template/authoring.md](docs/project-template/authoring.md) and [docs/conventions/testing.md](docs/conventions/testing.md).
 - **What a consumer does with the template, or `_skip_if_exists`** → [docs/project-template/rendering-and-updating.md](docs/project-template/rendering-and-updating.md).
-- **Dependabot in the body** → [docs/conventions/dependency-management.md](docs/conventions/dependency-management.md).
+- **The template's own continuous integration, `.github/workflows/template.yml`** → [docs/conventions/testing.md](docs/conventions/testing.md#continuous-integration).
+- **Dependabot, at the root or in the body, or the Copier version the workflow pins** → [docs/conventions/dependency-management.md](docs/conventions/dependency-management.md).
 - **C# in the body, and placeholders in code** → [docs/conventions/csharp-style.md](docs/conventions/csharp-style.md).
 - **Comments, documentation comments, docstrings, or deciding where an explanation belongs** → [docs/conventions/comments-and-documentation.md](docs/conventions/comments-and-documentation.md).
 - **Markdown, including placeholders in body Markdown and tables** → [docs/conventions/markdown-style.md](docs/conventions/markdown-style.md).
@@ -49,9 +50,10 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 
 **This is important.** A change here is not done until the documentation reflects it:
 
-- A new or changed question, default, or validator updates the tables in [docs/project-template/questions.md](docs/project-template/questions.md), including its validation rule. A new SDK release raises the `dotnet_sdk_version` default and the bands in its help.
+- A new or changed question, default, or validator updates the tables in [docs/project-template/questions.md](docs/project-template/questions.md), including its validation rule. A new SDK release raises the `dotnet_sdk_version` default and the bands in its help, and the SDK versions in the render matrix of `.github/workflows/template.yml`.
 - A new or changed `_skip_if_exists` entry updates the list in [docs/project-template/rendering-and-updating.md](docs/project-template/rendering-and-updating.md#files-the-template-only-creates).
-- A new license updates the table in [docs/project-template/licensing.md](docs/project-template/licensing.md) **and** `scripts/refresh-licenses.py`.
+- A change to `.github/workflows/template.yml` or a Dependabot configuration updates [docs/conventions/testing.md](docs/conventions/testing.md) or [docs/conventions/dependency-management.md](docs/conventions/dependency-management.md).
+- A new license updates the table in [docs/project-template/licensing.md](docs/project-template/licensing.md) **and** `scripts/refresh-licenses.py`, and gets an entry in the render matrix of `.github/workflows/template.yml`.
 - A new article under `template/docs/` is listed in three places, all hand-maintained: the generated project's documentation index, its section index, and the `nav` in `template/properdocs.yml`.
 - A new article at the root goes into the section directory under `docs/` it belongs to, and is listed in [docs/README.md](docs/README.md) and in that section's `README.md`. A new section, and a new article in the project template section, is also listed in [README.md](README.md).
 - A changed convention of the generated project updates the matching article under [docs/conventions/](docs/conventions/README.md) too, so that the two rule sets stay the same wherever they can.
