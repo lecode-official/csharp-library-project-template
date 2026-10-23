@@ -12,3 +12,4 @@ All notable changes to the C# library project template are documented here, newe
 - Added the `license` question, with ten vendored license texts and the script that refreshes them.
 - Added the documentation of the generated project: its read me, `AGENTS.md`, community files, changelog, and the developer and user manuals.
 - Added the C# solution of the generated project: the library, the sample app, and the pinned .NET SDK.
+- Added the NuGet packaging of the library: package metadata, inherited documentation comments, package validation, and a symbol package.

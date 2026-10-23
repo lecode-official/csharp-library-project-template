@@ -18,7 +18,7 @@ The root needs very little, and all of it is pinned:
 
 ## The Body's Dependencies
 
-Everything the body pins becomes a pin in every generated project, so the body pins every dependency to an exact version.
+Everything the body pins becomes a pin in every generated project, so the body pins every dependency to an exact version: the package versions in its project files.
 
 Two pins are not constants at all:
 

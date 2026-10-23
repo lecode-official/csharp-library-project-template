@@ -11,6 +11,16 @@ The repository is organized into a few top-level directories:
 
 The solution, [`source/[[ product_name ]].slnx`](source/), groups two projects: the library, and a runnable sample app that references it.
 
+## Installation
+
+[[ product_name ]] is published on NuGet as `[[ package_id ]]`:
+
+```shell
+dotnet add package [[ package_id ]]
+```
+
+See the [User Manual](docs/user-manual/README.md) for how to use it.
+
 ## Development
 
 ### Developer Setup
@@ -31,7 +41,7 @@ See [developer setup](docs/developer-manual/tooling/developer-setup.md) for the 
 dotnet build "source/[[ product_name ]].slnx"
 ```
 
-Build output does not land next to the source: `source/Directory.Build.props` redirects every project's `bin` and `obj` into `build/<project folder name>/` instead. See [architecture](docs/developer-manual/architecture.md).
+The build settings every project shares live in the root `Directory.Build.props`. Build output does not land next to the source: two more `Directory.Build.props` files redirect every project's `bin` and `obj` into `build/<project folder name>/` instead. See [architecture](docs/developer-manual/architecture.md).
 
 ### Running
 
@@ -69,4 +79,4 @@ To report a security vulnerability, please do not open a public issue — see [`
 
 ## License
 
-[[ product_name ]] is licensed under `[[ license ]]`. The full text is in [`LICENSE`](LICENSE). **This is no legal advice and you should read the [license file](LICENSE) for more information.**
+[[ product_name ]] is licensed under `[[ license ]]`. The full text is in [`LICENSE`](LICENSE), and the library's project file declares the same identifier as its `PackageLicenseExpression`, which is what NuGet publishes. **This is no legal advice and you should read the [license file](LICENSE) for more information.**

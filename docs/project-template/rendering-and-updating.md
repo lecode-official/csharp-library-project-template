@@ -70,7 +70,7 @@ Some files every project keeps, but fills with its own content. The template onl
 
 - `README.md`, `CHANGELOG.md` and `CONTRIBUTORS.md` at the root of the project.
 - `docs/user-manual/getting-started.md`.
-- The sample app's `README.md`, `source/sample-app/README.md`.
+- The `README.md` of each project directory under `source/`, the library's and the sample app's.
 - `source/sample-app/Program.cs`.
 
 Copier creates a listed file when the project is generated, and never touches it again in an update. A template change to one of them can neither conflict with the project's own content nor bring back a placeholder the project has long replaced.

@@ -12,4 +12,5 @@ This manual is for people working on the [[ product_name ]] codebase itself: whe
    4. [File and Naming Conventions](conventions/file-and-naming-conventions.md)
    5. [Commit Messages](conventions/commit-messages.md)
    6. [Git Workflow](conventions/git-workflow.md)
+   7. [Versioning](conventions/versioning.md)
 4. [Contributing](contribution-guide.md)

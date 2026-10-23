@@ -1,6 +1,22 @@
 # Getting Started
 
-This article covers using [[ product_name ]] for the first time.
+This article covers installing [[ product_name ]] and using it for the first time.
+
+## Installing the Package
+
+Add the package to a project with the .NET CLI:
+
+```shell
+dotnet add package [[ package_id ]]
+```
+
+Or reference it directly in the project file, pinned to an exact version as [[ product_name ]]'s own dependencies are:
+
+```xml
+<PackageReference Include="[[ package_id ]]" Version="0.1.0" />
+```
+
+The package targets `[[ target_framework ]]`.
 
 ## The First Call
 

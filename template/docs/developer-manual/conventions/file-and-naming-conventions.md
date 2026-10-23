@@ -33,6 +33,7 @@ So a project file's base name deliberately does **not** match its directory name
 
 - The **root namespace** is PascalCase with no spaces and no dots beyond the ones it deliberately nests with: `[[ root_namespace ]]` for the library, `[[ root_namespace ]].SampleApp` for the sample app.
 - The **assembly name** is the project file's base name, so it keeps the spaces: `[[ product_name ]] Sample App`.
+- The **package id** is PascalCase with no spaces: `[[ package_id ]]`. NuGet ids cannot contain spaces.
 
 ## One Type per File
 

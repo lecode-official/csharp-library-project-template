@@ -20,6 +20,7 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 - **Wrap code in backticks** in prose everywhere — the docs, this file, and commit messages. XML documentation comments are the one exception: they are XML, not Markdown, so use `<see cref="..."/>` for identifiers and `<c>` for code instead.
 - **Prose uses periods, not semicolons.** In prose — the docs, XML documentation comments, this file — end each sentence with a period rather than joining two with a semicolon. Plain `//` comments do the reverse: sentences are separated by semicolons and the last one takes no terminal punctuation.
 - **Files and directories are kebab-case**, except well-known and tool-mandated names. Inside a C# project's own source tree they switch to PascalCase, one type per file. The project and solution files are named after the product, spaces included ([docs/developer-manual/conventions/file-and-naming-conventions.md](docs/developer-manual/conventions/file-and-naming-conventions.md)).
+- **Raise the version before opening a pull request**, in the library's `<Version>` property, and add the release to `CHANGELOG.md` ([docs/developer-manual/conventions/versioning.md](docs/developer-manual/conventions/versioning.md)).
 - **Write commit messages by the rules** ([docs/developer-manual/conventions/commit-messages.md](docs/developer-manual/conventions/commit-messages.md)) — the 50/72 rule, a title-cased, past-tense subject, and a prose body. State whether AI was involved and, if it was, what exactly the AI did. When you did any of the work, add a co-author trailer with your tool's no-reply address that names the exact model and version you are, not just the product, for example:
 
   ```text
@@ -37,6 +38,7 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 - **Markdown and documentation style** → [docs/developer-manual/conventions/markdown-style.md](docs/developer-manual/conventions/markdown-style.md).
 - **Naming a new file or directory** → [docs/developer-manual/conventions/file-and-naming-conventions.md](docs/developer-manual/conventions/file-and-naming-conventions.md).
 - **Writing commit messages** → [docs/developer-manual/conventions/commit-messages.md](docs/developer-manual/conventions/commit-messages.md).
+- **Releasing, or raising the version** → [docs/developer-manual/conventions/versioning.md](docs/developer-manual/conventions/versioning.md).
 - **Committing, pushing, rebasing, or anything else touching Git** → [docs/developer-manual/conventions/git-workflow.md](docs/developer-manual/conventions/git-workflow.md).
 - **Opening an issue, submitting a pull request, the AI-contribution policy** → [CONTRIBUTING.md](CONTRIBUTING.md).
 - **How consumers use the library** → [docs/user-manual/](docs/user-manual/README.md), starting with [getting started](docs/user-manual/getting-started.md).
