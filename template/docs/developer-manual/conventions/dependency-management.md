@@ -16,6 +16,8 @@ not `Version="2.*"` or `Version="[2.0.2,)"`. A project file references the packa
 - `dprint`, `cspell`, its `@cspell/dict-*` dictionary packages, `markdownlint-cli2`, and `npm-run-all2` are pinned exactly in [`package.json`](../../../package.json).
 - [`global.json`](../../../global.json) pins the exact .NET SDK version.
 
+The analyzer packages are no exception (see [static code analysis](../tooling/static-code-analysis.md)). Because a new analyzer version usually brings new rules, and a Release build fails on every new finding, upgrading one is a change of its own that fixes or configures whatever the new version reports.
+
 An upgrade is always a deliberate, visible change to a version string, never something that happens silently on the next restore.
 
 ## The Pinned SDK
@@ -42,7 +44,7 @@ With them in place, a restore fails loudly if the resolved graph would differ fr
 
 ## Vulnerability Audit
 
-Every restore audits the dependencies for known vulnerabilities, and [`Directory.Build.props`](../../../Directory.Build.props) sets `NuGetAuditMode` to `all`, so the transitive dependencies are audited as well, not only the direct ones. A vulnerable package is reported as a warning on every restore. Upgrade the package, or the direct dependency that pulls it in, rather than suppressing the warning.
+Every restore audits the dependencies for known vulnerabilities, and [`Directory.Build.props`](../../../Directory.Build.props) sets `NuGetAuditMode` to `all`, so the transitive dependencies are audited as well, not only the direct ones. A vulnerable package is a warning, which a Release build turns into an error. Upgrade the package, or the direct dependency that pulls it in, rather than suppressing the warning.
 
 ## Local .NET Tools
 

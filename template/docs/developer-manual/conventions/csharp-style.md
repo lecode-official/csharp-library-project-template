@@ -80,15 +80,40 @@ And the C#-specific ones:
 - **Interface members declare their access modifier explicitly** (`public string Name { get; }`), even where it is `public`, the default for an interface member, matching the explicit style used elsewhere in this codebase (`this.`, `sealed`). A member with a default implementation may also be `protected` or `private` (see [file layout](#file-layout)).
 - **Private fields are `camelCase`** with no leading underscore and no `_` prefix.
 
+## Idioms the Analyzers Enforce
+
+A few smaller idioms are checked by the analyzers configured in [`.globalconfig`](../../../.globalconfig) (see [static code analysis](../tooling/static-code-analysis.md)):
+
+- **Every `await` in the library uses `ConfigureAwait(false)`** (`RCS1090`), because a library does not know the synchronization context of the code that calls it. The sample app and the test project turn the rule around in their own `.globalconfig`, so there a `ConfigureAwait` call is reported instead: an application owns its synchronization context, and xUnit reports `ConfigureAwait(false)` in a test method itself (`xUnit1030`).
+- **Null checks use pattern matching**, `value is null` and `value is not null`, never `==` or `!=` (`RCS1248`).
+- **An empty string is written as `string.Empty`**, never `""` (`RCS1078`).
+- **Argument lists, array initializers, and collection initializers have no trailing comma** (`RCS1260`).
+- **Arguments are validated with throw helpers** such as `ArgumentNullException.ThrowIfNull` and its siblings, not with an `if` statement that throws (`RCS1255`).
+- **Primary constructors are not used**, because their parameters cannot carry XML documentation comments of their own. The code-style option behind `IDE0290` is turned off, so the analyzers never suggest one.
+
 ## Nullability and Implicit Usings
 
 Every project enables `<Nullable>enable</Nullable>` and `<ImplicitUsings>enable</ImplicitUsings>` (see [architecture](../architecture.md)). Write code that is genuinely null-safe rather than silencing the analyzer with `!`. A nullable parameter or return type should mean that `null` is a real, handled case.
+
+Where the null-forgiving operator `!` is genuinely needed, because the compiler cannot see a guarantee that the code relies on, it carries a justification comment: a plain comment that starts with `// !`, followed by a space, and says why the value cannot be `null`. It goes on the line above the statement, or, for a declaration, between the documentation comment and the declaration — above the documentation comment, StyleCop reports it (`SA1514`). A `!` without one fails the build (see [static code analysis](../tooling/static-code-analysis.md)).
+
+```csharp
+/// <summary>
+/// Gets the name of the greeter.
+/// </summary>
+// ! Every caller sets the name through the object initializer, which the required modifier cannot express here
+public string Name { get; init; } = null!;
+```
 
 ## Formatting
 
 C# **is** formatted by [dprint](../tooling/formatting-dprint.md), through the Roslyn plugin configured in [`dprint.json`](../../../dprint.json). The plugin drives whitespace, newlines, and indentation only — it has no equivalent of the `csharp_style_*` or `dotnet_*` analyzer preferences. `.csproj` and `.slnx` files are formatted too, as XML, through an explicit association in the same configuration.
 
 Indentation and basic whitespace also come from [`.editorconfig`](../../../.editorconfig) (4 spaces and no tabs, in `.csproj` and `.slnx` files too, LF line endings, and the 150-character maximum line length), which most editors, including Visual Studio Code, apply automatically.
+
+## Enforcement
+
+Most of the rules on this page are checked on every build by the analyzers configured in [`.globalconfig`](../../../.globalconfig): explicit types, explicit access modifiers, `this.` qualification, file-scoped namespaces, expression bodies, braces, one type per file, the documentation comments, and many more (see [static code analysis](../tooling/static-code-analysis.md)). A Release build fails on any finding. The member order is checked in part: constructors before fields, constants before other fields, static before instance members, and private before internal before protected before public. What no analyzer can check — the order of properties and methods, the names of the `#region` blocks, sealing by default, the wording of a summary — remains a review-time convention.
 
 ## Related
 
@@ -98,4 +123,5 @@ Indentation and basic whitespace also come from [`.editorconfig`](../../../.edit
 - [Line length](line-length.md) — the 150-character limit, which is also a lower limit for comments.
 - [Markdown style](markdown-style.md) — the punctuation rule for prose versus plain comments governs both.
 - [Formatting (dprint)](../tooling/formatting-dprint.md) — the formatter and its Roslyn plugin.
+- [Static code analysis](../tooling/static-code-analysis.md) — the analyzers that enforce most of these rules.
 - [Testing](testing.md) — how these rules apply to the test project.
