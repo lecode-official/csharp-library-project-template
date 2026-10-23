@@ -54,6 +54,9 @@ _exclude:
 # deletes has no place here: without an entry, an update leaves the deletion alone
 _skip_if_exists:
   - /README.md
+  - /CHANGELOG.md
+  - /CONTRIBUTORS.md
+  - /docs/user-manual/getting-started.md
 
 # Questions that Copier will ask upon project creation; the answers will be recorded in the ".copier-answers.yml" file; if the answers file already
 # exists, the questions will be answered automatically, which is helpful when an existing project is updated to the latest version of the template;
@@ -162,6 +165,21 @@ integration_branch:
     [% if not integration_branch | regex_search('^[A-Za-z0-9]([A-Za-z0-9._/-]*[A-Za-z0-9])?$') or '..' in integration_branch %]The integration branch
     must be a valid branch name made of letters, digits, dots, slashes, hyphens, and underscores.[% elif integration_branch == default_branch %]The
     integration branch must differ from the default branch.[% endif %]
+
+maintainer_name:
+  type: str
+  default: "[[ author ]]"
+  help: The person or team named in "SECURITY.md" and "CODE_OF_CONDUCT.md" as the contact for reports.
+  validator: >-
+    [% if not maintainer_name | trim %]The maintainer name must not be empty.[% elif maintainer_name | regex_search('["\\\\<>&\\[\\]]') %]The
+    maintainer name must not contain double quotes, backslashes, square brackets, or the characters "<", ">", and "&".[% endif %]
+
+maintainer_url:
+  type: str
+  help: A profile or contact URL for the maintainer, either an HTTP or HTTPS URL, or a "mailto:" link.
+  validator: >-
+    [% if not maintainer_url | regex_search('^(https?://|mailto:)[^\\s"<>()]+$') %]The maintainer URL must be an HTTP or HTTPS URL, or a "mailto:"
+    link, without spaces or parentheses.[% endif %]
 
 license:
   type: str

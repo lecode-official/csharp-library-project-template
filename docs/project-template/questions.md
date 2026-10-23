@@ -22,19 +22,21 @@ A validator runs on every answer Copier collects, including a default the person
 | `library_slug`        | `product_slug`              | The same pattern as `product_slug`, and not `sample-app`, which is the sample app's directory.                                                                                    | The library's directory under `source/`, which is also its build output directory under `build/`.                                                                |
 | `root_namespace`      | —                           | One or more PascalCase identifiers separated by dots, each starting with an uppercase letter and containing only letters and digits, such as `CliNetCore` or `LeCode.CliNetCore`. | `RootNamespace`, and the `namespace` in every `.cs` file. The sample app derives its own namespace from it.                                                      |
 
-The product name and the slug are deliberately separate, because the product name is a display name that ends up in file names with spaces, while the slug is a URL- and directory-safe identifier. See [file and naming conventions](../conventions/file-and-naming-conventions.md) for how the two are used in paths.
+The product name and the slug are deliberately separate, because the product name is a display name that ends up in file names with spaces, while the slug is a URL- and directory-safe identifier. See [file and naming conventions](../../template/docs/developer-manual/conventions/file-and-naming-conventions.md) in the generated project for how the two are used.
 
 The `product_slug` default lowercases the product name and turns every run of characters other than a lowercase letter or a digit into a single dash, then strips a leading or trailing dash. So `CLI.NET Core` becomes `cli-net-core`. An earlier default only replaced spaces, which turned the same name into `cli.net-core`, a slug the validator now rejects.
 
 ## Authorship
 
-| Question           | Default          | Validation                                                   | Feeds                                                                                       |
-| ------------------ | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
-| `author`           | —                | Not empty, and none of `"`, `\`, `[`, `]`, `<`, `>` and `&`. | The NuGet `Authors`, and the `author` of the root `package.json`.                           |
-| `copyright_holder` | `author`         | Not empty, and none of `"`, `\`, `<`, `>` and `&`.           | The `<Copyright>` property, and the license text for the licenses that take a substitution. |
-| `copyright_year`   | the current year | Exactly four digits.                                         | The same two places.                                                                        |
+| Question           | Default          | Validation                                                                                                 | Feeds                                                                                       |
+| ------------------ | ---------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `author`           | —                | Not empty, and none of `"`, `\`, `[`, `]`, `<`, `>` and `&`.                                               | The NuGet `Authors`, and the `author` of the root `package.json`.                           |
+| `copyright_holder` | `author`         | Not empty, and none of `"`, `\`, `<`, `>` and `&`.                                                         | The `<Copyright>` property, and the license text for the licenses that take a substitution. |
+| `copyright_year`   | the current year | Exactly four digits.                                                                                       | The same two places.                                                                        |
+| `maintainer_name`  | `author`         | Not empty, and none of `"`, `\`, `[`, `]`, `<`, `>` and `&`.                                               | `SECURITY.md`, `CODE_OF_CONDUCT.md` and `CONTRIBUTORS.md`, as the contact for reports.      |
+| `maintainer_url`   | —                | Starts with `http://`, `https://` or `mailto:`, and contains no whitespace, `"`, `<`, `>`, or parentheses. | The same three files.                                                                       |
 
-`author` may not contain square brackets, because an author's name is commonly written into a Markdown link, `[name](url)`.
+The maintainer's name and URL are written into a Markdown link, `[name](url)`, which is why the name may not contain square brackets and the URL may not contain parentheses. `author` follows the same rule as `maintainer_name`, because it is that question's default.
 
 The `copyright_year` default is rendered as `[[ '%Y' | strftime ]]`, so it is always the year the project is generated in, and never needs updating by hand. `strftime` is a filter of the `jinja2_ansible_filters` extension, which Copier always loads, so it costs no `--trust`. `copier update` reuses the recorded answer, so a project's copyright year never moves after it was generated.
 

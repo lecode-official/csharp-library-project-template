@@ -18,7 +18,7 @@ Files with a conventional or tool-mandated name keep that name:
 
 ## The Body Uses the Generated Project's Names
 
-A path under `template/` is the path the file will have in the generated project, so the body follows the generated project's file and naming conventions: kebab-case by default, PascalCase inside a C# project's own source tree, one type per file, and project and solution files named after the product.
+A path under `template/` is the path the file will have in the generated project, so the body follows the generated project's [file and naming conventions](../../template/docs/developer-manual/conventions/file-and-naming-conventions.md): kebab-case by default, PascalCase inside a C# project's own source tree, one type per file, and project and solution files named after the product.
 
 No file in the body carries a `.jinja` suffix. `_templates_suffix` is empty, so every file is a template under its real name (see [authoring](../project-template/authoring.md#no-jinja-extension)).
 
@@ -37,3 +37,4 @@ One file in the body has a name and place Copier depends on: [`template/.copier-
 
 - [Template structure](../project-template/template-structure.md) — what lives at the root and what lives in the body.
 - [Questions](../project-template/questions.md) — the slugs and names that end up in paths.
+- [File and naming conventions](../../template/docs/developer-manual/conventions/file-and-naming-conventions.md) — the generated project's full rule set.

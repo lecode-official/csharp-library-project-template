@@ -17,7 +17,7 @@ This section covers the conventions for authoring the template: how the files in
 The [split](../project-template/template-structure.md) between the root and `template/` means every file here belongs to one of two projects:
 
 - **A file at the root** belongs to the template itself. It follows the articles in this section.
-- **A file under `template/`** becomes a file of the generated project. Once rendered, it *is* that project's code, so it follows the generated project's own conventions, to the letter. The articles in this section add only what is different about writing such a file as a template: where placeholders may go, what changes once they are substituted, and how to check the result.
+- **A file under `template/`** becomes a file of the generated project. Once rendered, it *is* that project's code, so it follows the generated project's own [conventions](../../template/docs/developer-manual/conventions/README.md), to the letter. The articles in this section add only what is different about writing such a file as a template: where placeholders may go, what changes once they are substituted, and how to check the result.
 
 The two rule sets are deliberately the same wherever they can be, so that moving between the root and the body does not mean switching styles. Where a rule of the generated project changes, change its article in the body, every body file it affects, and the matching article here, in the same change.
 

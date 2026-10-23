@@ -17,7 +17,7 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 - **The delimiters are remapped**: `[[ expression ]]`, `[% block %]`, `[# comment #]`. Plain `{{ }}` is literal text in a template file, which is what lets the GitHub Actions workflows keep their `${{ … }}` expressions unescaped ([docs/project-template/authoring.md](docs/project-template/authoring.md)).
 - **Never add an `[% if false %]` block.** It is the workaround this layout exists to remove — documentation about the template belongs at the root, not hidden inside the body. `grep -rn "if false" template/` returning nothing is a check worth keeping.
 - **Never introduce an unsafe feature.** `_tasks`, `_migrations` and `_jinja_extensions` all force every consumer to render with `--trust`. The license handling deliberately uses a Jinja `include` instead, precisely to avoid that ([docs/project-template/licensing.md](docs/project-template/licensing.md)). If `copier copy` starts demanding `--trust`, something regressed.
-- **Follow the conventions of the side you are on.** Root files follow [docs/conventions/](docs/conventions/README.md). Body files follow the generated project's own conventions to the letter, plus what [docs/conventions/](docs/conventions/README.md) adds about writing them as templates.
+- **Follow the conventions of the side you are on.** Root files follow [docs/conventions/](docs/conventions/README.md). Body files follow the generated project's own [conventions](template/docs/developer-manual/conventions/README.md) to the letter, plus what [docs/conventions/](docs/conventions/README.md) adds about writing them as templates.
 - **Verify by rendering, not only by linting.** No linter in this repository checks the body, and no hook fires when you edit it. A file can be valid as a template and broken once rendered ([docs/conventions/testing.md](docs/conventions/testing.md)).
 - **Run `npm run lint` before finishing.** It checks this repository's own files, not the body's.
 - **Never run a Git command that changes state or history unless asked for that exact thing** — `git commit`, `git push`, `git rebase`, `git reset`, `git tag`, and `git add`/`git restore --staged`/`git mv`/`git rm` alike. Edit the files and stop. Each instruction authorizes only itself, and the staging area is the user's review record ([docs/conventions/git-workflow.md](docs/conventions/git-workflow.md)).
@@ -41,6 +41,7 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 - **Installing what working on the template needs** → [docs/tooling/developer-setup.md](docs/tooling/developer-setup.md).
 - **Formatting, linting, spell checking, or the editor setup** → [docs/tooling/](docs/tooling/README.md).
 - **The Claude Code hooks** → [docs/tooling/claude-code-hooks.md](docs/tooling/claude-code-hooks.md).
+- **The conventions the *generated* project follows** → [template/docs/developer-manual/](template/docs/developer-manual/README.md). Those are the rules for the code the template emits, and they are what a change to `template/` has to keep satisfying.
 
 ## Keep the Documentation up to Date
 

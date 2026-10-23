@@ -4,7 +4,7 @@ This article covers how commit and tag messages are written in this repository. 
 
 ## The Generated Project's Rules, Unchanged
 
-The template's history follows the same rules as a generated project's:
+The template's history follows the same rules as a generated project's, described in full in the generated project's [commit messages](../../template/docs/developer-manual/conventions/commit-messages.md) article:
 
 - **The 50/72 rule.** The subject is at most 50 characters, a blank line follows it, and every body line is wrapped at 72 characters.
 - **A title-cased subject without a terminal period**, preserving the real casing of identifiers and tool names.
@@ -42,7 +42,7 @@ The first is the address of GitHub Copilot, the second the form aider writes on 
 
 ## Tag Messages
 
-Every release of the template is an annotated tag, and its message follows these rules:
+Every release of the template is an annotated tag, and its message follows the generated project's [tag message](../../template/docs/developer-manual/conventions/commit-messages.md#tag-messages) rules:
 
 - The subject reads `Release vX.Y.Z (Month D, YYYY)`, as in `Release v0.1.0 (October 19, 2026)`.
 - The body is the release's list of changes from [`CHANGELOG.md`](../../CHANGELOG.md), one bullet per change, with no opening paragraph.
@@ -75,3 +75,4 @@ Co-Authored-By: Claude Opus 5.5 Medium <noreply@anthropic.com>
 - [Git workflow](git-workflow.md) — who runs the commit, and what an instruction to write a message authorizes.
 - [Versioning](versioning.md) — the changelog and the release tags.
 - [Markdown style](markdown-style.md) — the same title-case and punctuation rules.
+- [Commit messages](../../template/docs/developer-manual/conventions/commit-messages.md) — the generated project's full rule set.

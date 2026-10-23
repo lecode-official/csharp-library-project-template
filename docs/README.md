@@ -1,6 +1,6 @@
 # Template Documentation
 
-This is the documentation for the template itself: how it is laid out, what it asks, how to change it, and the conventions and tools that go with changing it. It is never copied into a generated project.
+This is the documentation for the template itself: how it is laid out, what it asks, how to change it, and the conventions and tools that go with changing it. It is never copied into a generated project. The documentation a generated project ships with lives under [`template/docs/`](../template/docs/README.md) instead.
 
 1. [Project Template](project-template/README.md) — the repository as a Copier template.
    1. [Template Structure](project-template/template-structure.md) — the two-level layout, and the four problems it solves.

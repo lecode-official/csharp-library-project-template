@@ -38,3 +38,4 @@ A tag is what makes a template change reach consumers, because `copier update` m
 
 - [Commit messages](commit-messages.md) — what a message says once you are asked to write one.
 - [Versioning](versioning.md) — the changelog and the tags.
+- [Git workflow](../../template/docs/developer-manual/conventions/git-workflow.md) — the same rules, as the generated project states them.
