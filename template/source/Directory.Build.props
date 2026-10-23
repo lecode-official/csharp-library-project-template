@@ -1,5 +1,11 @@
 <Project>
     <!--
+        Imports the repository-wide "Directory.Build.props" at the repository root first, which MSBuild would not import on its own, because it stops
+        at the first "Directory.Build.props" it finds
+    -->
+    <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+    <!--
         Applies to every project under "source/"; redirects "bin/" and "obj/" out of each project's own folder and into
         "../build/<project folder name>/" instead, keeping the source tree free of build output (see Architecture); "$(MSBuildThisFileDirectory)" is
         "source/" itself here, so "../build/" lands the output at the repository root's "build/"; "$([System.IO.Path]::GetFileName(...))" reads each

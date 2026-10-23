@@ -2,7 +2,7 @@
 
 This article covers every question the template asks, what each answer feeds, how each answer is validated, and how to add a question.
 
-Copier asks questions **in declaration order**, and a question may only reference the answers above it — which is why `dotnet_sdk_version` is declared after `target_framework`.
+Copier asks questions **in declaration order**, and a question may only reference the answers above it — which is why `dotnet_sdk_version` is declared after `target_framework`, and `package_id` after `root_namespace`.
 
 ## Types and Validation
 
@@ -21,6 +21,7 @@ A validator runs on every answer Copier collects, including a default the person
 | `product_description` | —                           | Not empty, and none of `"`, `\`, `<`, `>` and `&`.                                                                                                                                | The NuGet `Description`, the website's `site_description`, and the read me.                                                                                      |
 | `library_slug`        | `product_slug`              | The same pattern as `product_slug`, and not `sample-app`, which is the sample app's directory.                                                                                    | The library's directory under `source/`, which is also its build output directory under `build/`.                                                                |
 | `root_namespace`      | —                           | One or more PascalCase identifiers separated by dots, each starting with an uppercase letter and containing only letters and digits, such as `CliNetCore` or `LeCode.CliNetCore`. | `RootNamespace`, and the `namespace` in every `.cs` file. The sample app derives its own namespace from it.                                                      |
+| `package_id`          | `root_namespace`            | Letters, digits and underscores in groups separated by single dots or hyphens, and at most 100 characters, which are NuGet's own rules for a package identifier.                  | The NuGet `PackageId`.                                                                                                                                           |
 
 The product name and the slug are deliberately separate, because the product name is a display name that ends up in file names with spaces, while the slug is a URL- and directory-safe identifier. See [file and naming conventions](../../template/docs/developer-manual/conventions/file-and-naming-conventions.md) in the generated project for how the two are used.
 
@@ -56,7 +57,7 @@ The branch names are limited to the characters Git allows in a branch name that 
 | -------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
 | `target_framework`   | `net10.0`                | One of the `choices`, of which `net10.0` is the only one.                                                          | The `TargetFramework` of both projects, and the build output paths that contain it. |
 | `dotnet_sdk_version` | `10.0.402` for `net10.0` | A full release version of the form `X.Y.ZZZ`, starting with the target framework's version, `10.0.` for `net10.0`. | The SDK version pinned exactly in `global.json`.                                    |
-| `license`            | `LGPL-3.0-or-later`      | One of the `choices`.                                                                                              | The `LICENSE` file.                                                                 |
+| `license`            | `LGPL-3.0-or-later`      | One of the `choices`.                                                                                              | The `LICENSE` file, and the library's `PackageLicenseExpression`.                   |
 
 ### `target_framework`
 
@@ -80,7 +81,7 @@ The default is rendered from `target_framework`, as `[% if target_framework == '
 
 ### `license`
 
-An SPDX identifier, which selects the `LICENSE` file's content. See [licensing](licensing.md) — in particular for why only some of these take a copyright substitution.
+An SPDX identifier, which becomes both the `LICENSE` file's content and the library's `PackageLicenseExpression`. See [licensing](licensing.md) — in particular for why only some of these take a copyright substitution.
 
 ## Adding a Question
 

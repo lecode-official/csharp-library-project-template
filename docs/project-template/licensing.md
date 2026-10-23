@@ -64,11 +64,11 @@ The check is worth re-running by hand after any manual edit. It leaves out `[[` 
 grep -rn '\[%\|\[#\|%\]\|#\]' licenses/
 ```
 
-## The Identifiers
+## The NuGet Side
 
-The choices are SPDX identifiers, with one exception. Two things to know:
+The chosen identifier goes straight into the library's `<PackageLicenseExpression>`, which is what NuGet publishes. Two things to know:
 
-- **`UNLICENSED` is not an SPDX identifier.** It is a NuGet extension to the expression grammar, and it is the right answer for a library that is not published publicly.
+- **`UNLICENSED` is not an SPDX identifier.** It is a NuGet extension to the expression grammar, and it is the right answer for a library that is not published publicly: it packs successfully, but nuget.org rejects it.
 - **`GPL-3.0` and `LGPL-3.0` without a suffix are deprecated** SPDX identifiers, replaced by the `-only` and `-or-later` forms in SPDX 3.0. Only the current forms are offered, which is also why the SPDX data repository has no `text/GPL-3.0.txt` to vendor.
 
 ## Adding a License to the Choices

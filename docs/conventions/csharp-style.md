@@ -21,13 +21,13 @@ Only a few answers are safe inside C# code, because a placeholder is substituted
 
 - **`[[ root_namespace ]]` is the one placeholder that becomes an identifier.** It appears in namespace declarations and `using` directives, and the sample app's namespace derives from it as `[[ root_namespace ]].SampleApp`. Its `help` string asks for PascalCase without spaces, which is what makes it a valid identifier.
 - **`[[ product_name ]]` never becomes an identifier.** It may contain spaces and dots. It is fine inside a string literal, as the sample app's `Greet("[[ product_name ]]")` shows, and in project and assembly names, which are allowed to contain spaces.
-- **Anything else stays out of code.** If a C# file seems to need another answer, it usually belongs in the project file instead, where the answers already feed `AssemblyTitle`, `Product` and the rest (see [questions](../project-template/questions.md)).
+- **Anything else stays out of code.** If a C# file seems to need another answer, it usually belongs in the project file instead, where the answers already feed `AssemblyTitle`, `Product`, `PackageId` and the rest (see [questions](../project-template/questions.md)).
 
 A placeholder inside a documentation comment changes that line's rendered width, which the [line length](line-length.md) article deals with.
 
 ## Ship Placeholders, Not Features
 
-The C# in the body exists so that a freshly generated project builds and documents itself on day one. It is deliberately minimal: the library is a single placeholder class, and the sample app calls it.
+The C# in the body exists so that a freshly generated project builds, packs and documents itself on day one. It is deliberately minimal: the library is a single placeholder class, and the sample app calls it.
 
 Anything added to it has to be something every generated library wants, because every consumer either keeps it or deletes it. A type that only some libraries need is a type most consumers delete by hand after every render, and a type they keep is one the template now has to maintain for them through `copier update`.
 

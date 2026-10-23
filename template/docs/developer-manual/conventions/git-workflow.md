@@ -29,4 +29,5 @@ Rewriting history moves every commit after the one that changed, which invalidat
 ## Related
 
 - [Commit messages](commit-messages.md) — what a message should say once you are asked to write one.
+- [Versioning](versioning.md) — the version bump that happens in the branch, before the pull request.
 - [Contribution guide](../contribution-guide.md) — the process a change goes through.

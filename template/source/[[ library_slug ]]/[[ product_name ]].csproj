@@ -6,6 +6,13 @@
         <Nullable>enable</Nullable>
         <RootNamespace>[[ root_namespace ]]</RootNamespace>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+        <!--
+            Validates the package when it is packed, e.g., that it is consistent across target frameworks; once a version has been published, set
+            "PackageValidationBaselineVersion" to it, so that every later package is also checked for breaking changes against that version (see
+            Versioning)
+        -->
+        <EnablePackageValidation>true</EnablePackageValidation>
     </PropertyGroup>
 
     <!-- Assembly Info -->
@@ -14,4 +21,53 @@
         <Product>[[ product_name ]]</Product>
         <NeutralLanguage>en-US</NeutralLanguage>
     </PropertyGroup>
+
+    <!-- NuGet Package Information -->
+    <PropertyGroup>
+        <PackageId>[[ package_id ]]</PackageId>
+        <Version>0.1.0</Version>
+        <Title>[[ product_name ]]</Title>
+        <Authors>[[ author ]]</Authors>
+        <Description>[[ product_description ]]</Description>
+        <Copyright>Copyright © [[ copyright_year ]] [[ copyright_holder ]]</Copyright>
+
+        <!--
+            The license is declared as an SPDX license expression, which is what NuGet expects; the "LICENSE" file at the repository root carries the
+            full text of the same license (see the Contributing article); "UNLICENSED" is a NuGet extension to the SPDX syntax rather than an SPDX
+            identifier itself: it packs successfully, which is what a privately distributed package needs, but nuget.org rejects it
+        -->
+        <PackageLicenseExpression>[[ license ]]</PackageLicenseExpression>
+
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+
+        <!--
+            Packs the debug symbols into a separate symbol package (".snupkg") next to the package, which nuget.org serves to debuggers through its
+            symbol server, so that a consumer can step into the library's code
+        -->
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageProjectUrl>[[ repository_url ]]</PackageProjectUrl>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>[[ repository_url ]]</RepositoryUrl>
+    </PropertyGroup>
+
+    <!-- Packaged Files -->
+    <ItemGroup>
+        <!--
+            "PackageReadmeFile" above only names the file, it does not pack it; without this item, "dotnet pack" fails because the file it was told to
+            use is not in the package
+        -->
+        <None Include="README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
+
+    <!-- Referenced NuGet Packages -->
+    <ItemGroup>
+        <!--
+            Roslyn never expands <inheritdoc/> into real text in the generated XML documentation file, it is left in verbatim, so any tool reading
+            that file (a consumer's IDE tooltip for the compiled package, a documentation generator, ...) sees an empty member; this task rewrites
+            <inheritdoc/> into the real, inherited text as a build step, for every non-Debug build; "PrivateAssets=all" keeps it a build-time-only
+            dependency of this project, it is never referenced by a consumer of the compiled package
+        -->
+        <PackageReference Include="SauceControl.InheritDoc" Version="2.0.2" PrivateAssets="all" />
+    </ItemGroup>
 </Project>

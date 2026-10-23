@@ -115,6 +115,16 @@ root_namespace:
     [% if not root_namespace | regex_search('^[A-Z][A-Za-z0-9]*(\\.[A-Z][A-Za-z0-9]*)*$') %]The root namespace must consist of one or more PascalCase
     identifiers separated by dots, each starting with an uppercase letter and containing only letters and digits.[% endif %]
 
+package_id:
+  type: str
+  default: "[[ root_namespace ]]"
+  help: >-
+    The NuGet package identifier the library is published under. It may contain letters, digits, underscores, dots, and hyphens, and is at most 100
+    characters long.
+  validator: >-
+    [% if not package_id | regex_search('^[A-Za-z0-9_]+([.-][A-Za-z0-9_]+)*$') %]The package ID may only contain letters, digits, and underscores,
+    separated by single dots or hyphens.[% elif package_id | length > 100 %]The package ID must not be longer than 100 characters.[% endif %]
+
 author:
   type: str
   help: The author of the library, used for the NuGet package metadata.
@@ -209,8 +219,9 @@ license:
   type: str
   default: LGPL-3.0-or-later
   help: >-
-    The license the library is released under, given as an SPDX license identifier. It is written to the "LICENSE" file. Choose "UNLICENSED" for a
-    library that is not published publicly. It is a NuGet extension to the SPDX syntax that packs successfully but is rejected by nuget.org.
+    The license the library is released under, given as an SPDX license identifier. It is written to the "LICENSE" file and to the
+    "PackageLicenseExpression" of the library project. Choose "UNLICENSED" for a library that is not published publicly. It is a NuGet extension to
+    the SPDX syntax that packs successfully but is rejected by nuget.org.
   choices:
     MIT: MIT
     Apache License 2.0: Apache-2.0

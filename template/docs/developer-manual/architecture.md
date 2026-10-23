@@ -15,12 +15,16 @@ Top-level files round out the repository. [`README.md`](../../README.md) is the 
 
 [`source/[[ product_name ]].slnx`](../../source/) is the solution file, in the newer XML-based `.slnx` format rather than the classic `.sln` format. It sits in `source/` rather than at the repository root. It groups two projects:
 
-- **`[[ library_slug ]]`** — the library itself.
+- **`[[ library_slug ]]`** — the library itself, packed and published as the `[[ package_id ]]` NuGet package.
 - **`sample-app`** — a runnable sample application that references the library through a project reference and demonstrates how it is used.
 
 Both target `[[ target_framework ]]`, and both enable `<Nullable>` and `<ImplicitUsings>`.
 
 The library also sets `<GenerateDocumentationFile>`, so that the XML documentation comments in the source (see [C# style](conventions/csharp-style.md)) ship alongside the compiled assembly and reach a consumer's editor tooltips.
+
+## Shared Build Settings
+
+[`Directory.Build.props`](../../Directory.Build.props) at the repository root holds the build settings every project shares: deterministic builds on the continuous integration runner (see [versioning](conventions/versioning.md#the-package-and-its-symbols)). MSBuild only imports the `Directory.Build.props` closest to a project, so `source/Directory.Build.props` imports the root one explicitly before adding its own settings.
 
 ## Build Output
 
@@ -30,9 +34,9 @@ The entire `build/` directory is generated and covered by [`.gitignore`](../../.
 
 ## Versioning and Licensing
 
-[`CHANGELOG.md`](../../CHANGELOG.md) is the human-readable history of what each version changed. It is not generated from Git history, so it is updated by hand.
+The NuGet package version is the `<Version>` property of the library's project file. [`CHANGELOG.md`](../../CHANGELOG.md) is the human-readable history of what each version changed. It is not generated from Git history, so it is updated by hand (see [versioning](conventions/versioning.md)).
 
-The project is licensed under `[[ license ]]`, and [`LICENSE`](../../LICENSE) carries the full text of the license.
+The project is licensed under `[[ license ]]`. The library's project file declares it as `<PackageLicenseExpression>`, which is the SPDX identifier NuGet expects, and [`LICENSE`](../../LICENSE) carries the full text of the same license.
 
 ## Related
 

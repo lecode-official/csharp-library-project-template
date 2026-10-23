@@ -1,0 +1,16 @@
+<Project>
+    <!--
+        Holds the build settings that every project in the repository shares; MSBuild only imports the "Directory.Build.props" closest to a project,
+        so "source/Directory.Build.props" imports this file explicitly before adding its own output redirection (see Architecture)
+    -->
+
+    <!-- Continuous Integration -->
+    <PropertyGroup>
+        <!--
+            Makes a build on the continuous integration runner deterministic in the way a published package needs it, e.g., by mapping the runner's
+            local source paths to repository-relative ones in the symbol files, so that a debugger can find the sources through Source Link; it is
+            only set on the runner, because it makes local debugging harder; GitHub Actions sets "GITHUB_ACTIONS" to "true" on every runner
+        -->
+        <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+</Project>
