@@ -6,7 +6,7 @@ This article covers the 150-character line limit on both sides of the split, and
 
 No line exceeds 150 characters, at the root or in the body. The root's [`dprint.json`](../../dprint.json) sets `lineWidth` to 150 for the files it formats: the JSON, YAML and TOML at the root.
 
-The limit applies just as much where no formatter enforces it. Nothing formats the shell commands in the Claude Code hooks, so keeping those within the limit is the author's job.
+The limit applies just as much where no formatter enforces it. Nothing formats the Python in [`scripts/`](../../scripts/) or the shell commands in the Claude Code hooks, so keeping those within the limit is the author's job.
 
 There are exactly two exceptions:
 
@@ -15,7 +15,7 @@ There are exactly two exceptions:
 
 ## It Is Also a Lower Limit
 
-A formatter reflows code, but never the inside of a comment or a string. So a comment or a split string literal is filled to the limit, and broken only where the next word would not fit. That applies to the comments in [`copier.yml`](../../copier.yml), and in the JSONC configuration files, exactly as it does to the generated project's code.
+A formatter reflows code, but never the inside of a comment or a string. So a comment, a docstring, or a split string literal is filled to the limit, and broken only where the next word would not fit. That applies to the comments in [`copier.yml`](../../copier.yml), in the JSONC configuration files, and in the Python scripts, exactly as it does to the generated project's code.
 
 The reason is the same as in the generated project: when everyone wraps at a slightly different width, every later edit re-wraps the paragraph, and a one-word change shows up as a five-line diff.
 

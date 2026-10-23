@@ -6,7 +6,7 @@ Copier asks questions **in declaration order**, and a question may only referenc
 
 ## Types and Validation
 
-Every question is declared with `type: str` and accepts free text, and its `validator` rejects an answer that would break the generated project, with a message that says what is allowed.
+Every question is declared with `type: str`. Only `license` restricts the answer to a list of `choices`. Every other question accepts free text, and its `validator` rejects an answer that would break the generated project, with a message that says what is allowed.
 
 An answer ends up in file names, C# code, XML, JSON, YAML, Markdown and Python strings. Rather than escaping every answer for every format it lands in, the validators only allow characters that are safe in all of them. Each validator uses the `regex_search` filter of the `jinja2_ansible_filters` extension, which Copier always loads, so none of them costs a `--trust`.
 
@@ -28,11 +28,11 @@ The `product_slug` default lowercases the product name and turns every run of ch
 
 ## Authorship
 
-| Question           | Default          | Validation                                                   | Feeds                                                             |
-| ------------------ | ---------------- | ------------------------------------------------------------ | ----------------------------------------------------------------- |
-| `author`           | —                | Not empty, and none of `"`, `\`, `[`, `]`, `<`, `>` and `&`. | The NuGet `Authors`, and the `author` of the root `package.json`. |
-| `copyright_holder` | `author`         | Not empty, and none of `"`, `\`, `<`, `>` and `&`.           | The `<Copyright>` property.                                       |
-| `copyright_year`   | the current year | Exactly four digits.                                         | The same two places.                                              |
+| Question           | Default          | Validation                                                   | Feeds                                                                                       |
+| ------------------ | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| `author`           | —                | Not empty, and none of `"`, `\`, `[`, `]`, `<`, `>` and `&`. | The NuGet `Authors`, and the `author` of the root `package.json`.                           |
+| `copyright_holder` | `author`         | Not empty, and none of `"`, `\`, `<`, `>` and `&`.           | The `<Copyright>` property, and the license text for the licenses that take a substitution. |
+| `copyright_year`   | the current year | Exactly four digits.                                         | The same two places.                                                                        |
 
 `author` may not contain square brackets, because an author's name is commonly written into a Markdown link, `[name](url)`.
 
@@ -48,6 +48,16 @@ The `copyright_year` default is rendered as `[[ '%Y' | strftime ]]`, so it is al
 
 The branch names are limited to the characters Git allows in a branch name that are also safe in the YAML and JSON they end up in.
 
+## License
+
+| Question  | Default             | Validation            | Feeds               |
+| --------- | ------------------- | --------------------- | ------------------- |
+| `license` | `LGPL-3.0-or-later` | One of the `choices`. | The `LICENSE` file. |
+
+### `license`
+
+An SPDX identifier, which selects the `LICENSE` file's content. See [licensing](licensing.md) — in particular for why only some of these take a copyright substitution.
+
 ## Adding a Question
 
 1. Declare it in [`copier.yml`](../../copier.yml), **after** any question it references. Give it a `help` string. It is the only explanation a person rendering the template sees.
@@ -62,5 +72,6 @@ A question that only ever has one sensible answer, and is not expected to grow a
 ## Related
 
 - [Template structure](template-structure.md) — where the answers are recorded, and why that file lives inside the body.
+- [Licensing](licensing.md) — the `license` question in detail.
 - [Authoring](authoring.md) — using an answer in a template file.
 - [Rendering and updating](rendering-and-updating.md) — how recorded answers are replayed during an update.

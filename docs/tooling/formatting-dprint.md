@@ -4,7 +4,7 @@ This article covers code formatting, which is owned entirely by [dprint](https:/
 
 ## The Root's Configuration
 
-The root's [`dprint.json`](../../dprint.json) formats the template's own files: Markdown, JSON, YAML and TOML. It has no C# or XML plugin, because the root has no such files.
+The root's [`dprint.json`](../../dprint.json) formats the template's own files: Markdown, JSON, YAML and TOML. It has no C# or XML plugin, because the root has no such files, and nothing at the root formats Python, so the scripts under [`scripts/`](../../scripts/) are kept tidy by hand.
 
 It excludes three things:
 

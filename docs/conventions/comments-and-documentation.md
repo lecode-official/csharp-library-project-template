@@ -37,11 +37,19 @@ Both sides carry heavily commented configuration: the JSONC files ([`dprint.json
 
 A root comment refers to an article by its path, as in `(see docs/project-template/template-structure.md)`. A body comment refers to the generated project's article instead, either by its title, as in `(see Dependency Management)`, or by its path inside the generated project.
 
+## Python Docstrings and Comments
+
+The root's [`scripts/`](../../scripts/) holds Python, written this way:
+
+- A module docstring explains what the script is for, who runs it and when, and why it exists.
+- Every function has a docstring with a one-line summary that starts with a third-person verb (`Downloads a text file.`), followed by `Args:`, `Returns:` and `Raises:` sections where they apply.
+- Docstrings are prose and end their sentences with periods. `#` comments follow the plain-comment rule, as everywhere else.
+
 ## Prose and Plain Comments
 
 The punctuation rule is the same throughout the repository:
 
-- **Prose** ends its sentences with periods and never joins two sentences with a semicolon. That covers Markdown, XML documentation comments, and the `help` strings and `validator` messages in [`copier.yml`](../../copier.yml), which are the only explanation a person rendering the template ever sees.
+- **Prose** ends its sentences with periods and never joins two sentences with a semicolon. That covers Markdown, XML documentation comments, Python docstrings, and the `help` strings and `validator` messages in [`copier.yml`](../../copier.yml), which are the only explanation a person rendering the template ever sees.
 - **Plain comments** (`//`, `#`, `<!-- -->`) do the reverse. Sentences are separated by semicolons, and the last one takes no terminal punctuation.
 
 Whatever the kind, a comment explains a non-obvious *why*: a hidden constraint, an ordering requirement, a workaround, a Copier behavior that would otherwise look like a mistake. A comment that only restates what the code says does not earn its place.

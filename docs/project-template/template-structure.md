@@ -11,6 +11,8 @@ This article covers the two-level layout of this repository, and the problems it
 ├── AGENTS.md           rules for working on the template
 ├── CONTRIBUTING.md     how to contribute, next to CODE_OF_CONDUCT.md, SECURITY.md, and CONTRIBUTORS.md
 ├── docs/               these articles
+├── licenses/           the vendored license texts
+├── scripts/            maintenance scripts
 ├── dprint.json         the template's own formatter configuration
 ├── .markdownlint.yml   the template's own Markdown linting
 ├── .cspell.json        the template's own spell checking
@@ -37,8 +39,21 @@ Three constraints, each verified against Copier's own behavior:
 - **The answers file template must live inside the body**, at [`template/.copier-answers.yml`](../../template/.copier-answers.yml). Only the subdirectory is walked, so a copy at the root would never be rendered — and without a rendered `.copier-answers.yml`, a generated project cannot be updated at all.
 - **`_exclude` patterns are matched against the generated project's paths**, not the template's, so none of them carries a `template/` prefix. Copier also defaults `_exclude` to empty once `_subdirectory` names a real directory, because nothing outside it is reachable in the first place. The patterns follow the `.gitignore` syntax, so a pattern for a root-level directory or file is anchored with a leading slash, as in `/build`. An unanchored `build` would match at any depth and also drop the body's `docs/build/`.
 
+## The One Thing That Reaches Across
+
+Jinja's `include` is the deliberate exception. Copier's template loader searches from the **clone root**, not from the subdirectory, so a file inside `template/` can include a file beside `copier.yml`:
+
+```jinja
+[% include "licenses/" ~ license ~ ".txt" %]
+```
+
+That is how [`template/LICENSE`](../../template/LICENSE) gets its content out of [`licenses/`](../../licenses/) without those texts ever being copied into a project as files of their own. It is ordinary sandboxed Jinja rather than an unsafe feature, so it costs no `--trust` (see [licensing](licensing.md)).
+
+The loader rejects any path that resolves outside the clone root, and rejects symlinks that escape it, so this reaches sideways but not out.
+
 ## Related
 
 - [Questions](questions.md) — what the template asks and what each answer feeds.
+- [Licensing](licensing.md) — the include mechanism in practice.
 - [Authoring](authoring.md) — adding a file to the body.
 - [Rendering and updating](rendering-and-updating.md) — what a consumer of the template does.

@@ -48,7 +48,7 @@ By default, `copier update` asks every question again, with the recorded answers
 
 - `--defaults` skips the prompts and reuses every recorded answer, falling back to the default for a question the template added since.
 - `--skip-answered` skips the questions that already have a recorded answer, and prompts only for the ones the template added since.
-- `--data name=value` sets a single answer, overriding the recorded one, as in `copier update --defaults --data default_branch=trunk`.
+- `--data name=value` sets a single answer, overriding the recorded one, as in `copier update --defaults --data license=MIT`.
 
 Each answer, recorded or new, is checked by its question's validator again.
 

@@ -8,7 +8,7 @@
         "format": "npx dprint fmt",
         "lint:dprint": "npx dprint check \"**/*\"",
         "lint:markdownlint": "npx markdownlint-cli2 \"**/*.md\" \"!**/node_modules/**\" \"!template/**\" \"!licenses/**\" \"!**/.venv/**\"",
-        "lint:cspell": "npx cspell lint --no-progress \"**/*.md\" \"copier.yml\"",
+        "lint:cspell": "npx cspell lint --no-progress \"**/*.md\" \"copier.yml\" \"scripts/**/*.py\"",
         "lint": "run-s --continue-on-error lint:dprint lint:markdownlint lint:cspell"
     },
     "devDependencies": {
