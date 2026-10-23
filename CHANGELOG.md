@@ -16,3 +16,4 @@ All notable changes to the C# library project template are documented here, newe
 - Added the unit test project of the generated project, based on xUnit v3 and Microsoft.Testing.Platform, with code coverage.
 - Added Central Package Management, lock files, and the NuGet vulnerability audit to the generated project.
 - Added formatting with dprint, Markdown linting with MarkdownLint, and spell checking with CSpell to the generated project.
+- Added strict static code analysis to the generated project, with the .NET analyzers, StyleCop Analyzers, Roslynator, and Nullable.Extended.

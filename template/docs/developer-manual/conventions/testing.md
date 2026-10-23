@@ -22,15 +22,15 @@ A test method name has three parts, run together as a single PascalCase identifi
 
 No member name in this code base contains an underscore, test methods included (see [C# style](csharp-style.md)). A test explorer or a failure message shows the full name on its own line regardless, so a separator is not needed to keep the three parts readable.
 
-An asynchronous test method does not end in `Async`, unlike every other asynchronous method (see [C# style](csharp-style.md)). It is named after the member under test, the scenario, and the outcome like every other test, and only the test runner ever calls it, so the suffix would add nothing.
+An asynchronous test method does not end in `Async`, unlike every other asynchronous method (see [C# style](csharp-style.md)). It is named after the member under test, the scenario, and the outcome like every other test, and only the test runner ever calls it, so the suffix would add nothing. [`tests/unit-tests/.globalconfig`](../../../tests/unit-tests/.globalconfig) turns the IDE1006 naming rule for asynchronous methods off for the test project (see [static code analysis](../tooling/static-code-analysis.md)).
 
 ## No `ConfigureAwait` in Tests
 
-Test code never calls `ConfigureAwait`. xUnit's own analyzer reports `ConfigureAwait(false)` in a test method (xUnit1030), because it may bypass the test runner's parallelization limits.
+Test code never calls `ConfigureAwait`. xUnit's own analyzer reports `ConfigureAwait(false)` in a test method (xUnit1030), so the test project's `.globalconfig` turns the Roslynator rule RCS1090, which requires `ConfigureAwait(false)` in the library, around to report any `ConfigureAwait` call instead (see [static code analysis](../tooling/static-code-analysis.md)).
 
 ## Every Member Is Documented, Including Private Ones
 
-A test class, and every member on it — test methods, test doubles, and the members of those test doubles — carries an XML documentation comment, with no exception for `private` or for test code. `GenerateDocumentationFile` is enabled on the test project, so the compiler reports a missing comment on a `public` member, and xUnit requires every test class and method to be public. Private members are not checked by the compiler, so documenting them is a matter of discipline. See [comments and documentation comments](comments-and-documentation.md) for what the summary is expected to say.
+A test class, and every member on it — test methods, test doubles, and the members of those test doubles — carries an XML documentation comment, with no exception for `private` or for test code. The build checks all of it: the compiler reports a missing comment on a `public` member, because `GenerateDocumentationFile` is enabled on the test project, and StyleCop Analyzers reports a missing comment on every other member, `private` ones included (see [static code analysis](../tooling/static-code-analysis.md)). See [comments and documentation comments](comments-and-documentation.md) for what the summary is expected to say.
 
 ## Structure
 

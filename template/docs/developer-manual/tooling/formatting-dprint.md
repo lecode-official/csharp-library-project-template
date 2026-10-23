@@ -4,7 +4,7 @@ This article covers code formatting, which is owned entirely by [dprint](https:/
 
 Configuration lives in [`dprint.json`](../../../dprint.json). dprint formats C# through the Roslyn plugin, XML — including `.csproj` and `.slnx`, which are explicitly associated with the markup plugin because their extensions are not recognized by default — and Markdown, JSON, YAML and TOML.
 
-The Roslyn plugin only drives whitespace, newlines, and indentation. It has no equivalent of the `csharp_style_*` or `dotnet_*` analyzer preferences, so the structural conventions in [C# style](../conventions/csharp-style.md) remain a review-time matter. A plugin for a file type the repository has no use for can be removed, together with its configuration section.
+The Roslyn plugin only drives whitespace, newlines, and indentation. It has no equivalent of the `csharp_style_*` or `dotnet_*` analyzer preferences. Those, and most of the structural conventions in [C# style](../conventions/csharp-style.md), are checked by the analyzers instead (see [static code analysis](static-code-analysis.md)), which report a problem but never reformat anything. A plugin for a file type the repository has no use for can be removed, together with its configuration section.
 
 ## Running It
 

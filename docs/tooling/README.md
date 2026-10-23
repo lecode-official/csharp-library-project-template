@@ -14,7 +14,7 @@ This section covers the tools used to work on the template: the formatter, the l
 Every tool here exists twice, once for each side of the [split](../project-template/template-structure.md):
 
 - **The root's configuration** checks the template's own files, though not every tool checks all of them. dprint formats and checks every Markdown, JSON, YAML and TOML file, the configuration files themselves included. MarkdownLint checks the Markdown: the articles under `docs/`, `README.md`, `AGENTS.md` and `CHANGELOG.md`. CSpell checks only the Markdown, `copier.yml` and the scripts. The configuration lives at the root: [`dprint.json`](../../dprint.json), [`.markdownlint.yml`](../../.markdownlint.yml) and [`.cspell.json`](../../.cspell.json).
-- **The body's configuration** is a template file like any other. It checks the generated project, and only ever runs in a render. It lives where the generated project expects it, at the root of the body: `template/dprint.json`, `template/.cspell.json`, and `template/.markdownlint.yml`.
+- **The body's configuration** is a template file like any other. It checks the generated project, and only ever runs in a render. It lives where the generated project expects it, at the root of the body: `template/dprint.json`, `template/.cspell.json`, `template/.markdownlint.yml`, and `template/.globalconfig`.
 
 Every root configuration excludes `template/`, because the files in it are Jinja templates rather than valid documents of their own type, and `licenses/`, because those texts are verbatim copies that must never be touched. So no tool in this repository checks the body. A render does (see [testing](../conventions/testing.md)).
 

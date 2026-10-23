@@ -9,6 +9,13 @@
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 
         <!--
+            Declares the library compatible with trimming and native AOT compilation, which turns on the trim, AOT, and single-file analyzers, so that
+            code a consumer could not trim or compile ahead of time is reported here, instead of in the consumer's application (see Static Code
+            Analysis)
+        -->
+        <IsAotCompatible>true</IsAotCompatible>
+
+        <!--
             Validates the package when it is packed, e.g., that it is consistent across target frameworks; once a version has been published, set
             "PackageValidationBaselineVersion" to it, so that every later package is also checked for breaking changes against that version (see
             Versioning)

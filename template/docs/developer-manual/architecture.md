@@ -10,7 +10,7 @@ The repository is organized into a few top-level directories:
 - [`tests/`](../../tests/) — the unit tests.
 - [`docs/`](../README.md) — this documentation.
 
-Top-level files round out the repository. [`README.md`](../../README.md) is the project's front door, [`CHANGELOG.md`](../../CHANGELOG.md) records what changed in each version, [`CONTRIBUTORS.md`](../../CONTRIBUTORS.md) lists everyone who has contributed, and [`LICENSE`](../../LICENSE) is the full text of the license. [`CONTRIBUTING.md`](../../CONTRIBUTING.md), [`CODE_OF_CONDUCT.md`](../../CODE_OF_CONDUCT.md) and [`SECURITY.md`](../../SECURITY.md) round out the community-facing files a repository host recognizes by name. [`global.json`](../../global.json) pins the exact .NET SDK version, and [`.config/dotnet-tools.json`](../../.config/dotnet-tools.json) is the local tool manifest — both follow the same exact-version-only rule as everything else (see [dependency management](conventions/dependency-management.md)). The configuration of the code formatter and the linters lives at the repository root too, where each tool discovers it on its own (see [tooling](tooling/README.md)).
+Top-level files round out the repository. [`README.md`](../../README.md) is the project's front door, [`CHANGELOG.md`](../../CHANGELOG.md) records what changed in each version, [`CONTRIBUTORS.md`](../../CONTRIBUTORS.md) lists everyone who has contributed, and [`LICENSE`](../../LICENSE) is the full text of the license. [`CONTRIBUTING.md`](../../CONTRIBUTING.md), [`CODE_OF_CONDUCT.md`](../../CODE_OF_CONDUCT.md) and [`SECURITY.md`](../../SECURITY.md) round out the community-facing files a repository host recognizes by name. [`global.json`](../../global.json) pins the exact .NET SDK version, and [`.config/dotnet-tools.json`](../../.config/dotnet-tools.json) is the local tool manifest — both follow the same exact-version-only rule as everything else (see [dependency management](conventions/dependency-management.md)). The configuration of the code formatter, the linters, and the static code analysis lives at the repository root too, where each tool discovers it on its own (see [tooling](tooling/README.md)).
 
 ## Solution and Projects
 
@@ -22,16 +22,17 @@ Top-level files round out the repository. [`README.md`](../../README.md) is the 
 
 All three target `[[ target_framework ]]`, and all three enable `<Nullable>` and `<ImplicitUsings>`.
 
-Two of them also set `<GenerateDocumentationFile>`, each for its own reason:
+All three also set `<GenerateDocumentationFile>`, each for its own reason:
 
 - **The library**, so that the XML documentation comments in the source (see [C# style](conventions/csharp-style.md)) ship alongside the compiled assembly and reach a consumer's editor tooltips.
 - **The test project**, so that a missing documentation comment on a test class or method fails the build.
+- **The sample app**, which is not documented for a consumer, because the analyzers need the documentation file all the same. Without it, the code-style rule IDE0005 cannot run in the build and StyleCop Analyzers turns its documentation rules off (SA0001), and both report that as an error (see [static code analysis](tooling/static-code-analysis.md)).
 
 The library also grants the test project access to its `internal` members through `InternalsVisibleTo`, so internal types can be unit tested directly (see [testing](conventions/testing.md)). Both the sample app and the test project set `<IsPackable>false</IsPackable>` — neither is published.
 
 ## Shared Build Settings
 
-[`Directory.Build.props`](../../Directory.Build.props) at the repository root holds the build settings every project shares: deterministic builds on the continuous integration runner (see [versioning](conventions/versioning.md#the-package-and-its-symbols)), and the dependency audit (see [dependency management](conventions/dependency-management.md#vulnerability-audit)). MSBuild only imports the `Directory.Build.props` closest to a project, so the two files below import the root one explicitly before adding their own settings.
+[`Directory.Build.props`](../../Directory.Build.props) at the repository root holds the build settings every project shares: the static code analysis settings, warnings as errors in Release builds, deterministic builds on the continuous integration runner (see [versioning](conventions/versioning.md#the-package-and-its-symbols)), and the dependency audit (see [static code analysis](tooling/static-code-analysis.md)). MSBuild only imports the `Directory.Build.props` closest to a project, so the two files below import the root one explicitly before adding their own settings.
 
 [`Directory.Packages.props`](../../Directory.Packages.props) turns on Central Package Management: it declares the version of every NuGet package, and the project files reference packages without a version (see [dependency management](conventions/dependency-management.md)).
 

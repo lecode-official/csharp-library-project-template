@@ -13,4 +13,17 @@
         <PackageVersion Include="SauceControl.InheritDoc" Version="2.0.2" />
         <PackageVersion Include="xunit.v3" Version="4.0.2" />
     </ItemGroup>
+
+    <!-- Static Code Analyzers -->
+    <ItemGroup>
+        <!--
+            A global package reference is added to every project in the repository, as a build-time-only dependency, i.e., it never becomes a
+            dependency of anything that references a project or its package (see Static Code Analysis); StyleCop Analyzers has only ever published
+            its support for modern C# in prerelease versions, which is why it is the one dependency that is pinned to a "-beta" version
+        -->
+        <GlobalPackageReference Include="Nullable.Extended.Analyzer" Version="1.17.0" />
+        <GlobalPackageReference Include="Roslynator.Analyzers" Version="5.0.1" />
+        <GlobalPackageReference Include="Roslynator.Formatting.Analyzers" Version="5.0.1" />
+        <GlobalPackageReference Include="StyleCop.Analyzers" Version="1.3.151-beta" />
+    </ItemGroup>
 </Project>

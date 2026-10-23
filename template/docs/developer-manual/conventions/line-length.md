@@ -4,7 +4,7 @@ This article covers the 150-character line limit: where it is enforced, where it
 
 ## 150 Characters, in Every Language
 
-No line of code exceeds 150 characters. The limit lives in [`dprint.json`](../../../dprint.json) as `lineWidth`, and dprint applies it to every language it formats — C#, XML (including `.csproj`, `.props`, and `.slnx`), JSON, YAML, and TOML. The limit applies just as much to the languages dprint does not format, where nothing enforces it automatically.
+No line of code exceeds 150 characters. The limit lives in [`dprint.json`](../../../dprint.json) as `lineWidth`, and dprint applies it to every language it formats — C#, XML (including `.csproj`, `.props`, and `.slnx`), JSON, YAML, and TOML. In C#, the limit is also enforced by the analyzers: the Roslynator rule RCS0056 reports every line longer than `roslynator_max_line_length`, which [`.globalconfig`](../../../.globalconfig) sets to `150` (see [static code analysis](../tooling/static-code-analysis.md)), so an overlong line fails a Release build even where dprint could not break it. The limit applies just as much to the languages dprint does not format, where nothing enforces it automatically.
 
 This is a hard limit, not a target. There are exactly two exceptions:
 

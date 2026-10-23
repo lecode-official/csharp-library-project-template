@@ -48,6 +48,8 @@ The reason is that a root article and a body article are written to the same con
 3. In the render, run `npm install` and `dotnet restore`, which is what a consumer does first, then lint, build and test.
 4. If the dependency also has a root counterpart, raise that in the same change.
 
+An analyzer package (StyleCop Analyzers, Roslynator) needs more than a passing render. A new version usually brings new rules, so read its release notes, and decide for every new rule whether `template/.globalconfig` enables, configures, or turns it off, with a comment that says why. The body's own C# has to stay free of findings, because a Release build in every generated project fails on any of them.
+
 The upgrade reaches existing generated projects through `copier update`, as an ordinary change to their version strings.
 
 ## Related

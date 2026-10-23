@@ -43,7 +43,7 @@ Use `npm ci` rather than `npm install` for a fresh clone, so that the exact lock
 npm run build
 ```
 
-The build settings every project shares live in the root `Directory.Build.props`. Build output does not land next to the source: two more `Directory.Build.props` files redirect every project's `bin` and `obj` into `build/<project folder name>/` instead. See [architecture](docs/developer-manual/architecture.md).
+The build settings every project shares, including the static code analysis, live in the root `Directory.Build.props`. Build output does not land next to the source: two more `Directory.Build.props` files redirect every project's `bin` and `obj` into `build/<project folder name>/` instead. See [architecture](docs/developer-manual/architecture.md).
 
 ### Running
 
@@ -86,6 +86,7 @@ The linter configuration lives at the repository root, where each tool discovers
 
 - **MarkdownLint** ([`.markdownlint.yml`](.markdownlint.yml)) — lints the Markdown files across the repository, including this read me.
 - **CSpell** ([`.cspell.json`](.cspell.json)) — checks the spelling of code, comments, and documentation.
+- **The static code analyzers** ([`.globalconfig`](.globalconfig)) — check the C# code on every build.
 
 ```shell
 # Runs the code formatter in check mode and every linter

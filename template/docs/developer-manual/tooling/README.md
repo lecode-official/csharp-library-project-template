@@ -6,7 +6,8 @@ This section gives an overview of the tools used for development, including code
 2. [Code Formatting (dprint)](formatting-dprint.md)
 3. [Markdown Linting (MarkdownLint)](linting-markdownlint.md)
 4. [Spell Checking (CSpell)](spell-checking-cspell.md)
-5. [Testing and Code Coverage](testing-and-code-coverage.md)
+5. [Static Code Analysis](static-code-analysis.md)
+6. [Testing and Code Coverage](testing-and-code-coverage.md)
 
 Formatting and linting are kept strictly separate: **one formatter owns all formatting, and the linters only check quality.** No lint rule that would reformat code is ever added.
 
@@ -14,7 +15,10 @@ Formatting and linting are kept strictly separate: **one formatter owns all form
 
 - **Formatting:** [dprint](formatting-dprint.md), which covers C#, XML (including `.csproj` and `.slnx`), Markdown, JSON, YAML, and TOML.
 - **Linting:** [MarkdownLint](linting-markdownlint.md) for the documentation, and [CSpell](spell-checking-cspell.md) for spelling across the whole repository.
+- **Static code analysis:** the .NET SDK's own analyzers, StyleCop Analyzers, Roslynator, and Nullable.Extended, which check the C# code on every build (see [static code analysis](static-code-analysis.md)).
 - **Compiling and testing:** the .NET SDK itself. There is no separate type-check step, because the compiler *is* the type check — `dotnet build` and `dotnet test` are what catch a type error (see [testing and code coverage](testing-and-code-coverage.md)).
+
+The analyzers are the C# linters. They run inside `dotnet build` rather than as a separate script, and their configuration lives in [`.globalconfig`](../../../.globalconfig) at the repository root, where the compiler discovers it. Like every other linter, they check and never reformat — formatting stays with dprint.
 
 ## Where the Configuration Lives
 
@@ -22,9 +26,10 @@ Every linter and formatter configuration lives at the repository root, where eac
 
 - [`.cspell.json`](../../../.cspell.json)
 - [`.markdownlint.yml`](../../../.markdownlint.yml)
+- [`.globalconfig`](../../../.globalconfig)
 - [`dprint.json`](../../../dprint.json)
 
-dprint has no choice anyway: it rejects its own `incremental` setting inside an extended configuration.
+Several of them have no choice anyway: the compiler only discovers `.globalconfig` in the directory of a source file or one of its parents, and dprint rejects its own `incremental` setting inside an extended configuration.
 
 ## How to Run
 

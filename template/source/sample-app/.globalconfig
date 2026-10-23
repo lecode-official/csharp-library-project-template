@@ -1,0 +1,9 @@
+# The static code analysis settings that apply only to the sample app, on top of the repository-wide ".globalconfig" at the repository root (see
+# Static Code Analysis); the higher level makes the settings of this file win over the ones of the repository-wide file, instead of the two canceling
+# each other out
+is_global = true
+global_level = 101
+
+# An application owns its synchronization context, so it never needs "ConfigureAwait(false)"; the Roslynator rule RCS1090 is turned around to report
+# any "ConfigureAwait" call instead
+roslynator_configure_await = false
