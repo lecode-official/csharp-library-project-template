@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- Build Configuration -->
+    <PropertyGroup>
+        <TargetFramework>[[ target_framework ]]</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>[[ root_namespace ]].UnitTests</RootNamespace>
+        <IsPackable>false</IsPackable>
+
+        <!--
+            xUnit v3 builds every test project as an executable of its own, which runs its tests in its own process, on Microsoft.Testing.Platform
+            (see Testing and Code Coverage)
+        -->
+        <OutputType>Exe</OutputType>
+        <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+
+        <!--
+            Enabled here as well as on the library, so that a missing documentation comment on a test class or test method fails the build; xUnit
+            requires both to be public, so the compiler check actually reaches them (see Testing)
+        -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    </PropertyGroup>
+
+    <!-- Assembly Info -->
+    <PropertyGroup>
+        <AssemblyTitle>[[ product_name ]] Unit Tests</AssemblyTitle>
+        <Product>[[ product_name ]]</Product>
+        <NeutralLanguage>en-US</NeutralLanguage>
+    </PropertyGroup>
+
+    <!-- Referenced NuGet Packages -->
+    <ItemGroup>
+        <!--
+            The tests run on Microsoft.Testing.Platform, which "global.json" selects for "dotnet test", so the project needs neither
+            "Microsoft.NET.Test.Sdk" nor "xunit.runner.visualstudio", which only the legacy VSTest runner uses; "coverlet.MTP" is the code coverage
+            extension for Microsoft.Testing.Platform, which the "coverlet" option of "dotnet test" turns on (see Testing and Code Coverage)
+        -->
+        <PackageReference Include="coverlet.MTP" />
+        <PackageReference Include="xunit.v3" />
+    </ItemGroup>
+
+    <!-- Global Usings -->
+    <ItemGroup>
+        <Using Include="Xunit" />
+    </ItemGroup>
+
+    <!-- Referenced Projects -->
+    <ItemGroup>
+        <ProjectReference Include="..\..\source\[[ library_slug ]]\[[ product_name ]].csproj" />
+    </ItemGroup>
+</Project>

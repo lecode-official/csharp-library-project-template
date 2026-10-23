@@ -1,0 +1,26 @@
+# The Dependabot configuration of the template repository itself, which keeps the actions of its own workflow and its own linters up to date; it does
+# not reach into "template/", whose dependencies are raised deliberately and verified by rendering (see docs/conventions/dependency-management.md),
+# and Copier, which ".github/workflows/template.yml" installs at an exact version, is raised by hand as well
+version: 2
+
+updates:
+  # The actions used by ".github/workflows/template.yml"; the pull request updates both the commit SHA and the version in the comment next to it
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # The linters and the code formatter in the root "package.json"; the root and the body run the same versions, so a pull request that raises one of
+  # them has to raise the body's version in the same change, and the key of dprint in "allowScripts" has to follow its version by hand
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      npm:
+        patterns:
+          - "*"

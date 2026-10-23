@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- Build Configuration -->
+    <PropertyGroup>
+        <TargetFramework>[[ target_framework ]]</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>[[ root_namespace ]].SampleApp</RootNamespace>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+
+        <!--
+            The sample app is not documented for a consumer, but the analyzers need the documentation file all the same: without it, the code-style
+            rule IDE0005 cannot run in the build and StyleCop Analyzers turns its documentation rules off (SA0001), and both report that as an error
+            (see Static Code Analysis)
+        -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+        <!-- The sample app demonstrates the library, it is not itself published -->
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <!-- Assembly Info -->
+    <PropertyGroup>
+        <AssemblyTitle>[[ product_name ]] Sample App</AssemblyTitle>
+        <Product>[[ product_name ]]</Product>
+        <NeutralLanguage>en-US</NeutralLanguage>
+    </PropertyGroup>
+
+    <!-- Referenced Projects -->
+    <ItemGroup>
+        <ProjectReference Include="..\[[ library_slug ]]\[[ product_name ]].csproj" />
+    </ItemGroup>
+</Project>

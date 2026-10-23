@@ -1,0 +1,21 @@
+{
+    // Pins the exact .NET SDK version this repository builds with; "rollForward": "disable" means an exact match is required, so a machine with a
+    // different patch level fails loudly at restore time instead of silently building with another toolchain (see Dependency Management)
+    "sdk": {
+        "version": "[[ dotnet_sdk_version ]]",
+        "rollForward": "disable",
+
+        // Shown instead of the default SDK-not-found message when the pinned version is missing
+        "errorMessage": "This repository pins the .NET SDK to [[ dotnet_sdk_version ]]. Install it from https://dotnet.microsoft.com/download/dotnet/10.0 and try again.",
+
+        // Never resolve a preview SDK, even when one is installed and is newer than the pinned version
+        "allowPrerelease": false
+    },
+
+    // Runs "dotnet test" on Microsoft.Testing.Platform instead of the legacy VSTest runner; xUnit v3 test projects are Microsoft.Testing.Platform
+    // applications, which the .NET 10 SDK no longer runs through VSTest (see Testing and Code Coverage); in this mode, "dotnet test" takes the
+    // solution or project through "--solution" or "--project" instead of a positional argument
+    "test": {
+        "runner": "Microsoft.Testing.Platform"
+    }
+}

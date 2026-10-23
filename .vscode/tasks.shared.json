@@ -1,0 +1,126 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        // Installs the Node.js dependencies, which are the linters and the code formatter; if you only use Visual Studio Code tasks, you do not have
+        // to run this task manually, all other tasks that require up-to-date dependencies run it automatically as a dependency
+        {
+            "label": "Install Dependencies",
+            "type": "npm",
+            "script": "ci",
+            "problemMatcher": [],
+            "icon": {
+                "id": "desktop-download",
+                "color": "terminal.ansiBlue",
+            },
+        },
+
+        // Runs the dprint code formatter on the entire code base
+        {
+            "label": "Format",
+            "type": "npm",
+            "script": "format",
+            "dependsOn": ["Install Dependencies"],
+            "problemMatcher": [],
+            "icon": {
+                "id": "case-sensitive",
+                "color": "terminal.ansiYellow",
+            },
+        },
+
+        // Runs MarkdownLint on the entire codebase
+        {
+            "label": "Lint Markdown",
+            "type": "npm",
+            "script": "lint:markdownlint",
+            "dependsOn": ["Install Dependencies"],
+            "problemMatcher": [
+                {
+                    "owner": "markdownlint",
+                    "fileLocation": ["relative", "${workspaceFolder}"],
+                    "pattern": {
+                        "regexp": "^(.+?):(\\d+)(?::(\\d+))?\\s+(error|warning)\\s+(MD\\d+\\S*)\\s+(.+)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "severity": 4,
+                        "code": 5,
+                        "message": 6,
+                    },
+                },
+            ],
+            "group": "test",
+            "icon": {
+                "id": "shield",
+                "color": "terminal.ansiCyan",
+            },
+        },
+
+        // Runs CSpell on the entire codebase
+        {
+            "label": "Lint Spelling",
+            "type": "npm",
+            "script": "lint:cspell",
+            "dependsOn": ["Install Dependencies"],
+            "problemMatcher": [
+                {
+                    "owner": "cspell",
+                    "fileLocation": ["relative", "${workspaceFolder}"],
+                    "pattern": {
+                        "regexp": "^(.+?):(\\d+):(\\d+)\\s+-\\s+(.+)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "message": 4,
+                    },
+                },
+            ],
+            "group": "test",
+            "icon": {
+                "id": "shield",
+                "color": "terminal.ansiCyan",
+            },
+        },
+
+        // Runs the code formatter in check mode and every linter over the entire codebase
+        {
+            "label": "Lint",
+            "type": "npm",
+            "script": "lint",
+            "dependsOn": ["Install Dependencies"],
+            "problemMatcher": [
+                {
+                    "owner": "markdownlint",
+                    "fileLocation": ["relative", "${workspaceFolder}"],
+                    "pattern": {
+                        "regexp": "^(.+?):(\\d+)(?::(\\d+))?\\s+(error|warning)\\s+(MD\\d+\\S*)\\s+(.+)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "severity": 4,
+                        "code": 5,
+                        "message": 6,
+                    },
+                },
+                {
+                    "owner": "cspell",
+                    "fileLocation": ["relative", "${workspaceFolder}"],
+                    "pattern": {
+                        "regexp": "^(.+?):(\\d+):(\\d+)\\s+-\\s+(.+)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "message": 4,
+                    },
+                },
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true,
+            },
+            "icon": {
+                "id": "shield",
+                "color": "terminal.ansiCyan",
+            },
+        },
+    ],
+}

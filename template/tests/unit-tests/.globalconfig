@@ -1,0 +1,13 @@
+# The static code analysis settings that apply only to the unit test project, on top of the repository-wide ".globalconfig" at the repository root
+# (see Static Code Analysis); the higher level makes the settings of this file win over the ones of the repository-wide file, instead of the two
+# canceling each other out
+is_global = true
+global_level = 101
+
+# xUnit's own analyzer (xUnit1030) reports "ConfigureAwait(false)" in test methods, so the Roslynator rule RCS1090 is turned around to report any
+# "ConfigureAwait" call instead
+roslynator_configure_await = false
+
+# A test method is named after the member under test, the scenario, and the expected outcome (see Testing), and it is never called by code, only by
+# the test runner, so an asynchronous test method does not end with "Async"
+dotnet_naming_rule.async_methods_end_with_async.severity = none

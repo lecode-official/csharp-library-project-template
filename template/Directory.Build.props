@@ -1,0 +1,50 @@
+<Project>
+    <!--
+        Holds the build settings that every project in the repository shares; MSBuild only imports the "Directory.Build.props" closest to a project,
+        so "source/Directory.Build.props" and "tests/unit-tests/Directory.Build.props" import this file explicitly before adding their own output
+        redirection (see Architecture)
+    -->
+
+    <!-- Static Code Analysis -->
+    <PropertyGroup>
+        <!--
+            Enables every code quality rule of the .NET SDK as a warning; "latest-all" does not raise the code-style rules, so "AnalysisModeStyle"
+            raises them separately, and "EnforceCodeStyleInBuild" runs them in the build, not only in the editor; the severities of the individual
+            rules, and the rules of StyleCop Analyzers and Roslynator, are configured in ".globalconfig" (see Static Code Analysis)
+        -->
+        <AnalysisLevel>latest-all</AnalysisLevel>
+        <AnalysisModeStyle>All</AnalysisModeStyle>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+        <!--
+            Warnings are treated as errors in Release builds only, which is what continuous integration builds, so that a warning fails the pull
+            request without getting in the way while working locally
+        -->
+        <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
+
+        <!--
+            Turns on the compiler's strict mode, which reports a few constructs that the C# specification forbids, but that the compiler accepts for
+            backwards compatibility otherwise
+        -->
+        <Features>strict</Features>
+    </PropertyGroup>
+
+    <!-- Continuous Integration -->
+    <PropertyGroup>
+        <!--
+            Makes a build on the continuous integration runner deterministic in the way a published package needs it, e.g., by mapping the runner's
+            local source paths to repository-relative ones in the symbol files, so that a debugger can find the sources through Source Link; it is
+            only set on the runner, because it makes local debugging harder; GitHub Actions sets "GITHUB_ACTIONS" to "true" on every runner
+        -->
+        <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+
+    <!-- Dependency Auditing -->
+    <PropertyGroup>
+        <!--
+            Audits the transitive dependencies for known vulnerabilities as well, not only the direct ones; a vulnerable package is a warning, which a
+            Release build turns into an error (see Dependency Management)
+        -->
+        <NuGetAuditMode>all</NuGetAuditMode>
+    </PropertyGroup>
+</Project>

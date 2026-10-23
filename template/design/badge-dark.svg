@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+    <title>Open book with C# on its pages, on a rounded square</title>
+    <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="14" fill="#111a13" stroke="#2c3d2e" stroke-width="1.5"/>
+    <g transform="translate(6.5 5.3) scale(0.796875)">
+        <path fill="#6fd36a" d="M4 20 L4 52 C14 49 24 50 32 54 C40 50 50 49 60 52 L60 20 Z"/>
+        <path fill="#20331f" stroke="#e2efe3" stroke-width="2.5" stroke-linejoin="round" d="M32 18 C24 13 14 13 8 16 L8 48 C14 45 24 45 32 50 Z"/>
+        <path fill="#20331f" stroke="#e2efe3" stroke-width="2.5" stroke-linejoin="round" d="M32 18 C40 13 50 13 56 16 L56 48 C50 45 40 45 32 50 Z"/>
+        <path fill="none" stroke="#6fd36a" stroke-width="3" stroke-linecap="round" d="M26.4 24.9 A7.5 7.5 0 1 0 26.4 35.5"/>
+        <path fill="none" stroke="#6fd36a" stroke-width="3" stroke-linecap="round" d="M42.75 23.5 L41.25 37 M46.75 23.5 L45.25 37 M38.5 26.8 L49.5 26.8 M38.5 33.6 L49.5 33.6"/>
+    </g>
+</svg>

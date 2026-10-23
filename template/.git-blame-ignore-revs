@@ -1,0 +1,7 @@
+# Revisions listed here are skipped by "git blame", so that mechanical, repository-wide changes do not obscure who last touched a line for a real
+# reason; configure it once per clone with:
+#
+#     git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# Only purely mechanical, repository-wide commits belong here; a commit that mostly reformats but also makes a judgment call stays out, because blame
+# would then hide a real decision

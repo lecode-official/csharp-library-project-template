@@ -1,0 +1,235 @@
+# The Copier configuration for this template, a template for C# library projects; this file stays at the repository root, outside the template body:
+# Copier only ever looks for "copier.*" at the root of the cloned template and never recurses into subdirectories, so a copy of this file inside
+# "template/" would be silently ignored and, worse, copied into every generated project as an ordinary file
+
+# The directory that holds the template body; everything outside it (this file, the repository's own README, AGENTS.md, docs, linter configuration,
+# and the vendored license texts) belongs to the template itself and is never copied into a generated project; this is what makes it possible to
+# document the template in the template, and to lint the template's own files with different settings than the files it generates
+_subdirectory: template
+
+# The oldest Copier version the template supports; the template does not depend on a feature introduced in a specific release, so the floor is the
+# oldest version the template was tested with; the continuous integration renders with the exact version pinned in ".github/workflows/template.yml"
+_min_copier_version: "9.5.0"
+
+# By default, files that should be processed by the Jinja templating engine, which add the ".jinja" extension to the file name (in addition to the
+# original extension); unfortunately, many tools that are used during the development of this template do not work with the ".jinja" file extension,
+# e.g., dprint will interpret all files with the ".jinja" extension as HTML files and will throw an error (for Markdown) or will remove all
+# whitespaces (for JSON); by removing the file extension, Copier will process all files as Jinja templates (if it fails to read a file as a template,
+# e.g., if the file is a binary file, it will simply copy the file)
+_templates_suffix: ""
+
+# The default Jinja delimiters ("{{ }}", "{% %}", "{# #}") are remapped here for consistency with the other Copier templates (where the remap is
+# required, e.g., to let Angular's own double-brace interpolation syntax pass through untouched); keeping the same non-default delimiters across every
+# template means conventions and snippets stay copy-pasteable between them; as a bonus, it also stops YAML/JSON formatters from mangling the
+# delimiters (e.g., rewriting double braces into "{ { x } }")
+_envops:
+  block_start_string: "[%"
+  block_end_string: "%]"
+  variable_start_string: "[["
+  variable_end_string: "]]"
+  comment_start_string: "[#"
+  comment_end_string: "#]"
+
+# Excludes some files and directories from being copied when a new project is created from the template; note that these patterns are matched against
+# the paths of the generated project, not against the paths in the template, so none of them carries a "template/" prefix; note also that defining
+# this key replaces Copier's defaults rather than extending them, and that the defaults are empty anyway whenever "_subdirectory" names a real
+# directory, since nothing outside that directory is reachable in the first place; the patterns follow the ".gitignore" syntax, so a pattern without a
+# leading slash matches at any depth: that is what the editor and operating system leftovers need, while the root-level directories and files are
+# anchored with a leading slash, because an unanchored "build" would also drop the documentation website's "docs/build/" hook scripts
+_exclude:
+  - "~*"
+  - .DS_Store
+  - Thumbs.db
+  - /TODO.md
+  - /build
+  - /coverage
+  - /coverage-report
+  - /node_modules
+  - /.venv
+
+# Files that every project keeps, but fills with its own content: the template only provides a starting point for them, so Copier creates them when a
+# project is generated, but never touches them again in an update, and a template change to one of them can neither conflict with the project's own
+# content nor bring back a placeholder the project has long replaced (see docs/project-template/rendering-and-updating.md); only files a project
+# keeps belong here, because Copier also re-creates a listed file that a project has deleted, on every update, which is why the placeholder
+# "Greeter" class and its tests are deliberately absent: a project deletes them, and without an entry here, an update leaves the deletion alone
+_skip_if_exists:
+  - /README.md
+  - /CHANGELOG.md
+  - /CONTRIBUTORS.md
+  - /docs/user-manual/getting-started.md
+  - /source/*/README.md
+  - /source/sample-app/Program.cs
+
+# Questions that Copier will ask upon project creation; the answers will be recorded in the ".copier-answers.yml" file; if the answers file already
+# exists, the questions will be answered automatically, which is helpful when an existing project is updated to the latest version of the template;
+# the questions are asked in the order they are declared here, and a question may only reference the answers of the questions above it
+
+# Every validator below uses "regex_search" from the "jinja2_ansible_filters" extension that Copier always loads, so none of them needs "--trust"; an
+# answer ends up in file names, C# code, XML, JSON, YAML, and Python strings, so the validators only allow characters that are safe in all of them,
+# instead of escaping every answer for every file format it lands in
+
+product_name:
+  type: str
+  help: >-
+    The human-readable name of the product (e.g., "CLI.NET Core"). It names the solution file, every project file, the assembly title, and the
+    documentation website, so it may contain spaces and dots, but only letters, digits, spaces, dots, hyphens, underscores, and plus signs.
+  validator: >-
+    [% if not product_name | regex_search('^[A-Za-z0-9]([A-Za-z0-9 ._+-]*[A-Za-z0-9+])?$') %]The product name must start with a letter or a digit,
+    must not end with a space, a dot, a hyphen, or an underscore, and may only contain letters, digits, spaces, dots, hyphens, underscores, and plus
+    signs.[% endif %]
+
+# The default turns every run of characters other than a lowercase letter or a digit into a single dash, so "CLI.NET Core" becomes "cli-net-core"
+product_slug:
+  type: str
+  default: "[[ product_name | lower | regex_replace('[^a-z0-9]+', '-') | regex_replace('^-+|-+$', '') ]]"
+  help: A lowercase, dash-separated identifier used for the repository directory and for the root package name.
+  validator: >-
+    [% if not product_slug | regex_search('^[a-z0-9]+(-[a-z0-9]+)*$') %]The product slug may only contain lowercase letters and digits, separated by
+    single dashes.[% endif %]
+
+product_description:
+  type: str
+  help: >-
+    A single sentence describing the product. It is used for the NuGet package description and for the documentation website, so it must not contain
+    double quotes, backslashes, or the characters "<", ">", and "&".
+  validator: >-
+    [% if not product_description | trim %]The product description must not be empty.[% elif product_description | regex_search('["\\\\<>&]')
+    %]The product description must not contain double quotes, backslashes, or the characters "<", ">", and "&".[% endif %]
+
+library_slug:
+  type: str
+  default: "[[ product_slug ]]"
+  help: >-
+    A lowercase, dash-separated identifier for the library project's own directory ("source/<slug>"), which is also the name of its build output
+    directory ("build/<slug>").
+  validator: >-
+    [% if not library_slug | regex_search('^[a-z0-9]+(-[a-z0-9]+)*$') %]The library slug may only contain lowercase letters and digits, separated by
+    single dashes.[% elif library_slug == 'sample-app' %]The library slug must differ from "sample-app", the directory of the sample app.[% endif %]
+
+root_namespace:
+  type: str
+  help: >-
+    The root namespace of the library, in PascalCase and without spaces (e.g., "CliNetCore" or "LeCode.CliNetCore"). The sample app and the unit test
+    project derive their own namespaces from it.
+  validator: >-
+    [% if not root_namespace | regex_search('^[A-Z][A-Za-z0-9]*(\\.[A-Z][A-Za-z0-9]*)*$') %]The root namespace must consist of one or more PascalCase
+    identifiers separated by dots, each starting with an uppercase letter and containing only letters and digits.[% endif %]
+
+package_id:
+  type: str
+  default: "[[ root_namespace ]]"
+  help: >-
+    The NuGet package identifier the library is published under. It may contain letters, digits, underscores, dots, and hyphens, and is at most 100
+    characters long.
+  validator: >-
+    [% if not package_id | regex_search('^[A-Za-z0-9_]+([.-][A-Za-z0-9_]+)*$') %]The package ID may only contain letters, digits, and underscores,
+    separated by single dots or hyphens.[% elif package_id | length > 100 %]The package ID must not be longer than 100 characters.[% endif %]
+
+author:
+  type: str
+  help: The author of the library, used for the NuGet package metadata.
+  validator: >-
+    [% if not author | trim %]The author must not be empty.[% elif author | regex_search('["\\\\<>&\\[\\]]') %]The author must not contain double
+    quotes, backslashes, square brackets, or the characters "<", ">", and "&".[% endif %]
+
+copyright_holder:
+  type: str
+  default: "[[ author ]]"
+  help: The copyright holder, used for the copyright notice in the project files and, for some licenses, in the license text itself.
+  validator: >-
+    [% if not copyright_holder | trim %]The copyright holder must not be empty.[% elif copyright_holder | regex_search('["\\\\<>&]') %]The copyright
+    holder must not contain double quotes, backslashes, or the characters "<", ">", and "&".[% endif %]
+
+# The default is the year the project is generated in; "strftime" comes from the "jinja2_ansible_filters" extension that Copier always loads, so it
+# needs no "--trust"; an update reuses the recorded answer, so the year a project's copyright notice starts at never moves after generation
+copyright_year:
+  type: str
+  default: "[[ '%Y' | strftime ]]"
+  help: The year the copyright notice starts at.
+  validator: "[% if not copyright_year | regex_search('^[0-9]{4}$') %]The copyright year must be a four-digit year.[% endif %]"
+
+repository_url:
+  type: str
+  help: >-
+    The browse URL of the repository, without a trailing slash (e.g., "https://github.com/lecode-official/command-line-parser"). The documentation
+    website rewrites links that point outside of the documentation directory into absolute URLs at this address.
+  validator: >-
+    [% if not repository_url | regex_search('^https?://[^\\s"<>]*[^\\s"<>/]$') %]The repository URL must be an HTTP or HTTPS URL without spaces and
+    without a trailing slash.[% endif %]
+
+# Both branch names end up in the workflows, the editor settings, and the documentation, so they are limited to the characters Git allows in a branch
+# name that are also safe in YAML and JSON
+default_branch:
+  type: str
+  default: main
+  help: The branch that releases are cut from and that the documentation website is deployed from.
+  validator: >-
+    [% if not default_branch | regex_search('^[A-Za-z0-9]([A-Za-z0-9._/-]*[A-Za-z0-9])?$') or '..' in default_branch %]The default branch must be a
+    valid branch name made of letters, digits, dots, slashes, hyphens, and underscores.[% endif %]
+
+integration_branch:
+  type: str
+  default: development
+  help: >-
+    The long-lived branch that feature branches are merged into before a release is merged into the default branch. Like the default branch, it is
+    protected against commits through the editor's own Git user interface.
+  validator: >-
+    [% if not integration_branch | regex_search('^[A-Za-z0-9]([A-Za-z0-9._/-]*[A-Za-z0-9])?$') or '..' in integration_branch %]The integration branch
+    must be a valid branch name made of letters, digits, dots, slashes, hyphens, and underscores.[% elif integration_branch == default_branch %]The
+    integration branch must differ from the default branch.[% endif %]
+
+maintainer_name:
+  type: str
+  default: "[[ author ]]"
+  help: The person or team named in "SECURITY.md" and "CODE_OF_CONDUCT.md" as the contact for reports.
+  validator: >-
+    [% if not maintainer_name | trim %]The maintainer name must not be empty.[% elif maintainer_name | regex_search('["\\\\<>&\\[\\]]') %]The
+    maintainer name must not contain double quotes, backslashes, square brackets, or the characters "<", ">", and "&".[% endif %]
+
+maintainer_url:
+  type: str
+  help: A profile or contact URL for the maintainer, either an HTTP or HTTPS URL, or a "mailto:" link.
+  validator: >-
+    [% if not maintainer_url | regex_search('^(https?://|mailto:)[^\\s"<>()]+$') %]The maintainer URL must be an HTTP or HTTPS URL, or a "mailto:"
+    link, without spaces or parentheses.[% endif %]
+
+target_framework:
+  type: str
+  default: net10.0
+  help: The target framework the library is built for.
+  choices:
+    .NET 10 (LTS, supported until November 14, 2028): net10.0
+
+# A free string instead of a list of choices: Copier rejects any answer that is not one of the choices, also when it replays a recorded answer during
+# "copier update", so once a version was dropped from the list, every project that had picked it could no longer be updated; the default, and the
+# bands named in the help, are raised whenever a new SDK is released (see docs/project-template/questions.md)
+dotnet_sdk_version:
+  type: str
+  default: "[% if target_framework == 'net10.0' %]10.0.402[% endif %]"
+  help: >-
+    The .NET SDK version pinned exactly in "global.json". The feature bands of .NET 10 that still receive servicing updates are 10.0.4xx (newest
+    tooling, currently 10.0.402) and 10.0.1xx (the original band, currently 10.0.113). Both carry the same runtime and the same security fixes. Any
+    other released SDK version of the target framework's major version is accepted as well.
+  validator: >-
+    [% if not dotnet_sdk_version | regex_search('^[0-9]+\\.[0-9]+\\.[0-9]{3}$') %]The .NET SDK version must be a full release version, e.g.,
+    "10.0.402".[% elif not dotnet_sdk_version.startswith(target_framework[3:] ~ '.') %]The .NET SDK version must belong to the target framework, i.e.,
+    start with "[[ target_framework[3:] ]].".[% endif %]
+
+license:
+  type: str
+  default: LGPL-3.0-or-later
+  help: >-
+    The license the library is released under, given as an SPDX license identifier. It is written to the "LICENSE" file and to the
+    "PackageLicenseExpression" of the library project. Choose "UNLICENSED" for a library that is not published publicly. It is a NuGet extension to
+    the SPDX syntax that packs successfully but is rejected by nuget.org.
+  choices:
+    MIT: MIT
+    Apache License 2.0: Apache-2.0
+    BSD 2-Clause "Simplified" License: BSD-2-Clause
+    BSD 3-Clause "New" or "Revised" License: BSD-3-Clause
+    Mozilla Public License 2.0: MPL-2.0
+    GNU Lesser General Public License v3.0 or later: LGPL-3.0-or-later
+    GNU Lesser General Public License v3.0 only: LGPL-3.0-only
+    GNU General Public License v3.0 or later: GPL-3.0-or-later
+    GNU General Public License v3.0 only: GPL-3.0-only
+    Proprietary, all rights reserved: UNLICENSED

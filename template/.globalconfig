@@ -1,0 +1,903 @@
+# The static code analysis configuration for every C# project in this repository (see Static Code Analysis); this is a global analyzer configuration
+# file, not an EditorConfig file: the compiler discovers a file named ".globalconfig" in the directory of every source file and all of its parent
+# directories, and applies its settings to the whole compilation instead of to a file glob, so this one file at the repository root covers the
+# library, the sample app, and the unit tests alike; it therefore has no sections (a "[*.cs]" header would be ignored, together with everything below
+# it), and it only holds analyzer settings: the rule severities and the options the analyzers read; everything an editor reads (indentation, line
+# endings, the character set) stays in ".editorconfig", which also overrides any setting in this file that it repeats, so it must not repeat any of
+# them
+
+# A file named ".globalconfig" is global even without this key, but stating it keeps the file self-describing
+is_global = true
+
+# The level decides which global configuration file wins when two of them set the same key; the SDK's own "AnalysisLevel" configuration uses negative
+# levels, so every setting in this file overrides it; the more specific ".globalconfig" files further down the tree (e.g., the one of the unit test
+# project) use a higher level, so that they override this file, instead of canceling each other's settings out, which is what happens when two files
+# with the same level conflict
+global_level = 100
+
+# Code-Style Analysis Rules
+# -------------------------
+
+# Static members are always qualified with their type name, therefore, IDE0002, which simplifies member access by removing the type name, is disabled
+dotnet_diagnostic.IDE0002.severity = none
+
+# Fields, properties, methods, and events are always qualified with "this", which the StyleCop Analyzers rule SA1101 enforces in the build; these
+# options keep the IDE from contradicting it, and IDE0003, which removes "this", is disabled (its opposite, IDE0009, never runs in the build, and
+# SX1101, the StyleCop Analyzers rule that removes "this", is disabled by default)
+dotnet_diagnostic.IDE0003.severity = none
+dotnet_style_qualification_for_field = true
+dotnet_style_qualification_for_property = true
+dotnet_style_qualification_for_method = true
+dotnet_style_qualification_for_event = true
+
+# Unnecessary using directives are reported in the build (this requires "GenerateDocumentationFile", which every project enables)
+dotnet_diagnostic.IDE0005.severity = warning
+
+# Formatting is owned by dprint (see Formatting), so the code-style rule IDE0055, which reports formatting that deviates from the formatting options,
+# is disabled instead of having a second tool report what the formatter fixes anyway
+dotnet_diagnostic.IDE0055.severity = none
+
+# Using directives are placed outside of the namespace declaration, which StyleCop Analyzers (SA1200) reads as well, so the editor, the code-style
+# rule IDE0065, and SA1200 all agree
+csharp_using_directive_placement = outside_namespace
+
+# Accessibility modifiers are always written, even on interface members, where "public" is the default (see C# Style; relates to the code-style rule
+# IDE0040, the StyleCop Analyzers rule SA1400, and the Roslynator rule RCS1018)
+dotnet_style_require_accessibility_modifiers = always
+
+# The StyleCop Analyzers rule SA1400 is disabled, and the Roslynator rule RCS1018, which is disabled by default, is not enabled, because the
+# code-style rule IDE0040 reports the same, and when two rules report the same thing, the built-in rule is kept and the other one is disabled, so that
+# a single problem never shows up twice (see Static Code Analysis)
+dotnet_diagnostic.SA1400.severity = none
+
+# Explicit types are always used instead of the "var" keyword; the "csharp_style_var_*" options already default to explicit types, so raising IDE0008
+# to a warning is enough to enforce it (the Roslynator rule RCS1264 reports the same and is therefore not enabled)
+dotnet_diagnostic.IDE0008.severity = warning
+
+# Curly braces are only required when the body of a statement spans multiple lines (relates to the StyleCop Analyzers rule SA1503 and the Roslynator
+# rules RCS1001 to RCS1004, RCS1007, and RCS1126, which are configured the same way below)
+csharp_prefer_braces = false
+
+# A constructor or a method whose body fits on a single line uses an expression body; when the body spans multiple lines, a block body is used
+# (relates to the rules IDE0021 and IDE0022; this rule is equivalent to the Roslynator rule RCS1016)
+csharp_style_expression_bodied_constructors = when_on_single_line
+csharp_style_expression_bodied_methods = when_on_single_line
+
+# The member names of tuples and anonymous types are always specified explicitly, i.e., "new { Age = age, Name = name }" instead of "new { age, name
+# }" (relates to the rule IDE0037)
+dotnet_style_prefer_inferred_tuple_names = false
+dotnet_style_prefer_inferred_anonymous_type_member_names = false
+
+# In general, conditional expressions are preferred over if-else statements, but the rules IDE0045 and IDE0046 also flag if-else statements that are
+# too complex to be read comfortably as a conditional expression, therefore, they are disabled
+dotnet_style_prefer_conditional_expression_over_assignment = false
+dotnet_style_prefer_conditional_expression_over_return = false
+
+# The value of an expression does not have to be used or discarded explicitly, i.e., the return value of a method call may be ignored without
+# assigning it to the discard "_"
+dotnet_diagnostic.IDE0058.severity = none
+
+# Namespaces are always file-scoped (relates to the rules IDE0160 and IDE0161)
+csharp_style_namespace_declarations = file_scoped
+
+# A lambda expression is preferred, even when it calls a method with the same signature, i.e., "items.Select(item => Foo(item))" instead of
+# "items.Select(Foo)", therefore, IDE0200, which converts it into a method group, is disabled (this rule is equivalent to the Roslynator rule RCS1207,
+# which is configured the same way below)
+dotnet_diagnostic.IDE0200.severity = none
+
+# Primary constructors are not used, because their parameters cannot carry XML documentation comments of their own (relates to the rule IDE0290)
+csharp_style_prefer_primary_constructors = false
+
+# The naming rules of the code-style rule IDE1006: interfaces are prefixed with "I", types and non-field members are PascalCase, asynchronous methods
+# end with "Async", private fields are camelCase without an underscore, and parameters and local variables are camelCase (see C# Style); StyleCop
+# Analyzers checks most of these as well, but IDE1006 also offers a code fix that renames every reference
+dotnet_naming_rule.interfaces_are_prefixed_with_i.symbols = interfaces
+dotnet_naming_rule.interfaces_are_prefixed_with_i.style = prefixed_with_i
+dotnet_naming_rule.interfaces_are_prefixed_with_i.severity = warning
+dotnet_naming_rule.async_methods_end_with_async.symbols = async_methods
+dotnet_naming_rule.async_methods_end_with_async.style = pascal_case_with_async_suffix
+dotnet_naming_rule.async_methods_end_with_async.severity = warning
+dotnet_naming_rule.types_and_members_are_pascal_case.symbols = types_and_members
+dotnet_naming_rule.types_and_members_are_pascal_case.style = pascal_case
+dotnet_naming_rule.types_and_members_are_pascal_case.severity = warning
+dotnet_naming_rule.private_fields_are_camel_case.symbols = private_fields
+dotnet_naming_rule.private_fields_are_camel_case.style = camel_case
+dotnet_naming_rule.private_fields_are_camel_case.severity = warning
+dotnet_naming_rule.parameters_and_locals_are_camel_case.symbols = parameters_and_locals
+dotnet_naming_rule.parameters_and_locals_are_camel_case.style = camel_case
+dotnet_naming_rule.parameters_and_locals_are_camel_case.severity = warning
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+dotnet_naming_symbols.interfaces.applicable_accessibilities = *
+dotnet_naming_symbols.async_methods.applicable_kinds = method
+dotnet_naming_symbols.async_methods.applicable_accessibilities = *
+dotnet_naming_symbols.async_methods.required_modifiers = async
+dotnet_naming_symbols.types_and_members.applicable_kinds = namespace, class, struct, enum, delegate, event, method, property, local_function, type_parameter
+dotnet_naming_symbols.types_and_members.applicable_accessibilities = *
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_symbols.parameters_and_locals.applicable_kinds = parameter, local
+dotnet_naming_symbols.parameters_and_locals.applicable_accessibilities = *
+dotnet_naming_style.prefixed_with_i.required_prefix = I
+dotnet_naming_style.prefixed_with_i.capitalization = pascal_case
+dotnet_naming_style.pascal_case_with_async_suffix.required_suffix = Async
+dotnet_naming_style.pascal_case_with_async_suffix.capitalization = pascal_case
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+dotnet_naming_style.camel_case.capitalization = camel_case
+
+# The StyleCop Analyzers rules SA1300 (PascalCase elements), SA1302 (the "I" prefix of interfaces), SA1309 (no underscore at the beginning of a field
+# name), SA1312 (camelCase variables), and SA1313 (camelCase parameters) are disabled, and the Roslynator rule RCS1046 (the "Async" suffix), which is
+# disabled by default, is not enabled, because the code-style rule IDE1006 reports the same, and when two rules report the same thing, the built-in
+# rule is kept and the other one is disabled, so that a single problem never shows up twice (see Static Code Analysis)
+dotnet_diagnostic.SA1300.severity = none
+dotnet_diagnostic.SA1302.severity = none
+dotnet_diagnostic.SA1309.severity = none
+dotnet_diagnostic.SA1312.severity = none
+dotnet_diagnostic.SA1313.severity = none
+
+# Code Quality Analysis Rules
+# ---------------------------
+
+# Localizing the messages of a library is a decision of its own, which this template does not make up front, therefore, CA1303, which requires literal
+# strings to come from a resource table, is disabled
+dotnet_diagnostic.CA1303.severity = none
+
+# The Roslynator rule RCS1090 enforces "ConfigureAwait(false)" instead, because it works both ways: where a project turns it around, it reports every
+# "ConfigureAwait" call, which CA2007 cannot do; having both enabled would report every missing call twice
+dotnet_diagnostic.CA2007.severity = none
+
+# StyleCop Analyzers Rules
+# ------------------------
+
+# Parameters may span multiple lines, e.g., a multi-line string passed to the constructor of an attribute, which would otherwise have to be declared
+# as a separate constant
+dotnet_diagnostic.SA1118.severity = none
+
+# Regions are used to group using directives and type members (see C# Style), so they must be allowed
+dotnet_diagnostic.SA1124.severity = none
+
+# Elements are ordered by their kind first, constants come before all other fields, static members come before instance members, and within each of
+# these groups, members are ordered by their accessibility (see C# Style); the "readonly" trait is left out on purpose, because the conventions do not
+# order fields by it
+stylecop.ordering.elementOrder = kind, constant, static, accessibility
+
+# Private members come first and public members last, which is the opposite of the default order of StyleCop Analyzers (relates to the rule SA1202,
+# which checks it)
+stylecop.ordering.accessibilityOrder = private, privateProtected, internal, protected, protectedInternal, public
+
+# Constructors come first and are followed by the fields, which includes the constants (relates to the rule SA1201); properties and methods are
+# deliberately not part of the list, because the members that implement an interface are grouped in a region of their own at the end of the type,
+# regardless of their kind (see C# Style), so a property that implements an interface may follow the methods
+stylecop.ordering.memberKindOrder = constructor, field
+
+# Field, parameter, and variable names do not use Hungarian notation; "id" is the one prefix that is allowed, because it is a sensible name for a
+# variable that holds an identifier
+dotnet_diagnostic.SA1305.severity = warning
+stylecop.naming.allowedHungarianPrefixes = id
+
+# Every member is documented, including private members and private fields (see Comments and Documentation Comments); StyleCop Analyzers only checks
+# public, protected, and internal elements by default
+stylecop.documentation.documentPrivateElements = true
+stylecop.documentation.documentPrivateFields = true
+
+# Static read-only fields do not begin with an upper-case letter, because fields are always private and private members begin with a lower-case letter
+dotnet_diagnostic.SA1311.severity = none
+
+# The last element of a multi-line initializer does not have a trailing comma (this rule is the opposite of the Roslynator rule RCS1260, which is
+# configured to remove trailing commas below)
+dotnet_diagnostic.SA1413.severity = none
+
+# An empty block, e.g., the body of a catch clause that deliberately swallows an exception, may have its curly braces on the same line as the
+# statement it belongs to, in order to save space
+dotnet_diagnostic.SA1501.severity = none
+
+# Curly braces are only required when the body of a statement spans multiple lines (this rule is the StyleCop Analyzers equivalent of the code-style
+# option "csharp_prefer_braces")
+dotnet_diagnostic.SA1503.severity = none
+
+# A closing curly brace does not have to be followed by a blank line, because code is grouped into logical blocks, which do not always end at a
+# closing curly brace (this rule is equivalent to the Roslynator rule RCS0008, which is disabled by default)
+dotnet_diagnostic.SA1513.severity = none
+
+# A code file may begin with a blank line
+dotnet_diagnostic.SA1517.severity = none
+
+# Code files do not have a file header; the license of the project is declared once, in the "LICENSE" file and in the project file of the library
+dotnet_diagnostic.SA1633.severity = none
+
+# Nullable.Extended Analyzer Rules
+# --------------------------------
+
+# Every use of the null-forgiving operator "!" needs a justification comment that starts with "// ! " on the line above the statement, or between the
+# documentation comment and the declaration it belongs to (see C# Style); the rules report a "!" without one, depending on where it is used: NX0001
+# everywhere not covered by the others, NX0002 on a "null" or "default" literal, NX0003 inside a lambda expression, and NX0004 on a "null" or
+# "default" literal that initializes an init-only property; all four are warnings by default, which is deliberately left unchanged, so none of them is
+# configured here
+
+# Roslynator Formatting Analyzers Rules
+# -------------------------------------
+
+# All formatting rules are disabled by default, so every rule that is used has to be enabled explicitly
+
+# There is a blank line after "#region", after the list of using directives, before "#endregion", and before the list of using directives
+dotnet_diagnostic.RCS0002.severity = warning
+dotnet_diagnostic.RCS0003.severity = warning
+dotnet_diagnostic.RCS0005.severity = warning
+dotnet_diagnostic.RCS0006.severity = warning
+
+# There is a blank line between the accessors of a property, when they span multiple lines
+dotnet_diagnostic.RCS0007.severity = warning
+
+# There is a blank line between a declaration and the documentation comment of the next declaration, and between declarations in general
+dotnet_diagnostic.RCS0009.severity = warning
+dotnet_diagnostic.RCS0010.severity = warning
+
+# There is no blank line between accessors that are on a single line each
+dotnet_diagnostic.RCS0011.severity = warning
+roslynator_blank_line_between_single_line_accessors = false
+
+# There is a blank line between single-line declarations, and between single-line declarations of different kinds
+dotnet_diagnostic.RCS0012.severity = warning
+dotnet_diagnostic.RCS0013.severity = warning
+
+# Using directives are not separated into groups by blank lines
+dotnet_diagnostic.RCS0015.severity = warning
+roslynator_blank_line_between_using_directives = never
+
+# Attributes are on a line of their own and not on the same line as the declaration they belong to (except for parameters)
+dotnet_diagnostic.RCS0016.severity = warning
+
+# An accessor with a block body is not on a single line (the default value of "roslynator_accessor_braces_style" is "multi_line")
+dotnet_diagnostic.RCS0020.severity = warning
+
+# Curly braces are on lines of their own, unless the block is empty, in which case they may share the line of the declaration or statement they belong
+# to, i.e., "protected void OnRunning() { }" (see C# Style); the StyleCop Analyzers rule SA1502, which forbids an element on a single line even when
+# it is empty, is disabled for the same reason as SA1501
+dotnet_diagnostic.RCS0021.severity = warning
+roslynator_block_braces_style = single_line_when_empty
+dotnet_diagnostic.SA1502.severity = none
+
+# The curly braces of a type declaration are on separate lines, i.e., "interface IFoo { }" is not allowed
+dotnet_diagnostic.RCS0023.severity = warning
+
+# There is a new line after a switch label, i.e., "case 1: return 1;" is not allowed
+dotnet_diagnostic.RCS0024.severity = warning
+
+# Each accessor of a property with a body is on a line of its own
+dotnet_diagnostic.RCS0025.severity = warning
+
+# When a binary expression spans multiple lines, the line is broken after the operator
+dotnet_diagnostic.RCS0027.severity = warning
+roslynator_binary_operator_new_line = after
+
+# When a conditional expression spans multiple lines, the line is broken before the "?" and ":" operators
+dotnet_diagnostic.RCS0028.severity = warning
+roslynator_conditional_operator_new_line = before
+
+# A constructor initializer ("base(...)" or "this(...)") is on a line of its own
+dotnet_diagnostic.RCS0029.severity = warning
+
+# An embedded statement, i.e., the statement after "if", "else", "for", "foreach", "while", "using", and the like, is on a line of its own, i.e., "if
+# (x) Foo();" is not allowed
+dotnet_diagnostic.RCS0030.severity = warning
+
+# Each enum member is on a line of its own
+dotnet_diagnostic.RCS0031.severity = warning
+
+# When an expression body spans multiple lines, the line is broken after the arrow
+dotnet_diagnostic.RCS0032.severity = warning
+roslynator_arrow_token_new_line = after
+
+# Each statement is on a line of its own, i.e., "Foo(); Bar();" is not allowed
+dotnet_diagnostic.RCS0033.severity = warning
+
+# Each type parameter constraint clause is on a line of its own
+dotnet_diagnostic.RCS0034.severity = warning
+
+# The list of base types is not on a line of its own
+dotnet_diagnostic.RCS0039.severity = warning
+
+# There is no line break between "else" and "if" in an else-if branch
+dotnet_diagnostic.RCS0041.severity = warning
+
+# The auto-accessors of a property are on the same line as the property declaration, i.e., "public int Foo { get; set; }"
+dotnet_diagnostic.RCS0042.severity = warning
+
+# Line breaks are a single line feed character, never a carriage return followed by a line feed (the opposite rule, RCS0044, is disabled by default)
+dotnet_diagnostic.RCS0045.severity = warning
+
+# Indentation uses spaces instead of tabs
+dotnet_diagnostic.RCS0046.severity = warning
+
+# There is a blank line after the comment at the top of a file, should a file ever have one, and a blank line before the top declaration
+dotnet_diagnostic.RCS0049.severity = warning
+dotnet_diagnostic.RCS0050.severity = warning
+
+# In a do-while loop, "while" is on the same line as the closing curly brace
+dotnet_diagnostic.RCS0051.severity = warning
+roslynator_new_line_before_while_in_do_statement = false
+
+# When an assignment spans multiple lines, the line is broken after the equals sign
+dotnet_diagnostic.RCS0052.severity = warning
+roslynator_equals_token_new_line = after
+
+# When a parameter list spans multiple lines, each parameter is on a line of its own
+dotnet_diagnostic.RCS0053.severity = warning
+
+# Multi-line call chains and multi-line binary expressions are indented consistently, with one element per line
+dotnet_diagnostic.RCS0054.severity = warning
+dotnet_diagnostic.RCS0055.severity = warning
+
+# No line exceeds 150 characters (see Line Length); the default limit of the rule is 140 characters
+dotnet_diagnostic.RCS0056.severity = warning
+roslynator_max_line_length = 150
+
+# Every file ends with a new line (this rule is equivalent to the StyleCop Analyzers rule SA1518; the rule RCS0057, which removes white space at the
+# beginning of a file, is disabled by default)
+dotnet_diagnostic.RCS0058.severity = warning
+roslynator_new_line_at_end_of_file = true
+
+# When a call chain spans multiple lines, the line is broken before the null-conditional operator, so that it stays together with the member access it
+# belongs to
+dotnet_diagnostic.RCS0059.severity = warning
+roslynator_null_conditional_operator_new_line = before
+
+# There is a blank line after a file-scoped namespace declaration
+dotnet_diagnostic.RCS0060.severity = warning
+roslynator_blank_line_after_file_scoped_namespace_declaration = true
+
+# There is a blank line between the sections of a switch statement
+dotnet_diagnostic.RCS0061.severity = warning
+roslynator_blank_line_between_switch_sections = include
+
+# There are no unnecessary blank lines, e.g., at the beginning or end of a block, or several in a row; a blank line between a closing brace and the
+# next switch section is not required either (this rule replaces the obsolete Roslynator rule RCS1036)
+dotnet_diagnostic.RCS0063.severity = warning
+roslynator_blank_line_between_closing_brace_and_switch_section = false
+
+# Roslynator Analyzers Rules
+# --------------------------
+
+# A Roslynator rule that requires an option does nothing at all when the option is missing; ROS0003 reports that, so that a rule never stays switched
+# off silently
+dotnet_diagnostic.ROS0003.severity = warning
+
+# The Roslynator rules RCS1085 (auto-implemented properties), RCS1169 (read-only fields), and RCS1213 (unused members) are disabled, because the
+# code-style rules IDE0032, IDE0044, IDE0051, and IDE0052 report the same, and when two rules report the same thing, the built-in rule is kept and the
+# other one is disabled, so that a single problem never shows up twice (see Static Code Analysis); all three are enabled by default
+dotnet_diagnostic.RCS1085.severity = none
+dotnet_diagnostic.RCS1169.severity = none
+dotnet_diagnostic.RCS1213.severity = none
+
+# The body of an "if", "else", "for", "foreach", "while", or "do" statement has curly braces when it spans multiple lines, and none when it is a
+# single line (the rules that add braces regardless, RCS1007 and RCS1126, are disabled by default)
+dotnet_diagnostic.RCS1001.severity = warning
+dotnet_diagnostic.RCS1002.severity = warning
+dotnet_diagnostic.RCS1003.severity = warning
+dotnet_diagnostic.RCS1004.severity = warning
+
+# Using statements are not nested, but placed one after the other with a single body
+dotnet_diagnostic.RCS1005.severity = warning
+
+# An "if" that is the only statement in an "else" is merged into an "else if"
+dotnet_diagnostic.RCS1006.severity = warning
+
+# Predefined types like "string" or "int" are used instead of their full type names "System.String" or "System.Int32"
+dotnet_diagnostic.RCS1013.severity = warning
+
+# The element type of an array creation is only omitted when it is obvious; omitting it is what makes collection expressions possible in the first
+# place
+dotnet_diagnostic.RCS1014.severity = warning
+roslynator_array_creation_type_style = implicit_when_type_is_obvious
+
+# The "nameof" operator is used instead of a string literal that names a symbol
+dotnet_diagnostic.RCS1015.severity = warning
+
+# A member whose body fits on a single line uses an expression body, even when its declaration spans multiple lines; when the expression itself spans
+# multiple lines, a block body is used (this rule is equivalent to the code-style options "csharp_style_expression_bodied_constructors" and
+# "csharp_style_expression_bodied_methods")
+dotnet_diagnostic.RCS1016.severity = warning
+roslynator_body_style = expression
+roslynator_use_block_body_when_expression_spans_over_multiple_lines = true
+
+# "T?" is used instead of "Nullable<T>"
+dotnet_diagnostic.RCS1020.severity = warning
+
+# A lambda expression whose body is a single statement uses an expression body
+dotnet_diagnostic.RCS1021.severity = warning
+
+# The sections of a switch statement do not have curly braces
+dotnet_diagnostic.RCS1031.severity = warning
+
+# Redundant parentheses are removed
+dotnet_diagnostic.RCS1032.severity = warning
+
+# Boolean values are not compared to boolean literals, i.e., "if (x)" instead of "if (x == true)"
+dotnet_diagnostic.RCS1033.severity = warning
+
+# A member of a sealed class is not declared as sealed itself
+dotnet_diagnostic.RCS1034.severity = warning
+
+# There is no trailing white space
+dotnet_diagnostic.RCS1037.severity = warning
+
+# An attribute without arguments has no parentheses
+dotnet_diagnostic.RCS1039.severity = warning
+
+# The underlying type of an enum is omitted when it is "int"
+dotnet_diagnostic.RCS1042.severity = warning
+
+# A type that only has a single part is not declared as partial
+dotnet_diagnostic.RCS1043.severity = warning
+
+# The names of synchronous methods do not end with "Async" (see C# Style); the opposite, that the names of asynchronous methods do end with it, is
+# checked by the naming rules of the code-style rule IDE1006 above
+dotnet_diagnostic.RCS1047.severity = warning
+
+# Lambda expressions are used instead of anonymous methods
+dotnet_diagnostic.RCS1048.severity = warning
+
+# Boolean expressions are negated instead of being compared to "false", i.e., "if (!x)" instead of "if (x == false)"
+dotnet_diagnostic.RCS1049.severity = warning
+
+# An object creation expression that has an initializer omits the parentheses of the constructor call
+dotnet_diagnostic.RCS1050.severity = warning
+roslynator_object_creation_parentheses_style = omit
+
+# The condition of a conditional expression is not wrapped in parentheses
+dotnet_diagnostic.RCS1051.severity = warning
+roslynator_conditional_operator_condition_parentheses_style = omit
+
+# Attributes are declared separately, each in its own pair of square brackets and on a line of its own, i.e., "[Obsolete, Conditional("DEBUG")]" is
+# not allowed
+dotnet_diagnostic.RCS1052.severity = warning
+
+# There are no unnecessary semicolons at the end of declarations, i.e., "class Foo { };" is not allowed
+dotnet_diagnostic.RCS1055.severity = warning
+
+# Using alias directives are not used
+dotnet_diagnostic.RCS1056.severity = warning
+
+# Compound assignment operators are used, i.e., "x += y" instead of "x = x + y"
+dotnet_diagnostic.RCS1058.severity = warning
+
+# Each type is declared in a file of its own (see C# Style)
+dotnet_diagnostic.RCS1060.severity = warning
+
+# Nested "if" statements are merged
+dotnet_diagnostic.RCS1061.severity = warning
+
+# Double negations are avoided, and so are "!true" and "!false"
+dotnet_diagnostic.RCS1068.severity = warning
+
+# Case labels that only fall through to the default label are removed
+dotnet_diagnostic.RCS1069.severity = warning
+
+# A default section that does nothing is removed
+dotnet_diagnostic.RCS1070.severity = warning
+
+# A redundant call to the base constructor without arguments is removed
+dotnet_diagnostic.RCS1071.severity = warning
+
+# An "if" statement that only returns "true" or "false", or a value or "null", is replaced by returning the expression directly
+dotnet_diagnostic.RCS1073.severity = warning
+
+# A constructor that does nothing is removed
+dotnet_diagnostic.RCS1074.severity = warning
+
+# LINQ calls are optimized, e.g., "items.Any(predicate)" instead of "items.Where(predicate).Any()"
+dotnet_diagnostic.RCS1077.severity = warning
+
+# An empty string is always written as "string.Empty" (this rule is equivalent to the StyleCop Analyzers rule SA1122)
+dotnet_diagnostic.RCS1078.severity = warning
+roslynator_empty_string_style = field
+
+# "Count" or "Length" is used instead of "Any()" to check whether a collection has any elements
+dotnet_diagnostic.RCS1080.severity = warning
+
+# Each variable is declared on a line of its own
+dotnet_diagnostic.RCS1081.severity = warning
+
+# The null-coalescing operator is used instead of a conditional expression
+dotnet_diagnostic.RCS1084.severity = warning
+
+# An assignment like "x += 1" is not replaced by the increment operator "x++", because the increment and decrement operators behave differently
+# depending on whether they are used as prefix or postfix operators, which may be confusing
+dotnet_diagnostic.RCS1089.severity = none
+
+# Awaiting a task always uses "ConfigureAwait(false)"; projects that are not class libraries set "roslynator_configure_await" to "false" in a
+# ".globalconfig" file of their own, which turns the rule around, so that it reports any "ConfigureAwait" call instead (the code quality rule CA2007,
+# which reports the same, is disabled above)
+dotnet_diagnostic.RCS1090.severity = warning
+roslynator_configure_await = true
+
+# Empty code files are removed
+dotnet_diagnostic.RCS1093.severity = warning
+
+# Using directives are placed outside of the namespace declaration
+dotnet_diagnostic.RCS1094.severity = warning
+
+# The "HasFlag" method is used to check whether an enum value has a flag, which is slightly slower than a bitwise operation, but much more readable
+dotnet_diagnostic.RCS1096.severity = warning
+roslynator_enum_has_flag_style = method
+
+# "ToString()" is not called on a string, nor inside of an interpolated string
+dotnet_diagnostic.RCS1097.severity = warning
+
+# Constant values are placed on the right-hand side of a comparison, i.e., "if (x == 0)" instead of "if (0 == x)"
+dotnet_diagnostic.RCS1098.severity = warning
+
+# The default section is the last section of a switch statement
+dotnet_diagnostic.RCS1099.severity = warning
+
+# An "if" statement that only assigns "true" or "false" to a variable is replaced by assigning the condition directly
+dotnet_diagnostic.RCS1103.severity = warning
+
+# A conditional expression whose branches are "true" and "false" is replaced by its condition
+dotnet_diagnostic.RCS1104.severity = warning
+
+# A string without any interpolation has no "$" prefix
+dotnet_diagnostic.RCS1105.severity = warning
+
+# Unnecessary calls to "ToCharArray()" are removed, i.e., "foreach (char character in text)" instead of "foreach (char character in
+# text.ToCharArray())"
+dotnet_diagnostic.RCS1107.severity = warning
+
+# If one part of a partial class is declared as static, all of its parts are declared as static
+dotnet_diagnostic.RCS1108.severity = warning
+
+# Types are always declared inside of a namespace
+dotnet_diagnostic.RCS1110.severity = warning
+
+# Consecutive "Where()" calls are combined into a single call
+dotnet_diagnostic.RCS1112.severity = warning
+
+# "string.IsNullOrEmpty()" is used instead of "text == null || text.Length == 0"
+dotnet_diagnostic.RCS1113.severity = warning
+
+# Redundant delegate creations are removed, i.e., "Changed += OnChanged;" instead of "Changed += new EventHandler(OnChanged);"
+dotnet_diagnostic.RCS1114.severity = warning
+
+# A local variable that holds a constant value and is never changed is declared as "const"
+dotnet_diagnostic.RCS1118.severity = warning
+
+# Parentheses are added where they clarify the order of operations, e.g., "(a && b) || c" instead of "a && b || c", because not every reader knows the
+# precedence of every operator by heart; this is enforced by the code-style rule IDE0048, so RCS1123 and the StyleCop Analyzers rules SA1407 and
+# SA1408 are disabled, because they report the same (see Static Code Analysis)
+dotnet_diagnostic.RCS1123.severity = none
+dotnet_diagnostic.SA1407.severity = none
+dotnet_diagnostic.SA1408.severity = none
+
+# A local variable that is used only once, right after its declaration, is inlined
+dotnet_diagnostic.RCS1124.severity = warning
+
+# The null-coalescing operator is used instead of an "if" statement
+dotnet_diagnostic.RCS1128.severity = warning
+
+# Fields are not initialized to their default value
+dotnet_diagnostic.RCS1129.severity = warning
+
+# The bitwise operators are not used on enums that are not marked with the "Flags" attribute
+dotnet_diagnostic.RCS1130.severity = warning
+
+# An overriding member that does nothing more than calling the overridden member is removed
+dotnet_diagnostic.RCS1132.severity = warning
+
+# An object that is used in a using statement is not disposed of explicitly
+dotnet_diagnostic.RCS1133.severity = warning
+
+# Redundant statements are removed
+dotnet_diagnostic.RCS1134.severity = warning
+
+# The zero value of an enum that is marked with the "Flags" attribute is named "None"
+dotnet_diagnostic.RCS1135.severity = warning
+
+# Switch sections that have the same body are merged
+dotnet_diagnostic.RCS1136.severity = warning
+
+# Every exception that is thrown, every parameter, and every type parameter is documented in the documentation comment of its member (see Comments and
+# Documentation Comments)
+dotnet_diagnostic.RCS1140.severity = warning
+dotnet_diagnostic.RCS1141.severity = warning
+dotnet_diagnostic.RCS1142.severity = warning
+
+# A null-coalescing expression that always results in one of its operands is simplified
+dotnet_diagnostic.RCS1143.severity = warning
+
+# A redundant "as" operator is removed
+dotnet_diagnostic.RCS1145.severity = warning
+
+# The null-conditional operator is used instead of a separate null check, i.e., "if (x?.StartsWith("a") == true)" instead of "if (x != null &&
+# x.StartsWith("a"))"
+dotnet_diagnostic.RCS1146.severity = warning
+
+# Redundant casts are removed
+dotnet_diagnostic.RCS1151.severity = warning
+
+# The members of an enum are sorted by their values
+dotnet_diagnostic.RCS1154.severity = warning
+
+# "string.Length" is used instead of a comparison with an empty string
+dotnet_diagnostic.RCS1156.severity = warning
+
+# A composite value of an enum that is marked with the "Flags" attribute is only composed of values that exist
+dotnet_diagnostic.RCS1157.severity = warning
+
+# A static member of a generic type uses one of the type's type parameters, because otherwise, callers would have to specify a type argument that is
+# never used, i.e., "Foo<int>.Bar()"
+dotnet_diagnostic.RCS1158.severity = warning
+
+# "EventHandler<T>" is used instead of a custom event handler delegate
+dotnet_diagnostic.RCS1159.severity = warning
+
+# An abstract type does not have a public constructor
+dotnet_diagnostic.RCS1160.severity = warning
+
+# Enum members declare their values explicitly, i.e., "enum Foo { A = 0, B = 1 }" instead of "enum Foo { A, B }"
+dotnet_diagnostic.RCS1161.severity = warning
+
+# Chained assignments, i.e., "x = y = 0", are avoided
+dotnet_diagnostic.RCS1162.severity = warning
+
+# Unused type parameters are removed; unused parameters are reported by the code-style rule IDE0060, which is why the Roslynator rule RCS1163, which
+# reports the same, is disabled
+dotnet_diagnostic.RCS1163.severity = none
+dotnet_diagnostic.RCS1164.severity = warning
+
+# A variable of an unconstrained type parameter is checked for "null" with "is null" instead of a comparison with "default"
+dotnet_diagnostic.RCS1165.severity = warning
+
+# A value type is never checked for "null", because it can never be "null"
+dotnet_diagnostic.RCS1166.severity = warning
+
+# The names of parameters match the names of the parameters in the base member or the interface member they implement
+dotnet_diagnostic.RCS1168.severity = warning
+
+# A read-only auto-implemented property is used instead of a property with a private setter that is never used
+dotnet_diagnostic.RCS1170.severity = warning
+
+# The null-coalescing operator is used to simplify lazy initialization
+dotnet_diagnostic.RCS1171.severity = warning
+
+# The null-coalescing operator is used instead of an "if" statement that assigns one of two values depending on whether a value is "null"
+dotnet_diagnostic.RCS1173.severity = warning
+
+# A method that only awaits another asynchronous method and returns its result returns the task directly instead (this rule is related to the
+# Roslynator rule RCS1229)
+dotnet_diagnostic.RCS1174.severity = warning
+
+# An unused "this" parameter of an extension method is removed
+dotnet_diagnostic.RCS1175.severity = warning
+
+# An assignment to a variable that is only returned afterwards is replaced by returning the value directly
+dotnet_diagnostic.RCS1179.severity = warning
+
+# Lazy initialization is not inlined into the expression that uses it, i.e., "(items ??= []).Add(item)" is not enforced, because a separate statement
+# is easier to read
+dotnet_diagnostic.RCS1180.severity = none
+
+# A regular comment above a declaration is converted into a documentation comment
+dotnet_diagnostic.RCS1181.severity = warning
+
+# Redundant base interfaces are removed, e.g., "IEnumerable<string>" is not listed when "List<string>" already implements it
+dotnet_diagnostic.RCS1182.severity = warning
+
+# A "Regex" instance is used instead of the static methods of the "Regex" class
+dotnet_diagnostic.RCS1186.severity = warning
+
+# A constant is used instead of a static read-only field whose value is constant
+dotnet_diagnostic.RCS1187.severity = warning
+
+# An auto-implemented property is not initialized with its default value
+dotnet_diagnostic.RCS1188.severity = warning
+
+# The "#endregion" directive neither has to repeat the name of its region, nor must it omit it
+dotnet_diagnostic.RCS1189.severity = none
+
+# String literals are not concatenated, i.e., "foobar" instead of "foo" + "bar"
+dotnet_diagnostic.RCS1190.severity = warning
+
+# A composite value of an enum that is marked with the "Flags" attribute is declared with the bitwise or operator instead of a literal value, i.e.,
+# "All = A | B | C" instead of "All = 7"
+dotnet_diagnostic.RCS1191.severity = warning
+
+# Unnecessary verbatim string literals are avoided, i.e., "foo" instead of @"foo"
+dotnet_diagnostic.RCS1192.severity = warning
+
+# The logical exclusive or operator "^" is used instead of an equivalent combination of the "&&" and "||" operators
+dotnet_diagnostic.RCS1195.severity = warning
+
+# Extension methods are always called as if they were instance methods, i.e., "x.Foo()" instead of "Foo(x)"
+dotnet_diagnostic.RCS1196.severity = warning
+
+# "Append()" and "AppendLine()" calls on a "StringBuilder" are chained instead of concatenating their arguments
+dotnet_diagnostic.RCS1197.severity = warning
+
+# A nullable value is compared directly instead of checking "HasValue" first, i.e., "if (x == true)" instead of "if (x.HasValue && x.Value)"
+dotnet_diagnostic.RCS1199.severity = warning
+
+# "ThenBy()" is used instead of a second "OrderBy()" when ordering by multiple keys
+dotnet_diagnostic.RCS1200.severity = warning
+
+# Method calls on the same object are chained, i.e., "builder.Append("a").Append("b")"
+dotnet_diagnostic.RCS1201.severity = warning
+
+# The null-conditional operator is used to avoid a possible "NullReferenceException"
+dotnet_diagnostic.RCS1202.severity = warning
+
+# "EventArgs.Empty" is used instead of creating a new instance of "EventArgs"
+dotnet_diagnostic.RCS1204.severity = warning
+
+# Named arguments are ordered in the same order as the parameters of the method
+dotnet_diagnostic.RCS1205.severity = warning
+
+# The null-conditional operator is used instead of a conditional expression
+dotnet_diagnostic.RCS1206.severity = warning
+
+# A lambda expression is preferred over a method group, even when it only calls a method with the same signature (this rule is equivalent to the
+# code-style rule IDE0200, which is configured the same way above)
+dotnet_diagnostic.RCS1207.severity = warning
+roslynator_use_anonymous_function_or_method_group = anonymous_function
+
+# "if" statements are not nested unnecessarily
+dotnet_diagnostic.RCS1208.severity = warning
+
+# Type parameter constraints are ordered in the same order as the type parameters
+dotnet_diagnostic.RCS1209.severity = warning
+
+# An "else" clause that is unnecessary, because its "if" branch always returns, is removed
+dotnet_diagnostic.RCS1211.severity = warning
+
+# Redundant assignments are removed
+dotnet_diagnostic.RCS1212.severity = warning
+
+# Interpolated strings without any interpolation are not used
+dotnet_diagnostic.RCS1214.severity = warning
+
+# Unnecessary unsafe contexts are removed
+dotnet_diagnostic.RCS1216.severity = warning
+
+# An interpolated string is not converted into a concatenation, because interpolation reads better
+dotnet_diagnostic.RCS1217.severity = none
+
+# Branches are simplified, i.e., "if (!x) { M(); }" instead of "if (x) { } else { M(); }"
+dotnet_diagnostic.RCS1218.severity = warning
+
+# Pattern matching is used instead of a combination of the "is" operator and a cast, i.e., "if (x is string s && Foo(s))" instead of "if (x is string
+# && Foo((string)x))"
+dotnet_diagnostic.RCS1220.severity = warning
+
+# Pattern matching is used instead of a combination of the "as" operator and a null check
+dotnet_diagnostic.RCS1221.severity = warning
+
+# Consecutive preprocessor directives of the same kind are merged, i.e., "#pragma warning disable RCS1222, RCS1223"
+dotnet_diagnostic.RCS1222.severity = warning
+
+# All public and internal methods of a static class whose name ends with "Extensions" are extension methods
+dotnet_diagnostic.RCS1224.severity = warning
+
+# A class that only has private constructors is sealed
+dotnet_diagnostic.RCS1225.severity = warning
+
+# Sections of a documentation comment summary that are separated by a blank line are wrapped in paragraphs
+dotnet_diagnostic.RCS1226.severity = warning
+
+# An iterator method validates its arguments immediately, not only when the caller begins to enumerate its result
+dotnet_diagnostic.RCS1227.severity = warning
+
+# Empty elements in documentation comments are removed
+dotnet_diagnostic.RCS1228.severity = warning
+
+# An asynchronous method that only returns the result of another asynchronous method awaits it, instead of returning the task, which would leave a
+# disposed "using" variable behind (this rule is related to the Roslynator rule RCS1174)
+dotnet_diagnostic.RCS1229.severity = warning
+
+# An enumerator is not used directly when a "foreach" loop does the same
+dotnet_diagnostic.RCS1230.severity = warning
+
+# The elements of a documentation comment are ordered in the same order as the elements of the code they document
+dotnet_diagnostic.RCS1232.severity = warning
+
+# The boolean operators "&&" and "||" are used instead of the bitwise operators "&" and "|", because they short-circuit
+dotnet_diagnostic.RCS1233.severity = warning
+
+# When two enum members have the same value, the second one references the first one instead of repeating the value
+dotnet_diagnostic.RCS1234.severity = warning
+
+# "string.CompareOrdinal()" is used instead of "string.Compare()" with "StringComparison.Ordinal"
+dotnet_diagnostic.RCS1235.severity = warning
+
+# Exception filters are used instead of checking the type of an exception with an "if" statement inside of the catch clause
+dotnet_diagnostic.RCS1236.severity = warning
+
+# Nested conditional expressions are replaced by "if" statements
+dotnet_diagnostic.RCS1238.severity = warning
+
+# A "for" loop is used instead of a "while" loop that increments an index
+dotnet_diagnostic.RCS1239.severity = warning
+
+# The length of a collection is compared with zero using the equality operator, i.e., "items.Count == 0" instead of "items.Count <= 0"
+dotnet_diagnostic.RCS1240.severity = warning
+
+# A type that implements a generic interface with a non-generic counterpart, e.g., "IComparable<T>", implements the non-generic interface as well
+dotnet_diagnostic.RCS1241.severity = warning
+
+# Duplicate words in comments are removed
+dotnet_diagnostic.RCS1243.severity = warning
+
+# The "default" literal is used instead of the "default(T)" expression, where the type can be inferred
+dotnet_diagnostic.RCS1244.severity = warning
+
+# The indexer is used instead of "First()"
+dotnet_diagnostic.RCS1246.severity = warning
+
+# The "<c>" tag is used instead of the "<code>" tag for inline code in documentation comments
+dotnet_diagnostic.RCS1247.severity = warning
+
+# Null checks always use pattern matching, i.e., "x is null" instead of "x == null"
+dotnet_diagnostic.RCS1248.severity = warning
+roslynator_null_check_style = pattern_matching
+
+# The null-forgiving operator is not used when the expression cannot be "null" anyway
+dotnet_diagnostic.RCS1249.severity = warning
+
+# Objects are created with a target-typed "new()" instead of repeating the type name, and "var" is never used for it, i.e., "Foo foo = new();" instead
+# of "var foo = new Foo();"; collection expressions are used to create collections, i.e., "List<string> items = [];" instead of "List<string> items =
+# new();"
+dotnet_diagnostic.RCS1250.severity = warning
+roslynator_object_creation_type_style = implicit
+roslynator_use_collection_expression = true
+roslynator_use_var_instead_of_implicit_object_creation = false
+
+# A record without a body ends with a semicolon instead of empty curly braces, i.e., "public record Foo(string Bar);"
+dotnet_diagnostic.RCS1251.severity = warning
+
+# Infinite loops use "while (true)" instead of "for (;;)"
+dotnet_diagnostic.RCS1252.severity = warning
+roslynator_infinite_loop_style = while
+
+# The summary of a documentation comment spans multiple lines and is never on a single line together with its "<summary>" tags
+dotnet_diagnostic.RCS1253.severity = warning
+roslynator_doc_comment_summary_style = multi_line
+
+# The values of an enum that is marked with the "Flags" attribute are declared with the shift operator, i.e., "1 << 3" instead of "8"
+dotnet_diagnostic.RCS1254.severity = warning
+roslynator_enum_flag_value_style = shift_operator
+
+# Arguments are validated with "ArgumentNullException.ThrowIfNull()" and its siblings instead of "if" statements
+dotnet_diagnostic.RCS1255.severity = warning
+
+# A parameter that is nullable or whose default value is "null" is not checked for "null" with a throw helper
+dotnet_diagnostic.RCS1256.severity = warning
+
+# An enum member is referenced by name instead of casting an integer literal to the enum type
+dotnet_diagnostic.RCS1257.severity = warning
+
+# A flag that is already included in another flag of the same expression is removed
+dotnet_diagnostic.RCS1258.severity = warning
+
+# Empty syntax, i.e., empty destructors, "else" clauses, "finally" clauses, namespace declarations, object initializers, regions, and statements, is
+# removed
+dotnet_diagnostic.RCS1259.severity = warning
+
+# Argument lists, array initializers, and collection initializers have no trailing comma (this rule is the opposite of the StyleCop Analyzers rule
+# SA1413, which is disabled above)
+dotnet_diagnostic.RCS1260.severity = warning
+roslynator_trailing_comma_style = omit
+
+# "await using" is used instead of "using" for types that implement "IAsyncDisposable"
+dotnet_diagnostic.RCS1261.severity = warning
+
+# Raw string literals are only used where they are necessary
+dotnet_diagnostic.RCS1262.severity = warning
+
+# A catch clause that only rethrows the exception is removed
+dotnet_diagnostic.RCS1265.severity = warning
+
+# A raw string literal is used instead of a multi-line verbatim string literal that contains escaped double quotes
+dotnet_diagnostic.RCS1266.severity = warning
+
+# String interpolation is used instead of "string.Concat()"
+dotnet_diagnostic.RCS1267.severity = warning
+
+# The result of a subtraction is not compared with zero, the operands are compared directly, i.e., "a > b" instead of "a - b > 0"
+dotnet_diagnostic.RCS1268.severity = warning
