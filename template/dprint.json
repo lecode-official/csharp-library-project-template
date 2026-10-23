@@ -106,6 +106,10 @@
         // SVGs are formatted by neither the markup nor the XML side of the toolchain without mangling their contents
         "**/*.svg",
 
+        // The theme template override of the documentation website is a Jinja template, whose "{% %}" tags the markup plugin reads as plain text and
+        // reflows into a single paragraph
+        "docs/assets/templates/",
+
         // Build output; every project's "bin" and "obj" are redirected into "build/" (see Architecture), as is the documentation website
         "**/build/",
 

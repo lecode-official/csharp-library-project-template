@@ -39,6 +39,7 @@ Everything should pass immediately. The library that ships is a placeholder clas
 A few things are worth doing early:
 
 - **Enable GitHub Pages**, with "GitHub Actions" as its source, in the repository settings on GitHub under **Settings** and **Pages**. The docs workflow deploys the documentation website through the Pages actions on every push to the default branch, and it fails until Pages is enabled that way.
+- **Replace the placeholder logo** with the project's own. Every generated project ships an open book with C# on its pages as its mark, wired into the read me, the documentation website, the favicon, and the package icon, so nothing is missing until the real logo exists — see the generated project's own logo design article for the files and the steps.
 - **Decide on the documentation website.** It works as soon as the Python dependencies are installed, but a project that will not publish one should delete `properdocs.yml`, `requirements.txt`, `docs/build/` and the docs workflow rather than leave them to rot.
 
 ## Updating a Project

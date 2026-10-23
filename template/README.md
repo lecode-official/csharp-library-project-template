@@ -1,4 +1,9 @@
-# [[ product_name ]]
+# ![Logo](docs/assets/images/header-logo-light.svg#gh-light-mode-only) ![Logo](docs/assets/images/header-logo-dark.svg#gh-dark-mode-only) [[ product_name ]]
+
+<!--
+The logo is a light/dark pair of Markdown images, of which the repository host shows only the one matching the color scheme; replace the files with
+the project's own logo rather than changing this line (see docs/assets/README.md and docs/developer-manual/logo-design.md)
+-->
 
 <div align="center">
 
@@ -15,6 +20,7 @@ The repository is organized into a few top-level directories:
 - **[`source/`](source/)** — the source code of [[ product_name ]] itself, and the sample app that demonstrates it.
 - **[`tests/`](tests/)** — the unit tests.
 - **[`docs/`](docs/README.md)** — the project documentation. Start with [`docs/README.md`](docs/README.md).
+- **[`design/`](design/)** — logo and brand assets. See the [logo design](docs/developer-manual/logo-design.md) guide that governs them.
 
 The solution, [`source/[[ product_name ]].slnx`](source/), groups three projects: the library, a runnable sample app that references it, and the xUnit test project under `tests/`.
 

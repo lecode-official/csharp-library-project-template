@@ -9,6 +9,7 @@ The repository is organized into a few top-level directories:
 - [`source/`](../../source/) — the source code of [[ product_name ]] itself, and the sample app that demonstrates it.
 - [`tests/`](../../tests/) — the unit tests.
 - [`docs/`](../README.md) — this documentation, including the [documentation website](tooling/documentation-website.md)'s build scripts (`docs/build/`), wired in via [`properdocs.yml`](../../properdocs.yml).
+- [`design/`](../../design/) — logo and brand assets. See the [logo design](logo-design.md) guide that governs them.
 
 Top-level files round out the repository. [`README.md`](../../README.md) is the project's front door, [`CHANGELOG.md`](../../CHANGELOG.md) records what changed in each version, [`CONTRIBUTORS.md`](../../CONTRIBUTORS.md) lists everyone who has contributed, and [`LICENSE`](../../LICENSE) is the full text of the license. [`CONTRIBUTING.md`](../../CONTRIBUTING.md), [`CODE_OF_CONDUCT.md`](../../CODE_OF_CONDUCT.md) and [`SECURITY.md`](../../SECURITY.md) round out the community-facing files a repository host recognizes by name. [`global.json`](../../global.json) pins the exact .NET SDK version, and [`.config/dotnet-tools.json`](../../.config/dotnet-tools.json) is the local tool manifest — both follow the same exact-version-only rule as everything else (see [dependency management](conventions/dependency-management.md)). The configuration of the code formatter, the linters, and the static code analysis lives at the repository root too, where each tool discovers it on its own (see [tooling](tooling/README.md)).
 

@@ -21,3 +21,4 @@ All notable changes to the C# library project template are documented here, newe
 - Added the continuous integration workflows and the Dependabot configuration of the generated project.
 - Added the Visual Studio Code integration of the generated project.
 - Added the Claude Code integration of the generated project.
+- Added a placeholder logo to the generated project, used in its read me, its documentation website, its favicon, and its package icon.

@@ -1,0 +1,9 @@
+/*
+ * "theme.logo" in properdocs.yml takes a single image and has no dark variant of its own, so the dark palette swaps the image for the dark badge;
+ * "content" replaces the image a replaced element shows, which is why this needs no second image element; the logo appears both in the header and in
+ * the navigation drawer of the narrow layout
+ */
+[data-md-color-scheme="slate"] .md-header__button.md-logo img,
+[data-md-color-scheme="slate"] .md-nav__button.md-logo img {
+    content: url("../images/logo-dark.svg");
+}

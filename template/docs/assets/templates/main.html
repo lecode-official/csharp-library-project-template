@@ -1,0 +1,11 @@
+{#
+    Extends the documentation theme's own page template and fills only its "extrahead" block, so that this override follows the theme's head markup
+    instead of duplicating it; it adds one SVG favicon per color scheme, which browsers that honor the "media" attribute on a favicon link pick by the
+    visitor's color scheme, while every other browser keeps using the ".ico" set as "theme.favicon" in properdocs.yml (see Documentation Website)
+#}
+{% extends "base.html" %}
+
+{% block extrahead %}
+    <link rel="icon" type="image/svg+xml" href="{{ 'assets/favicon/favicon-light.svg' | url }}" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/svg+xml" href="{{ 'assets/favicon/favicon-dark.svg' | url }}" media="(prefers-color-scheme: dark)">
+{% endblock %}

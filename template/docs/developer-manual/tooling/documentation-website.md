@@ -24,9 +24,23 @@ Three plugins are enabled:
 
 `theme.palette` lists two [palettes](https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/#color-palette-toggle), one for `scheme: default` and one for `scheme: slate`, each tied to a `media: "(prefers-color-scheme: ...)"` query, so the site opens in whichever mode the visitor's system is set to. Each palette also carries a toggle that lets a visitor override that for the session, which the theme remembers.
 
-## Build Scripts
+### Making a Light/Dark Image Pair Work on Both the Repository Host and the Site
 
-Anything under `docs_dir` that is not excluded is copied into the built site as-is, at the same relative path. `exclude_docs` therefore excludes the whole `docs/build/` directory, because the Python scripts in it are run at build time rather than published. Without that exclusion the site generator would copy the scripts themselves into the built site as static files, and with them the `__pycache__` directory that Python writes next to them as soon as the hooks are loaded. Excluding the directory rather than the individual scripts covers both.
+A `README.md` that shows a logo as a light/dark pair uses the repository host's own convention: an `<img>` whose `src` ends in the literal suffix `#gh-dark-mode-only` or `#gh-light-mode-only`, which the host's renderer detects to hide the non-matching image. The theme has its own, near-identical convention — `#only-dark` and `#only-light` — but it is a *different* suffix, and since both tricks are a literal string match on the end of `src`, one `<img>` cannot satisfy both.
+
+Rather than write each image twice, a small stylesheet wired in through `extra_css` teaches the theme to recognize the host's suffixes as well, with an attribute selector matching `img[src$="#gh-dark-mode-only"]` scoped to the `data-md-color-scheme` attribute the theme sets on the page. Every Markdown image tag then stays identical on both platforms, and only the host's suffix is ever used in the repository.
+
+The header logo, `theme.logo`, is a single built-in setting with no light/dark option, so a second stylesheet swaps the image for the dark palette using the same attribute selector — applied to `content` rather than `display`, because there is one image to replace rather than a pair to hide.
+
+### Brand Colors
+
+Both palettes set `primary: custom`, which tells the theme to take its primary color from CSS variables instead of one of its built-in colors. A third stylesheet, `brand-colors.css`, sets those variables to the colors of the logo: the light accent for the header bar, and the lighter dark accent for links in the dark palette, so that they keep their contrast on the dark background (see [logo design](../logo-design.md)).
+
+### Static Assets
+
+Static files the documentation needs live under `docs/assets/`. Anything under `docs_dir` that is not excluded is copied into the built site as-is, at the same relative path.
+
+`exclude_docs` excludes the whole `docs/build/` directory, because the Python scripts in it are run at build time rather than published. Without that exclusion the site generator would copy the scripts themselves into the built site as static files, and with them the `__pycache__` directory that Python writes next to them as soon as the hooks are loaded. Excluding the directory rather than the individual scripts covers both. The theme template override in `docs/assets/templates/` is excluded as well, because the theme reads it through `custom_dir` rather than publishing it.
 
 ## Links Outside `docs/`
 
@@ -51,6 +65,14 @@ A project whose API reference is generated from its source's own documentation c
 The generating script builds the project, shells out to the pinned documentation generator writing into a temporary directory — never into `docs/` — and re-emits every file through `mkdocs_gen_files.open()`, which hands the content to the in-memory build. While doing so it records each page in an `mkdocs_gen_files.Nav` and writes that navigation out for literate-nav to read.
 
 One C#-specific trap is worth recording: the compiler never expands `<inheritdoc/>` into real text in the generated XML documentation file, it is left in verbatim. Any tool reading that file — the documentation generator, or a consumer's editor tooltip — therefore sees an empty member. A package that rewrites `<inheritdoc/>` with the real inherited text as a build step is what fixes it, and it only runs for non-`Debug` builds, so the generation step has to build in `Release`.
+
+## Favicon
+
+`theme.favicon` is a single built-in setting and takes one file. A favicon has no equivalent of the light/dark image trick, because it is not an `<img>` in the page but one or more `<link rel="icon">` elements in the head, and which one a browser uses is up to the browser.
+
+A `theme.custom_dir` template that extends the theme's own `main.html` and fills only its `extrahead` block adds two further `<link rel="icon" media="(prefers-color-scheme: ...)">` elements, one per SVG. Filling only that block means the override tracks the theme's own head markup instead of duplicating it. Browser support for `media` on a favicon link is inconsistent, so a multi-resolution `.ico` stays in place as the fallback.
+
+Browsers and crawlers also request `/favicon.ico` at the site root directly, regardless of any link element. Since the favicon is grouped with the other static assets rather than sitting loose at the root of `docs_dir`, an `on_post_build` hook copies the already-built file to the site root after every build.
 
 ## Running It Locally
 

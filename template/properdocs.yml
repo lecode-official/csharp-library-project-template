@@ -7,14 +7,17 @@ repo_url: "[[ repository_url ]]"
 docs_dir: docs
 
 # Builds the site into "build/documentation-website/" instead of the default "site/", so the built website sits alongside the .NET projects'
-# redirected build output under "build/"
+# redirected build output under "build/"; read dynamically off "config['site_dir']" by "copy-favicon-to-site-root.py", so nothing else needs to change
+# to honor this
 site_dir: build/documentation-website
 
-# The build scripts live inside "docs_dir" itself, in "build/", so the whole directory is excluded here; otherwise ProperDocs would copy the scripts
+# The build scripts live inside "docs_dir" itself, in "build/", so the whole directory is excluded here, and so is the theme template override in
+# "assets/templates/", which the theme reads through "custom_dir" rather than publishing it; otherwise ProperDocs would copy the scripts
 # into the built site as static assets, the same as it would any other file under "docs_dir", and with them the "__pycache__" directory that Python
 # writes next to them as soon as the hooks are loaded
 exclude_docs: |
   build/
+  assets/templates/
 
 # Plain MkDocs "hooks" modules (not plugins, since neither needs an entry point, just an event function): "rewrite-repo-links.py" runs
 # "on_page_markdown" to rewrite links pointing outside "docs_dir" into absolute URLs at "repo_url", and "inject-api-reference-link.py" runs
@@ -23,6 +26,7 @@ exclude_docs: |
 hooks:
   - docs/build/rewrite-repo-links.py
   - docs/build/inject-api-reference-link.py
+  - docs/build/copy-favicon-to-site-root.py
 
 theme:
   name: material
@@ -32,14 +36,32 @@ theme:
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
+      primary: custom
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: custom
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+
+  # The logo and the favicon (see docs/assets/README.md); both settings take exactly one file and have no light/dark option of their own, which is
+  # what the stylesheets below and the template override in "custom_dir" are for; "copy-favicon-to-site-root.py" also copies the favicon to the site
+  # root
+  favicon: assets/favicon/favicon.ico
+  custom_dir: docs/assets/templates
+  logo: assets/images/logo-light.svg
+
+# "gh-mode-only-images.css" teaches the theme to also honor the "#gh-dark-mode-only" and "#gh-light-mode-only" URL suffixes the repository host
+# recognizes on an "<img>" element, so the same Markdown image pair switches with both color schemes; "site-logo.css" swaps "theme.logo" itself to its
+# dark variant for the dark palette; "brand-colors.css" sets the colors of the logo as the theme's primary color, which "primary: custom" above refers
+# to
+extra_css:
+  - assets/styles/gh-mode-only-images.css
+  - assets/styles/site-logo.css
+  - assets/styles/brand-colors.css
 
 markdown_extensions:
   - pymdownx.highlight
@@ -76,6 +98,7 @@ nav:
   - Developer Manual:
       - Overview: developer-manual/README.md
       - Architecture: developer-manual/architecture.md
+      - Logo Design: developer-manual/logo-design.md
       - Tooling:
           - Overview: developer-manual/tooling/README.md
           - Developer Setup: developer-manual/tooling/developer-setup.md

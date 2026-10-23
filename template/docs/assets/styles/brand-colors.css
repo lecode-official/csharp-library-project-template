@@ -1,0 +1,19 @@
+/*
+ * The colors of the logo as the documentation theme's primary color (see Logo Design), which "primary: custom" in properdocs.yml asks the theme to
+ * take from these variables instead of from one of its built-in palettes; the header bar uses the accent of the light logo in both palettes, and the
+ * dark palette uses the lighter accent of the dark logo for links, so that they keep their contrast on the dark background
+ */
+:root > * {
+    --md-primary-fg-color: #1a7f1a;
+    --md-primary-fg-color--light: #3f9a3f;
+    --md-primary-fg-color--dark: #146414;
+    --md-accent-fg-color: #146414;
+}
+
+[data-md-color-scheme="slate"] {
+    --md-primary-fg-color: #1a5c1d;
+    --md-primary-fg-color--light: #2c7a2f;
+    --md-primary-fg-color--dark: #123f14;
+    --md-accent-fg-color: #6fd36a;
+    --md-typeset-a-color: #6fd36a;
+}

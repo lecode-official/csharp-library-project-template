@@ -1,0 +1,9 @@
+/*
+ * Teaches the documentation theme the "#gh-dark-mode-only" and "#gh-light-mode-only" URL suffixes that the repository host uses to show an image only
+ * in one color scheme, so that the same Markdown image pair switches with the color scheme on both (see Documentation Website); the theme sets
+ * "data-md-color-scheme" on the page to "default" for its light palette and to "slate" for its dark palette
+ */
+[data-md-color-scheme="default"] img[src$="#gh-dark-mode-only"],
+[data-md-color-scheme="slate"] img[src$="#gh-light-mode-only"] {
+    display: none;
+}
