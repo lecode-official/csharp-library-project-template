@@ -39,7 +39,7 @@ A root comment refers to an article by its path, as in `(see docs/project-templa
 
 ## Python Docstrings and Comments
 
-The root's [`scripts/`](../../scripts/) holds Python, written this way:
+The root's [`scripts/`](../../scripts/) and the body's `docs/build/` both hold Python, written the same way:
 
 - A module docstring explains what the script is for, who runs it and when, and why it exists.
 - Every function has a docstring with a one-line summary that starts with a third-person verb (`Downloads a text file.`), followed by `Args:`, `Returns:` and `Raises:` sections where they apply.
@@ -57,7 +57,7 @@ Whatever the kind, a comment explains a non-obvious *why*: a hidden constraint, 
 ## Where an Article Goes
 
 - **An article about the template** goes under the root's [`docs/`](../README.md), in the section it belongs to, and is listed in [`docs/README.md`](../README.md), in its section's `README.md`, and in the root [`README.md`](../../README.md).
-- **An article for the generated project** goes under [`template/docs/`](../../template/docs/README.md), and is listed in the generated project's documentation index and its section index (see [authoring](../project-template/authoring.md#adding-a-file-to-the-body)).
+- **An article for the generated project** goes under [`template/docs/`](../../template/docs/README.md), and is listed in the generated project's documentation index, its section index, and the `nav` in `template/properdocs.yml` (see [authoring](../project-template/authoring.md#adding-a-file-to-the-body)).
 
 ## Related
 

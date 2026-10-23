@@ -2,6 +2,8 @@
 
 This article covers what to install before building, testing, linting, or formatting [[ product_name ]] locally.
 
+Not every section is needed for every task: Python is only needed to build the documentation website locally.
+
 ## Node.js and npm
 
 Install [Node.js](https://nodejs.org), which bundles npm, at the version pinned in [`.nvmrc`](../../../.nvmrc). With [nvm](https://github.com/nvm-sh/nvm) that is one command in the repository root:
@@ -40,10 +42,27 @@ Once the SDK is installed, restore the pinned local `dotnet` tools declared in [
 dotnet tool restore
 ```
 
-That installs [ReportGenerator](https://github.com/danielpalme/ReportGenerator), used to turn raw coverage output into an HTML report (see [testing and code coverage](testing-and-code-coverage.md)).
+That installs [ReportGenerator](https://github.com/danielpalme/ReportGenerator), used to turn raw coverage output into an HTML report (see [testing and code coverage](testing-and-code-coverage.md)), and the XML-documentation-to-Markdown generator the [documentation website](documentation-website.md) uses.
+
+## Python and the Documentation Website
+
+The [documentation website](documentation-website.md) is built with [ProperDocs](https://properdocs.org/), themed with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/). Install [Python](https://www.python.org/downloads/), then create a virtual environment and install the pinned dependencies into it — never into the global or user Python installation:
+
+```shell
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --requirement requirements.txt
+```
+
+On Windows, activate with `.venv\Scripts\activate` instead of the `source` line. `.venv` is already excluded in [`.gitignore`](../../../.gitignore), so it is never committed.
+
+Without a virtual environment, `pip` either installs the packages globally, where they are invisible to everyone else on the machine and collide with every other project's Python dependencies, or refuses outright with an externally-managed-environment error on a distribution that locks down the system interpreter.
+
+Activate the environment in every new shell before running the documentation commands, and `deactivate` when done.
 
 ## Related
 
 - [Tooling](README.md) — what each installed tool does.
 - [Dependency management](../conventions/dependency-management.md) — how these pinned versions are kept exact.
 - [Testing and code coverage](testing-and-code-coverage.md) — running the tests once everything is installed.
+- [Documentation website](documentation-website.md) — building the site locally.

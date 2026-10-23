@@ -34,7 +34,7 @@ A pull request that adds a contribution is expected to also update the records t
 
 - **[`CONTRIBUTORS.md`](CONTRIBUTORS.md)** — add yourself, in alphabetical order, if this is your first contribution. You may use your real name or a pseudonym. Please link to your profile.
 - **[`CHANGELOG.md`](CHANGELOG.md)** — document what changed, under the version it will ship in.
-- **[`docs/`](docs/README.md)** — if your change affects how the project is built, used, or contributed to, update or add the relevant article. A new article is listed in the index of its manual ([Developer Manual](docs/developer-manual/README.md) or [User Manual](docs/user-manual/README.md)), and in its section's index where it has one.
+- **[`docs/`](docs/README.md)** — if your change affects how the project is built, used, or contributed to, update or add the relevant article. A new article is listed in the index of its manual ([Developer Manual](docs/developer-manual/README.md) or [User Manual](docs/user-manual/README.md)), in its section's index where it has one, and in the `nav` of [`properdocs.yml`](properdocs.yml).
 
 ## Licensing of Contributions
 

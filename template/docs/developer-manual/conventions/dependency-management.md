@@ -14,6 +14,7 @@ not `Version="2.*"` or `Version="[2.0.2,)"`. A project file references the packa
 
 - The dprint plugins in [`dprint.json`](../../../dprint.json) are pinned to an exact release URL.
 - `dprint`, `cspell`, its `@cspell/dict-*` dictionary packages, `markdownlint-cli2`, and `npm-run-all2` are pinned exactly in [`package.json`](../../../package.json).
+- The Python packages that build the documentation website are pinned exactly in [`requirements.txt`](../../../requirements.txt).
 - [`global.json`](../../../global.json) pins the exact .NET SDK version.
 
 The analyzer packages are no exception (see [static code analysis](../tooling/static-code-analysis.md)). Because a new analyzer version usually brings new rules, and a Release build fails on every new finding, upgrading one is a change of its own that fixes or configures whatever the new version reports.
@@ -48,9 +49,10 @@ Every restore audits the dependencies for known vulnerabilities, and [`Directory
 
 ## Local .NET Tools
 
-[`.config/dotnet-tools.json`](../../../.config/dotnet-tools.json) is a `dotnet` local tool manifest, restored with `dotnet tool restore`. It exists for tools invoked as part of the .NET build rather than through Node.js:
+[`.config/dotnet-tools.json`](../../../.config/dotnet-tools.json) is a `dotnet` local tool manifest, restored with `dotnet tool restore`. It exists for tools invoked as part of the .NET build rather than through Node.js or Python:
 
 - **ReportGenerator**, which turns raw coverage data into a readable report (see [testing and code coverage](../tooling/testing-and-code-coverage.md)).
+- **xmldoc2md**, which generates the API reference section of the documentation website (see [documentation website](../tooling/documentation-website.md)).
 
 Each tool's version is pinned exactly, with `"rollForward": false`. Upgrading one is `dotnet tool update <tool name> --version <exact version>`, followed by committing the manifest change.
 
@@ -61,6 +63,12 @@ The linters and the code formatter are npm packages, declared as `devDependencie
 Restore them with `npm ci`, never `npm install` — `npm ci` fails instead of silently updating the lock file when it would no longer match `package.json`, which is the same guarantee `--locked-mode` gives the NuGet restore. The only exception is the very first install, before any `package-lock.json` exists: `npm install` writes it, and it is committed straight away. The same goes for the `packages.lock.json` files, which the first `dotnet restore` writes.
 
 Install scripts are blocked by default. The one package that genuinely needs one, `dprint`, is listed explicitly in the `allowScripts` map, keyed by exact name and version. A version bump means updating that key too, or the script silently stops being allowed.
+
+## Python Dependencies
+
+[`requirements.txt`](../../../requirements.txt) pins the exact versions of ProperDocs, its theme and its plugins. Unlike the NuGet and npm dependencies, there is **no lock file** recording transitive versions — only the direct dependencies are pinned.
+
+Install it inside a virtual environment, never against the system or user Python installation (see [developer setup](../tooling/developer-setup.md)). Without one, `pip` either installs the packages globally, where they are invisible to every other project, or refuses outright with an externally-managed-environment error.
 
 ## Related
 

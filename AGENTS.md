@@ -51,7 +51,7 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 - A new or changed question, default, or validator updates the tables in [docs/project-template/questions.md](docs/project-template/questions.md), including its validation rule. A new SDK release raises the `dotnet_sdk_version` default and the bands in its help.
 - A new or changed `_skip_if_exists` entry updates the list in [docs/project-template/rendering-and-updating.md](docs/project-template/rendering-and-updating.md#files-the-template-only-creates).
 - A new license updates the table in [docs/project-template/licensing.md](docs/project-template/licensing.md) **and** `scripts/refresh-licenses.py`.
-- A new article under `template/docs/` is listed in two places, both hand-maintained: the generated project's documentation index and its section index.
+- A new article under `template/docs/` is listed in three places, all hand-maintained: the generated project's documentation index, its section index, and the `nav` in `template/properdocs.yml`.
 - A new article at the root goes into the section directory under `docs/` it belongs to, and is listed in [docs/README.md](docs/README.md) and in that section's `README.md`. A new section, and a new article in the project template section, is also listed in [README.md](README.md).
 - A changed convention of the generated project updates the matching article under [docs/conventions/](docs/conventions/README.md) too, so that the two rule sets stay the same wherever they can.
 - A new route to an article updates the "When Working on X" list above.

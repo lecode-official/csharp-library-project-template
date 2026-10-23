@@ -22,13 +22,13 @@ A `<summary>` explains not just what a member does, but **why it exists and how 
 
 - `<param>` and `<returns>` document parameters and return values. A `<returns>` element always starts with "Returns", as in `<returns>Returns the exit code the command produced.</returns>`.
 - `<exception>` documents every exception the member throws deliberately.
-- `<inheritdoc/>` is used where a member implements an interface member or overrides a base member and has nothing to add. The compiler never expands it into the generated XML documentation file — it is left in verbatim — which is why the library references `SauceControl.InheritDoc` to rewrite it with the real inherited text at build time. Without that, a consumer's tooltip shows nothing for those members.
+- `<inheritdoc/>` is used where a member implements an interface member or overrides a base member and has nothing to add. The compiler never expands it into the generated XML documentation file — it is left in verbatim — which is why the library references `SauceControl.InheritDoc` to rewrite it with the real inherited text at build time. Without that, both a consumer's tooltip and the generated API reference show nothing for those members (see [documentation website](../tooling/documentation-website.md)).
 
 ## Markup Inside a Documentation Comment
 
 A documentation comment is XML, not Markdown, so backticks stay literal instead of rendering as a code span:
 
-- `<see cref="..."/>` references a type or member, so that it becomes a clickable link in an editor tooltip.
+- `<see cref="..."/>` references a type or member, so that it becomes a clickable link in an editor tooltip and in the generated API reference.
 - `<see langword="..."/>` marks up a C# keyword mentioned in prose — `null`, `true`, `false`, `default`, `sealed`, `internal`, and so on — rather than writing it as plain text.
 - `<c>...</c>` wraps anything else that is code: a file name, a literal value, a short snippet.
 
@@ -69,3 +69,4 @@ A test method's name already states its scenario and expected outcome in short f
 - [Line length](line-length.md) — how far a comment is filled before it is broken.
 - [Markdown style](markdown-style.md) — the prose punctuation rule these comments share.
 - [Testing](testing.md) — the test project's own documentation requirement.
+- [Documentation website](../tooling/documentation-website.md) — how these comments become the published API reference.

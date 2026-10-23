@@ -25,7 +25,8 @@ Rendering the template needs [Copier](https://copier.readthedocs.io/en/stable/#i
 A rendered project is verified with its own toolchain, so checking a change to the body needs that toolchain too:
 
 - **The .NET SDK**, at the exact version the render's `global.json` pins. That is the answer to the `dotnet_sdk_version` question, so a change that is rendered once per serviced SDK band needs the SDK of each of those renders installed. `global.json` disables roll-forward, so a mismatched SDK fails outright.
-- **Python**, for [`scripts/refresh-licenses.py`](../../scripts/refresh-licenses.py), which uses only the standard library.
+- **Python**, for the render's documentation website, installed into a virtual environment inside the render, never into the system or user Python installation.
+- **Python**, also, for [`scripts/refresh-licenses.py`](../../scripts/refresh-licenses.py), which uses only the standard library.
 
 The render's own [developer setup](../../template/docs/developer-manual/tooling/developer-setup.md) article covers each of these in detail, from the generated project's point of view.
 

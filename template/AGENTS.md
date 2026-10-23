@@ -42,6 +42,7 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 - **Installing the SDK or Node.js** → [docs/developer-manual/tooling/developer-setup.md](docs/developer-manual/tooling/developer-setup.md).
 - **Linting, formatting, spell checking** → [docs/developer-manual/tooling/](docs/developer-manual/tooling/README.md).
 - **An analyzer finding, or changing a rule's severity** → [docs/developer-manual/tooling/static-code-analysis.md](docs/developer-manual/tooling/static-code-analysis.md).
+- **The documentation website, its navigation, or the generated API reference** → [docs/developer-manual/tooling/documentation-website.md](docs/developer-manual/tooling/documentation-website.md).
 - **Markdown and documentation style** → [docs/developer-manual/conventions/markdown-style.md](docs/developer-manual/conventions/markdown-style.md).
 - **Line length, or filling a comment or a split string literal to the limit** → [docs/developer-manual/conventions/line-length.md](docs/developer-manual/conventions/line-length.md).
 - **Naming a new file or directory** → [docs/developer-manual/conventions/file-and-naming-conventions.md](docs/developer-manual/conventions/file-and-naming-conventions.md).
@@ -64,6 +65,7 @@ Files use file-scoped namespaces and always group members into `#region` blocks 
 
 - Keep the "When Working on X" routing table above accurate.
 - Keep the indexes accurate — every article must be listed. An article is listed in the index of its manual, the [Developer Manual index](docs/developer-manual/README.md) or the [User Manual index](docs/user-manual/README.md), and an article in the tooling or conventions section also in that section's index, [tooling](docs/developer-manual/tooling/README.md) or [conventions](docs/developer-manual/conventions/README.md). The [documentation index](docs/README.md) lists only the two manuals.
+- Keep the `nav` list in [`properdocs.yml`](properdocs.yml) accurate, since the published website's navigation comes from it rather than from the indexes.
 - A change to the public API updates the User Manual (how consumers use it), not only the Developer Manual (how the codebase itself is built) — the two serve different audiences, and the same change often needs a separate edit to each.
 - If a change introduces a topic that does not fit an existing article, add a new small, single-topic article, link it from the relevant index, and reference it here if relevant.
 - If a change invalidates something a doc says, fix the doc — do not leave it stale.
