@@ -1,0 +1,27 @@
+{
+    "name": "csharp-library-project-template",
+    "version": "1.0.0",
+    "private": true,
+    "description": "A Copier template for C# library projects.",
+    "type": "module",
+    "scripts": {
+        "format": "npx dprint fmt",
+        "lint:dprint": "npx dprint check \"**/*\"",
+        "lint:markdownlint": "npx markdownlint-cli2 \"**/*.md\" \"!**/node_modules/**\" \"!template/**\" \"!licenses/**\" \"!**/.venv/**\"",
+        "lint:cspell": "npx cspell lint --no-progress \"**/*.md\" \"copier.yml\"",
+        "lint": "run-s --continue-on-error lint:dprint lint:markdownlint lint:cspell"
+    },
+    "devDependencies": {
+        "cspell": "10.4.0",
+        "dprint": "0.64.1",
+        "markdownlint-cli2": "0.24.0",
+        "npm-run-all2": "9.0.4"
+    },
+    "packageManager": "npm@11.21.1",
+    "engines": {
+        "node": ">=24"
+    },
+    "allowScripts": {
+        "dprint@0.64.1": true
+    }
+}
