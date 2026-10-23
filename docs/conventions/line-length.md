@@ -4,11 +4,14 @@ This article covers the 150-character line limit on both sides of the split, and
 
 ## 150 Characters, Everywhere
 
-No line exceeds 150 characters, at the root or in the body. The root's [`dprint.json`](../../dprint.json) sets `lineWidth` to 150 for the files it formats: the JSON, YAML and TOML at the root.
+No line exceeds 150 characters, at the root or in the body. The limit lives in two configurations that say the same thing:
+
+- The root's [`dprint.json`](../../dprint.json) sets `lineWidth` to 150 for the files it formats: the JSON, YAML and TOML at the root.
+- The body's [`dprint.json`](../../template/dprint.json) sets the same limit for the generated project, including its C# and XML.
 
 The limit applies just as much where no formatter enforces it. Nothing formats the Python in [`scripts/`](../../scripts/) or the shell commands in the Claude Code hooks, so keeping those within the limit is the author's job.
 
-There are exactly two exceptions:
+There are exactly two exceptions, as in the generated project's [line length](../../template/docs/developer-manual/conventions/line-length.md) article:
 
 - **Markdown is exempt.** Prose is never hard-wrapped, at the root or in the body.
 - **A line that genuinely cannot be broken**, such as a URL, a long string literal, or a hook command in `.claude/settings.json`.
@@ -21,16 +24,17 @@ The reason is the same as in the generated project: when everyone wraps at a sli
 
 ## A Placeholder Changes the Width
 
-A line in the body is measured twice: once as it is written in the template, and once after rendering, when every placeholder has been replaced by an answer of unknown length. The two widths differ, and only the second one is what the generated project sees.
+A line in the body is measured twice: once as it is written in the template, and once after rendering, when every placeholder has been replaced by an answer of unknown length. The two widths differ, and only the second one is what the generated project's linters see.
 
-- **In code**, a line that grows past the limit after rendering breaks the limit in the generated project. Leave room on a line that carries a placeholder, so that a reasonably long answer still fits.
+- **In code that dprint reflows**, a line that grows past the limit after rendering is rewrapped by the generated project's formatter, which means its `dprint check` fails until someone runs `npm run format`. Leave room on a line that carries a placeholder, so that a reasonably long answer still fits.
 - **In a comment or a documentation comment**, nothing reflows the line and nothing reports it. A placeholder makes the fill rule impossible to satisfy for every answer, so keep placeholders out of filled comment paragraphs where you can. Where you cannot, end the line that carries the placeholder early enough that a long answer still stays within the limit.
-- **In Markdown**, the width does not matter, because Markdown is exempt.
+- **In Markdown**, the width does not matter, because Markdown is exempt. Tables are the exception, and are covered in [Markdown style](markdown-style.md#placeholders-in-body-markdown).
 
 The only way to see the rendered width is to render (see [authoring](../project-template/authoring.md#verifying-a-change)), ideally with a long product name, which is the answer that appears in the most places.
 
 ## Related
 
-- [Formatting (dprint)](../tooling/formatting-dprint.md) — what the root's formatter formats.
+- [Formatting (dprint)](../tooling/formatting-dprint.md) — the two configurations and what each one formats.
 - [Comments and documentation](comments-and-documentation.md) — what goes inside the comments being filled.
-- [Markdown style](markdown-style.md) — the exempt case.
+- [Markdown style](markdown-style.md) — the exempt case, and its table exception.
+- [Line length](../../template/docs/developer-manual/conventions/line-length.md) — the generated project's full rule set, including how a string literal is split.

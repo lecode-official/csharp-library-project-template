@@ -1,8 +1,8 @@
 # Markdown Style
 
-This article covers the conventions for Markdown files (this documentation, `README.md`, and `AGENTS.md`).
+This article covers the conventions for Markdown files (this documentation, `README.md`, and `AGENTS.md`). Markdown linting itself is handled by MarkdownLint (see [MarkdownLint](../tooling/linting-markdownlint.md)). This is about the conventions on top.
 
-Prose in Markdown is never hard-wrapped.
+Markdown is the one place the [150-character line limit](line-length.md) does not apply: prose is never hard-wrapped.
 
 ## Headings Are Title Case
 
@@ -41,5 +41,6 @@ Never use horizontal rules (`---`) to separate sections. Headings already provid
 
 ## Related
 
+- Markdown linting: [MarkdownLint](../tooling/linting-markdownlint.md).
 - The other conventions: [C# style](csharp-style.md) and [file and naming conventions](file-and-naming-conventions.md).
 - [Commit messages](commit-messages.md) — the same title-case and punctuation rules, applied to the Git history.

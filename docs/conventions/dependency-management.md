@@ -18,7 +18,7 @@ The root needs very little, and all of it is pinned:
 
 ## The Body's Dependencies
 
-Everything the body pins becomes a pin in every generated project, so the body follows the generated project's [dependency management](../../template/docs/developer-manual/conventions/dependency-management.md) rules unchanged: exact package versions declared once in `template/Directory.Packages.props`, `RestorePackagesWithLockFile` on every project, and exact versions in `template/.config/dotnet-tools.json`.
+Everything the body pins becomes a pin in every generated project, so the body follows the generated project's [dependency management](../../template/docs/developer-manual/conventions/dependency-management.md) rules unchanged: exact package versions declared once in `template/Directory.Packages.props`, `RestorePackagesWithLockFile` on every project, exact versions in `template/package.json` and `template/.config/dotnet-tools.json`, and a Node.js version pinned in `template/.nvmrc`.
 
 Two pins are not constants at all:
 
@@ -27,19 +27,25 @@ Two pins are not constants at all:
 
 ## No Lock Files in the Body
 
-The body ships no `packages.lock.json`. A generated project runs `dotnet restore` once, right after it is generated, and commits the lock files it writes (see [rendering and updating](../project-template/rendering-and-updating.md#after-generating)). From then on it restores in locked mode, like any other project.
+The body ships neither a `package-lock.json` nor any `packages.lock.json`. A generated project runs `npm install` and `dotnet restore` once, right after it is generated, and commits the lock files they write (see [rendering and updating](../project-template/rendering-and-updating.md#after-generating)). From then on it installs with `npm ci` and restores in locked mode, like any other project.
 
 Generating the lock files during rendering is not an option, because running a command at render time needs a Copier task, and a task forces every consumer to render with `--trust`.
 
-Shipping them in the body would work for a first render, but it breaks `copier update`. A lock file records the whole resolved dependency graph, including every dependency a consumer has added since. As soon as a project's graph differs from the template's, every template change to the lock file arrives as a large merge conflict in a file nobody edits by hand. Without a lock file in the body, a template update only changes version strings in a project file, and the consumer's own `dotnet restore` brings their lock files up to date.
+Shipping them in the body would work for a first render, but it breaks `copier update`. A lock file records the whole resolved dependency graph, including every dependency a consumer has added since. As soon as a project's graph differs from the template's, every template change to the lock file arrives as a large merge conflict in a file nobody edits by hand. Without a lock file in the body, a template update only changes version strings in `package.json` or a project file, and the consumer's own `npm install` or `dotnet restore` brings their lock file up to date.
 
 The cost is that a generated project's first install resolves transitive dependencies on the day it runs, rather than to versions the template chose. The direct dependencies are still pinned exactly, and everything is locked from the first commit on.
+
+## Keep Shared Tools in Step
+
+The root and the body run the same tools on their Markdown, `dprint`, `markdownlint-cli2` and `cspell`, with the same dprint plugins for Markdown, JSON, YAML and TOML. `markdownlint-cli2` brings its own copy of the `markdownlint` library, so neither side declares that one directly. They also run them the same way, through the `run-s` command of `npm-run-all2`, which `npm run lint` uses on both sides. Their versions are the same on both sides, and they are raised together, in the same change.
+
+The reason is that a root article and a body article are written to the same conventions, and a rule that behaves differently between two versions of a linter would let one side pass what the other rejects. Check both `package.json` files and both `dprint.json` files whenever you bump one of them.
 
 ## Upgrading a Body Dependency
 
 1. Change the version in the template file.
 2. Render a project (see [authoring](../project-template/authoring.md#verifying-a-change)).
-3. In the render, run `dotnet restore`, which is what a consumer does first, then build and test.
+3. In the render, run `npm install` and `dotnet restore`, which is what a consumer does first, then lint, build and test.
 4. If the dependency also has a root counterpart, raise that in the same change.
 
 The upgrade reaches existing generated projects through `copier update`, as an ordinary change to their version strings.

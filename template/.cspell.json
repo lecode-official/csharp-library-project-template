@@ -1,0 +1,179 @@
+{
+    // Version of the settings file, this should always be 0.2
+    "version": "0.2",
+
+    // The code in this repository is checked against American English, German, Spanish, and French
+    "language": "en-US,de-DE,es-ES,fr-FR",
+
+    // Words do not have to match in case
+    "caseSensitive": false,
+
+    // A list of file types that should be enabled (not all file types are enabled by default)
+    "enableFiletypes": [
+        "gitignore",
+        "mdx",
+    ],
+
+    // Registers the German, Spanish, and French dictionaries (installed as dev dependencies) so that the command-line interface can resolve them; the
+    // Visual Studio Code extension ships these dictionaries through its separate language add-ons, but the command-line interface needs them provided
+    // explicitly
+    "import": [
+        "@cspell/dict-de-de/cspell-ext.json",
+        "@cspell/dict-es-es/cspell-ext.json",
+        "@cspell/dict-fr-fr/cspell-ext.json",
+    ],
+
+    // A list of paths that are ignored when spell-checking (ignores the .git directory, but excludes the commit message file that is created by Git
+    // during a commit, and the cSpell configuration file itself)
+    "ignorePaths": [
+        // The CSpell configuration file is ignored, because it contains flag words that are always considered incorrect, which results in the
+        // configuration file being marked as containing spelling errors
+        "**/.cspell.json",
+
+        // Operating system file preview databases
+        "**/.DS_Store",
+        "**/Thumbs.db",
+
+        // Everything in the Git directory is ignored, except for the commit message file
+        "**/.git/!(COMMIT_EDITMSG)",
+
+        // Ignores SVG files (the entire file type could be ignored, but CSpell groups SVG files together with all XML-based file types)
+        "**/*.svg",
+
+        // Package manager files
+        "**/node_modules/",
+        "**/package-lock.json",
+        "**/packages.lock.json",
+        "**/.venv/",
+
+        // Local environment configuration, which contains secrets and machine-specific values
+        "**/.env",
+        "**/*.example",
+        "**/local.settings.json",
+
+        // Build output, test results, coverage reports, and caches, which contain generated code that should not be spell-checked
+        "**/build/",
+        "**/coverage/",
+        "**/coverage-report/",
+        "**/TestResults/",
+        "**/__pycache__/",
+    ],
+
+    // A list of dictionaries that should be added beyond the American English dictionary
+    "dictionaries": [
+        // Dictionaries that contain common misspellings
+        "en-us",
+        "en-us-common-misspellings",
+        "en-common-misspellings",
+        "de-DE",
+        "es-ES",
+        "fr-FR",
+
+        // Dictionaries that contain the keywords of the programming, markup, styling, and configuration languages used in the project
+        "bash",
+        "csharp",
+        "docker",
+        "git",
+        "node",
+        "npm",
+        "sql",
+
+        // Other miscellaneous dictionaries
+        "companies",
+        "computing-acronyms",
+        "filetypes",
+        "fonts",
+        "fullstack",
+        "lorem-ipsum",
+        "misc",
+        "networking-terms",
+        "public-licenses",
+        "software-terms",
+        "software-term-suggestions",
+        "software-tools",
+        "coding-compound-words",
+        "web-services",
+    ],
+
+    // A list of words to be always considered incorrect (by default, only words that have 4 or more characters are spell-checked, so this list
+    // includes some common typos of words that are too short to be recognizes by CSpell)
+    "flagWords": [
+        "adn",
+        "fo",
+        "fro",
+        "hte",
+        "ot",
+    ],
+
+    // A list of words that are not in the included default dictionary for American English; this list deliberately contains only the vocabulary of
+    // the toolchain itself (tool names, Visual Studio Code extension publishers, and configuration keys), every word that belongs to the domain of a
+    // concrete project is added by that project; the list is kept in alphabetical order
+    "words": [
+        "ansi",
+        "Anson",
+        "choosealicense",
+        "classpath",
+        "cobertura",
+        "codemod",
+        "codezombiech",
+        "Containerfile",
+        "copier",
+        "coreclr",
+        "coverlet",
+        "csproj",
+        "docstrings",
+        "docz",
+        "dotnet",
+        "dotnettools",
+        "envops",
+        "extrahead",
+        "globalconfig",
+        "globaltool",
+        "inheritdoc",
+        "initializers",
+        "jinja",
+        "langword",
+        "lecode",
+        "libpeerconnection",
+        "LINQ",
+        "markdowntable",
+        "mkdocs",
+        "nuget",
+        "nullable",
+        "Nullable",
+        "pasteable",
+        "properdocs",
+        "pycache",
+        "pymdownx",
+        "renderable",
+        "reportgenerator",
+        "reporttypes",
+        "roslyn",
+        "roslynator",
+        "slnx",
+        "snupkg",
+        "spanish",
+        "SPDX",
+        "stylecop",
+        "superfences",
+        "Swellaby",
+        "TakumiI",
+        "targetdir",
+        "tomoki",
+        "unreviewed",
+        "unstaging",
+        "unsuffixed",
+        "unvalidated",
+        "venv",
+        "viewbox",
+        "vsicons",
+        "wayou",
+        "wordmark",
+        "xmldoc",
+        "xmldoc2markdown",
+        "xmldoc2md",
+        "xunit",
+        "yzane",
+        "yzhang",
+    ],
+}

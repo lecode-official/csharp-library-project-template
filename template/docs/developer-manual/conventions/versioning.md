@@ -4,7 +4,7 @@ This article covers the version number: what it means here, when it is raised, e
 
 ## One Number for the Whole Repository
 
-Every manifest in the repository carries the same version — so far, that is the library's project file (see [below](#everything-that-has-to-move-together)) — and they are raised together, **even when only one of them changed**. A change to one package still raises the others, and the other way round. The alternative is several numbers that drift apart, and then "which version does a consumer have" has no answer, only a list.
+Every manifest in the repository carries the same version — the library's project file and `package.json` (see [below](#everything-that-has-to-move-together)) — and they are raised together, **even when only one of them changed**. A change to one package still raises the others, and the other way round. The alternative is several numbers that drift apart, and then "which version does a consumer have" has no answer, only a list.
 
 That an untouched package now claims a new version costs nothing. What it buys is that one number identifies one state of the whole repository, in every place the number appears.
 
@@ -33,9 +33,10 @@ When a change is both, the highest one wins. A release that adds three capabilit
 
 ## Everything That Has to Move Together
 
-The version lives in one manifest, and nowhere else by default:
+The version lives in two manifests, and nowhere else by default:
 
 - **`source/[[ library_slug ]]/[[ product_name ]].csproj`** — the `<Version>` property, which is what NuGet publishes.
+- **`package.json`** — the `"version"` field. The npm manifest is private and only declares the tooling, so nothing publishes it, but it is a manifest of this repository all the same, and it carries the same number rather than one of its own.
 - **`CHANGELOG.md`** — the release's own heading and date line.
 - **Any version literal in the source** — a version a running program reports about itself.
 

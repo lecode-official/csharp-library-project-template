@@ -9,13 +9,16 @@ This section covers the tools used to work on the template: the formatter, the l
 5. [Spell Checking (CSpell)](spell-checking-cspell.md)
 6. [Claude Code Hooks](claude-code-hooks.md)
 
-## The Root's Configuration
+## Two Configurations for Every Tool
 
-The tools check the template's own files, though not every tool checks all of them. dprint formats and checks every Markdown, JSON, YAML and TOML file, the configuration files themselves included. MarkdownLint checks the Markdown: the articles under `docs/`, `README.md`, `AGENTS.md` and `CHANGELOG.md`. CSpell checks only the Markdown, `copier.yml` and the scripts. The configuration lives at the root: [`dprint.json`](../../dprint.json), [`.markdownlint.yml`](../../.markdownlint.yml) and [`.cspell.json`](../../.cspell.json).
+Every tool here exists twice, once for each side of the [split](../project-template/template-structure.md):
 
-Every configuration excludes `template/`, because the files in it are Jinja templates rather than valid documents of their own type, and `licenses/`, because those texts are verbatim copies that must never be touched. So no tool in this repository checks the body. A render does (see [testing](../conventions/testing.md)).
+- **The root's configuration** checks the template's own files, though not every tool checks all of them. dprint formats and checks every Markdown, JSON, YAML and TOML file, the configuration files themselves included. MarkdownLint checks the Markdown: the articles under `docs/`, `README.md`, `AGENTS.md` and `CHANGELOG.md`. CSpell checks only the Markdown, `copier.yml` and the scripts. The configuration lives at the root: [`dprint.json`](../../dprint.json), [`.markdownlint.yml`](../../.markdownlint.yml) and [`.cspell.json`](../../.cspell.json).
+- **The body's configuration** is a template file like any other. It checks the generated project, and only ever runs in a render. It lives where the generated project expects it, at the root of the body: `template/dprint.json`, `template/.cspell.json`, and `template/.markdownlint.yml`.
 
-Formatting and linting are kept separate: **dprint owns all formatting, and the linters only check quality.** No lint rule that would reformat a file is ever enabled.
+Every root configuration excludes `template/`, because the files in it are Jinja templates rather than valid documents of their own type, and `licenses/`, because those texts are verbatim copies that must never be touched. So no tool in this repository checks the body. A render does (see [testing](../conventions/testing.md)).
+
+Formatting and linting are kept separate on both sides: **dprint owns all formatting, and the linters only check quality.** No lint rule that would reformat a file is ever enabled.
 
 ## How to Run
 

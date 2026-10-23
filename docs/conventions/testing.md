@@ -4,9 +4,9 @@ This article covers how a change to the template is tested, and the conventions 
 
 ## Rendering Is the Test Suite
 
-The template has no test project of its own. Its test is a render: generate a project from the working tree, then run that project's own build and tests, exactly as a consumer would on day one. [Authoring](../project-template/authoring.md#verifying-a-change) has the commands.
+The template has no test project of its own. Its test is a render: generate a project from the working tree, then run that project's own linters, build and tests, exactly as a consumer would on day one. [Authoring](../project-template/authoring.md#verifying-a-change) has the commands.
 
-A change is not done until a render of it is green. A render that fails its build or its tests is a defect in the template, even when the failing file is one the change never touched, because it fails the same way in every project generated from now on.
+A change is not done until a render of it is green. A render that fails its linters or its tests is a defect in the template, even when the failing file is one the change never touched, because it fails the same way in every project generated from now on.
 
 ## Which Renders to Run
 

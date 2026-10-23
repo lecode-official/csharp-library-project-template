@@ -10,7 +10,7 @@ The repository is organized into a few top-level directories:
 - [`tests/`](../../tests/) — the unit tests.
 - [`docs/`](../README.md) — this documentation.
 
-Top-level files round out the repository. [`README.md`](../../README.md) is the project's front door, [`CHANGELOG.md`](../../CHANGELOG.md) records what changed in each version, [`CONTRIBUTORS.md`](../../CONTRIBUTORS.md) lists everyone who has contributed, and [`LICENSE`](../../LICENSE) is the full text of the license. [`CONTRIBUTING.md`](../../CONTRIBUTING.md), [`CODE_OF_CONDUCT.md`](../../CODE_OF_CONDUCT.md) and [`SECURITY.md`](../../SECURITY.md) round out the community-facing files a repository host recognizes by name. [`global.json`](../../global.json) pins the exact .NET SDK version, and [`.config/dotnet-tools.json`](../../.config/dotnet-tools.json) is the local tool manifest — both follow the same exact-version-only rule as everything else (see [dependency management](conventions/dependency-management.md)).
+Top-level files round out the repository. [`README.md`](../../README.md) is the project's front door, [`CHANGELOG.md`](../../CHANGELOG.md) records what changed in each version, [`CONTRIBUTORS.md`](../../CONTRIBUTORS.md) lists everyone who has contributed, and [`LICENSE`](../../LICENSE) is the full text of the license. [`CONTRIBUTING.md`](../../CONTRIBUTING.md), [`CODE_OF_CONDUCT.md`](../../CODE_OF_CONDUCT.md) and [`SECURITY.md`](../../SECURITY.md) round out the community-facing files a repository host recognizes by name. [`global.json`](../../global.json) pins the exact .NET SDK version, and [`.config/dotnet-tools.json`](../../.config/dotnet-tools.json) is the local tool manifest — both follow the same exact-version-only rule as everything else (see [dependency management](conventions/dependency-management.md)). The configuration of the code formatter and the linters lives at the repository root too, where each tool discovers it on its own (see [tooling](tooling/README.md)).
 
 ## Solution and Projects
 
@@ -54,6 +54,6 @@ The project is licensed under `[[ license ]]`. The library's project file declar
 
 - [C# style](conventions/csharp-style.md) — the coding conventions for the source.
 - [File and naming conventions](conventions/file-and-naming-conventions.md) — why the directories and the project files are named the way they are.
-- [Tooling](tooling/README.md) — the tools that build and test the projects.
+- [Tooling](tooling/README.md) — the linters, the code formatter, and the editor setup.
 - [Testing and code coverage](tooling/testing-and-code-coverage.md) — running the unit tests.
 - [Contributing](contribution-guide.md) — how to propose and submit changes.

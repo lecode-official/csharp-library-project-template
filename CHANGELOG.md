@@ -15,3 +15,4 @@ All notable changes to the C# library project template are documented here, newe
 - Added the NuGet packaging of the library: package metadata, inherited documentation comments, package validation, and a symbol package.
 - Added the unit test project of the generated project, based on xUnit v3 and Microsoft.Testing.Platform, with code coverage.
 - Added Central Package Management, lock files, and the NuGet vulnerability audit to the generated project.
+- Added formatting with dprint, Markdown linting with MarkdownLint, and spell checking with CSpell to the generated project.

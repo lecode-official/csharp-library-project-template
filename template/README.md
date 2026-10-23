@@ -26,20 +26,21 @@ See the [User Manual](docs/user-manual/README.md) for how to use it.
 
 ### Developer Setup
 
-Building and working on [[ product_name ]] requires the .NET SDK — the exact version pinned in [`global.json`](global.json).
+Building and working on [[ product_name ]] requires the .NET SDK — the exact version pinned in [`global.json`](global.json) — and Node.js with npm, which is used to run the linters and the code formatter.
 
 ```shell
 git clone [[ repository_url ]]
 cd [[ product_slug ]]
+npm ci
 dotnet restore "source/[[ product_name ]].slnx"
 ```
 
-See [developer setup](docs/developer-manual/tooling/developer-setup.md) for the full walkthrough.
+Use `npm ci` rather than `npm install` for a fresh clone, so that the exact locked versions are installed. See [developer setup](docs/developer-manual/tooling/developer-setup.md) for the full walkthrough.
 
 ### Building
 
 ```shell
-dotnet build "source/[[ product_name ]].slnx"
+npm run build
 ```
 
 The build settings every project shares live in the root `Directory.Build.props`. Build output does not land next to the source: two more `Directory.Build.props` files redirect every project's `bin` and `obj` into `build/<project folder name>/` instead. See [architecture](docs/developer-manual/architecture.md).
@@ -47,7 +48,7 @@ The build settings every project shares live in the root `Directory.Build.props`
 ### Running
 
 ```shell
-dotnet run --project "source/sample-app/[[ product_name ]] Sample App.csproj"
+npm start
 ```
 
 runs the sample app, which demonstrates the library.
@@ -57,14 +58,46 @@ runs the sample app, which demonstrates the library.
 The library's behavior is verified by an xUnit test project, [`tests/unit-tests`](tests/unit-tests/). Every new feature is expected to come with unit tests covering it, in the same pull request (see [`CONTRIBUTING.md`](CONTRIBUTING.md)).
 
 ```shell
-dotnet test --solution "source/[[ product_name ]].slnx"
+npm test
 ```
 
 See [testing and code coverage](docs/developer-manual/tooling/testing-and-code-coverage.md) for how coverage is collected and reported.
 
 ### Dependencies
 
-Every dependency is pinned to an exact version — NuGet packages and the .NET SDK itself. NuGet package versions are declared once, in `Directory.Packages.props`, and every project sets `RestorePackagesWithLockFile`, so a package change is followed by `dotnet restore` and the resulting `packages.lock.json` files are committed alongside it. See [dependency management](docs/developer-manual/conventions/dependency-management.md).
+Every dependency is pinned to an exact version — NuGet packages, the dprint plugins, the linters, and the .NET SDK itself. NuGet package versions are declared once, in `Directory.Packages.props`, and every project sets `RestorePackagesWithLockFile`, so a package change is followed by `dotnet restore` and the resulting `packages.lock.json` files are committed alongside it. See [dependency management](docs/developer-manual/conventions/dependency-management.md).
+
+### Code Formatting & Linting
+
+The project separates *formatting* from *linting*: a single formatter, [dprint](https://dprint.dev), owns all code formatting, while the linters only check for quality issues. This split is deliberate — no lint rule that would reformat code is ever added.
+
+#### Formatting
+
+[dprint](https://dprint.dev) is configured in [`dprint.json`](dprint.json) and formats C#, XML (including `.csproj` and `.slnx`), Markdown, JSON, YAML, and TOML. Run it with:
+
+```shell
+# Formats the entire code base
+npm run format
+```
+
+#### Linting
+
+The linter configuration lives at the repository root, where each tool discovers it on its own:
+
+- **MarkdownLint** ([`.markdownlint.yml`](.markdownlint.yml)) — lints the Markdown files across the repository, including this read me.
+- **CSpell** ([`.cspell.json`](.cspell.json)) — checks the spelling of code, comments, and documentation.
+
+```shell
+# Runs the code formatter in check mode and every linter
+npm run lint
+
+# Runs a single linter
+npm run lint:dprint
+npm run lint:markdownlint
+npm run lint:cspell
+```
+
+`npm run lint` runs its steps with `run-s --continue-on-error`, so one failing linter does not hide the findings of the others, and the command still fails when any of them does.
 
 ## Use of AI
 

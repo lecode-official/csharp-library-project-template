@@ -17,13 +17,14 @@ Afterwards, in the generated project:
 ```shell
 cd my-new-library
 git init
+npm install
 dotnet restore "source/<Product Name>.slnx"
 dotnet test --solution "source/<Product Name>.slnx"
 ```
 
-The template ships no lock files, so this first `dotnet restore` writes a `packages.lock.json` per project. Commit them with the first commit.
+The template ships no lock files, so this first `npm install` resolves and writes `package-lock.json`, and `dotnet restore` writes a `packages.lock.json` per project. Commit them with the first commit. From then on, the project installs with `npm ci`, which fails without them.
 
-The generated project builds and tests green out of the box. The library it ships is a placeholder class that exists so all of that is true on day one — replace it with the real thing.
+The generated project builds, tests, formats and lints green out of the box. The library it ships is a placeholder class that exists so all of that is true on day one — replace it with the real thing.
 
 See [rendering and updating](docs/project-template/rendering-and-updating.md) for the full walkthrough, and [questions](docs/project-template/questions.md) for what each question means.
 
@@ -72,6 +73,7 @@ The [documentation index](docs/README.md) lists every article. It is split into 
 
 - **Copier 9.5.0 or newer**, the floor `copier.yml` declares with `_min_copier_version`.
 - **The .NET SDK** pinned by the generated project's `global.json`, to build what comes out.
+- **Node.js**, for the generated project's linters.
 
 Working on the template's own files needs only Node.js, for the formatter and the linters that check them. Verifying a change to the template body also needs Copier and everything a render needs, the .NET SDK and Python (see [developer setup](docs/tooling/developer-setup.md)).
 

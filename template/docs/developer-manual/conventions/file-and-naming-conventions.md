@@ -4,14 +4,14 @@ This article covers how files and directories are named throughout the repositor
 
 ## Kebab-Case by Default
 
-Files and directories are named in **kebab-case** — lowercase words separated by hyphens — for example `sample-app`, `unit-tests`, `developer-manual`, `testing-and-code-coverage.md`. This applies repository-wide: the project directories under [`source/`](../../../source/), the [`docs/`](../README.md) tree, and every Markdown article.
+Files and directories are named in **kebab-case** — lowercase words separated by hyphens — for example `sample-app`, `unit-tests`, `developer-manual`, `formatting-dprint.md`. This applies repository-wide: the project directories under [`source/`](../../../source/), the [`docs/`](../README.md) tree, and every Markdown article.
 
 ## Well-Known Exceptions
 
 Files with a conventional, tool- or ecosystem-mandated name keep that name instead of being renamed to kebab-case. This covers two kinds of file:
 
 - **Files everyone recognizes by their standard name**: `README.md`, `AGENTS.md`, `LICENSE`, `CHANGELOG.md`, `CONTRIBUTORS.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`.
-- **Files whose name is dictated by the tool that reads them**: `.editorconfig`, `.gitignore`, `.gitattributes`, `global.json`, `Directory.Build.props`, `Directory.Packages.props`, `packages.lock.json`. Renaming these would simply stop the tool from finding them.
+- **Files whose name is dictated by the tool that reads them**: `.editorconfig`, `.gitignore`, `.gitattributes`, `dprint.json`, `.cspell.json`, `.markdownlint.yml`, `global.json`, `Directory.Build.props`, `Directory.Packages.props`, `packages.lock.json`. Renaming these would simply stop the tool from finding them.
 
 ## PascalCase Inside a C# Project
 

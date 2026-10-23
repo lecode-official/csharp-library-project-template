@@ -1,0 +1,34 @@
+{
+    "name": "[[ product_slug ]]",
+    "version": "0.1.0",
+    "private": true,
+    "description": "[[ product_description ]]",
+    "author": "[[ author ]]",
+    "type": "module",
+    "scripts": {
+        "format": "npx dprint fmt",
+        "lint:dprint": "npx dprint check \"**/*\"",
+        "lint:markdownlint": "npx markdownlint-cli2 \"**/*.md\" \"!**/node_modules/**\" \"!**/build/**\" \"!**/.venv/**\" \"!**/coverage/**\" \"!**/coverage-report/**\" \"!**/TestResults/**\"",
+        "lint:cspell": "npx cspell lint --no-progress \"**/*\"",
+        "lint": "run-s --continue-on-error lint:dprint lint:markdownlint lint:cspell",
+        "test": "dotnet test --solution \"source/[[ product_name ]].slnx\"",
+        "build": "dotnet build \"source/[[ product_name ]].slnx\"",
+        "start": "dotnet run --project \"source/sample-app/[[ product_name ]] Sample App.csproj\""
+    },
+    "devDependencies": {
+        "@cspell/dict-de-de": "4.1.3",
+        "@cspell/dict-es-es": "3.0.9",
+        "@cspell/dict-fr-fr": "2.3.2",
+        "cspell": "10.4.0",
+        "dprint": "0.64.1",
+        "markdownlint-cli2": "0.24.0",
+        "npm-run-all2": "9.0.4"
+    },
+    "packageManager": "npm@11.21.1",
+    "engines": {
+        "node": ">=24"
+    },
+    "allowScripts": {
+        "dprint@0.64.1": true
+    }
+}

@@ -20,7 +20,7 @@ When a change is several of these, the highest one wins. Updating a project is a
 
 ## The Template's Version Is Not the Body's
 
-The body carries version numbers of its own: `<Version>` in the library's project file and the first release in `template/CHANGELOG.md`. Those are the **generated project's** starting version, not the template's. A template release never touches them. They only change when the template decides that new projects should start at a different version, which is a body change like any other.
+The body carries version numbers of its own: `<Version>` in the library's project file, `version` in `template/package.json`, and the first release in `template/CHANGELOG.md`. Those are the **generated project's** starting version, not the template's. A template release never touches them. They only change when the template decides that new projects should start at a different version, which is a body change like any other.
 
 The template's own version lives at the root: in the tag, in the root [`CHANGELOG.md`](../../CHANGELOG.md), and in the `version` field of the root [`package.json`](../../package.json). All three carry the same number, and they are raised together, in the branch, before the pull request. A bump that is left for after the merge is a bump that eventually does not happen.
 
