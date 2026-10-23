@@ -7,9 +7,10 @@
 The repository is organized into a few top-level directories:
 
 - **[`source/`](source/)** — the source code of [[ product_name ]] itself, and the sample app that demonstrates it.
+- **[`tests/`](tests/)** — the unit tests.
 - **[`docs/`](docs/README.md)** — the project documentation. Start with [`docs/README.md`](docs/README.md).
 
-The solution, [`source/[[ product_name ]].slnx`](source/), groups two projects: the library, and a runnable sample app that references it.
+The solution, [`source/[[ product_name ]].slnx`](source/), groups three projects: the library, a runnable sample app that references it, and the xUnit test project under `tests/`.
 
 ## Installation
 
@@ -50,6 +51,16 @@ dotnet run --project "source/sample-app/[[ product_name ]] Sample App.csproj"
 ```
 
 runs the sample app, which demonstrates the library.
+
+### Testing
+
+The library's behavior is verified by an xUnit test project, [`tests/unit-tests`](tests/unit-tests/). Every new feature is expected to come with unit tests covering it, in the same pull request (see [`CONTRIBUTING.md`](CONTRIBUTING.md)).
+
+```shell
+dotnet test --solution "source/[[ product_name ]].slnx"
+```
+
+See [testing and code coverage](docs/developer-manual/tooling/testing-and-code-coverage.md) for how coverage is collected and reported.
 
 ### Dependencies
 

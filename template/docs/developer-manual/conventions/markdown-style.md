@@ -26,7 +26,7 @@ When a name is intrinsically lowercase, it stays lowercase even as the first wor
 
 ## Code Spans for Identifiers, Paths, and File Names
 
-Wrap every identifier, file name, path, command, and code snippet in backticks, in prose everywhere — the documentation, `README.md`, `AGENTS.md`, and commit messages. Write `` `Greeter` ``, `` `source/[[ library_slug ]]/Greeter.cs` ``, `` `dotnet build` ``, not Greeter, source/[[ library_slug ]]/Greeter.cs, dotnet build. This keeps code visually distinct from surrounding prose and matches how links to source files are already written.
+Wrap every identifier, file name, path, command, and code snippet in backticks, in prose everywhere — the documentation, `README.md`, `AGENTS.md`, and commit messages. Write `` `Greeter` ``, `` `source/[[ library_slug ]]/Greeter.cs` ``, `` `dotnet test` ``, not Greeter, source/[[ library_slug ]]/Greeter.cs, dotnet test. This keeps code visually distinct from surrounding prose and matches how links to source files are already written.
 
 XML documentation comments are the one exception: they are XML, not Markdown, so a backtick stays literal there and `<see cref="..."/>` or `<c>...</c>` is used instead (see [comments and documentation comments](comments-and-documentation.md)).
 

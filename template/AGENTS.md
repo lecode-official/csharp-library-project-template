@@ -6,20 +6,21 @@ Guidance for AI assistants working on [[ product_name ]]. Humans should read the
 
 [[ product_description ]]
 
-The repository holds one solution, [`source/[[ product_name ]].slnx`](source/), with two projects — the library itself (`[[ library_slug ]]`) and a sample app that references it (`sample-app`). Both target `[[ target_framework ]]` with nullable reference types and implicit usings enabled.
+The repository holds one solution, [`source/[[ product_name ]].slnx`](source/), with three projects — the library itself (`[[ library_slug ]]`), a sample app that references it (`sample-app`), and its xUnit test project (`tests/unit-tests`). All three target `[[ target_framework ]]` with nullable reference types and implicit usings enabled.
 
 Start from [docs/developer-manual/architecture.md](docs/developer-manual/architecture.md).
 
 ## Golden Rules
 
 - **Match the surrounding code and the documented conventions** ([docs/developer-manual/conventions/](docs/developer-manual/conventions/README.md)). This code is heavily and consistently documented — follow it.
-- **Build the solution before finishing**, with `dotnet build "source/[[ product_name ]].slnx"`.
+- **Run the tests before finishing**, with `dotnet test --solution "source/[[ product_name ]].slnx"`.
 - **C# structure**: file-scoped namespaces, `#region` blocks on every type in the documented order, an XML documentation comment on **every member, including `private` ones**, `<inheritdoc/>` where a member implements or overrides, `sealed` classes by default, explicit `this.` on member access, expression-bodied members where the implementation is a single expression, and `camelCase` private fields with no underscore. Full detail: [C# style](docs/developer-manual/conventions/csharp-style.md).
 - **Nullable reference types and implicit usings are enabled everywhere.** Write genuinely null-safe code rather than silencing the analyzer with `!`.
 - **Markdown headings are title case** at every level, in every file ([docs/developer-manual/conventions/markdown-style.md](docs/developer-manual/conventions/markdown-style.md)). Preserve the real casing of code spans, brand names (`dprint`), and acronyms.
 - **Wrap code in backticks** in prose everywhere — the docs, this file, and commit messages. XML documentation comments are the one exception: they are XML, not Markdown, so use `<see cref="..."/>` for identifiers and `<c>` for code instead.
 - **Prose uses periods, not semicolons.** In prose — the docs, XML documentation comments, this file — end each sentence with a period rather than joining two with a semicolon. Plain `//` comments do the reverse: sentences are separated by semicolons and the last one takes no terminal punctuation.
 - **Files and directories are kebab-case**, except well-known and tool-mandated names. Inside a C# project's own source tree they switch to PascalCase, one type per file. The project and solution files are named after the product, spaces included ([docs/developer-manual/conventions/file-and-naming-conventions.md](docs/developer-manual/conventions/file-and-naming-conventions.md)).
+- **Every new feature is unit tested, in the same change.** A bug fix adds a test that reproduces the bug. Test classes mirror the source namespace and folder and are named `<TypeName>Tests`. `internal` types are tested directly through `InternalsVisibleTo`. Run the tests before finishing ([docs/developer-manual/conventions/testing.md](docs/developer-manual/conventions/testing.md)).
 - **Raise the version before opening a pull request**, in the library's `<Version>` property, and add the release to `CHANGELOG.md` ([docs/developer-manual/conventions/versioning.md](docs/developer-manual/conventions/versioning.md)).
 - **Write commit messages by the rules** ([docs/developer-manual/conventions/commit-messages.md](docs/developer-manual/conventions/commit-messages.md)) — the 50/72 rule, a title-cased, past-tense subject, and a prose body. State whether AI was involved and, if it was, what exactly the AI did. When you did any of the work, add a co-author trailer with your tool's no-reply address that names the exact model and version you are, not just the product, for example:
 
@@ -37,6 +38,7 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 - **Installing the SDK** → [docs/developer-manual/tooling/developer-setup.md](docs/developer-manual/tooling/developer-setup.md).
 - **Markdown and documentation style** → [docs/developer-manual/conventions/markdown-style.md](docs/developer-manual/conventions/markdown-style.md).
 - **Naming a new file or directory** → [docs/developer-manual/conventions/file-and-naming-conventions.md](docs/developer-manual/conventions/file-and-naming-conventions.md).
+- **Writing or running unit tests, measuring code coverage** → [docs/developer-manual/conventions/testing.md](docs/developer-manual/conventions/testing.md) and [testing and code coverage](docs/developer-manual/tooling/testing-and-code-coverage.md).
 - **Writing commit messages** → [docs/developer-manual/conventions/commit-messages.md](docs/developer-manual/conventions/commit-messages.md).
 - **Releasing, or raising the version** → [docs/developer-manual/conventions/versioning.md](docs/developer-manual/conventions/versioning.md).
 - **Committing, pushing, rebasing, or anything else touching Git** → [docs/developer-manual/conventions/git-workflow.md](docs/developer-manual/conventions/git-workflow.md).

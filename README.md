@@ -1,6 +1,6 @@
 # C# Library Project Template
 
-A [Copier](https://copier.readthedocs.io/) template for C# library projects. It generates a repository with a library, a sample app, a full set of conventions documentation, and the linting, formatting, editor and continuous integration setup that goes with them.
+A [Copier](https://copier.readthedocs.io/) template for C# library projects. It generates a repository with a library, a sample app, an xUnit test project, a full set of conventions documentation, and the linting, formatting, editor and continuous integration setup that goes with them.
 
 ## Generating a Project
 
@@ -18,10 +18,10 @@ Afterwards, in the generated project:
 cd my-new-library
 git init
 dotnet restore "source/<Product Name>.slnx"
-dotnet build "source/<Product Name>.slnx"
+dotnet test --solution "source/<Product Name>.slnx"
 ```
 
-The generated project builds green out of the box. The library it ships is a placeholder class that exists so all of that is true on day one — replace it with the real thing.
+The generated project builds and tests green out of the box. The library it ships is a placeholder class that exists so all of that is true on day one — replace it with the real thing.
 
 See [rendering and updating](docs/project-template/rendering-and-updating.md) for the full walkthrough, and [questions](docs/project-template/questions.md) for what each question means.
 
