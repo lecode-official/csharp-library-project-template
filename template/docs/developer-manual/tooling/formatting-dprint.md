@@ -12,7 +12,7 @@ The Roslyn plugin only drives whitespace, newlines, and indentation. It has no e
 npm run format            # the whole repository, in place
 ```
 
-To check formatting without modifying anything:
+To check formatting without modifying anything, which is what [continuous integration](continuous-integration.md) does:
 
 ```shell
 npx dprint check "**/*"
@@ -36,4 +36,5 @@ Since `jsonTrailingCommaFiles` **replaces** the plugin's defaults rather than ex
 
 - [Line length](../conventions/line-length.md) — the 150-character limit dprint enforces, and where it is also a lower limit.
 - [C# style](../conventions/csharp-style.md) — what the Roslyn plugin does and does not decide.
+- [Continuous integration](continuous-integration.md) — the check-mode invocation.
 - [Tooling](README.md) — the full tool set.

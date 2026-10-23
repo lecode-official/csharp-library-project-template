@@ -1,6 +1,6 @@
 # Testing and Code Coverage
 
-This article covers how to run the unit tests in [`tests/unit-tests`](../../../tests/unit-tests/) and how code coverage is measured. For the conventions the tests themselves follow, see [testing](../conventions/testing.md).
+This article covers how to run the unit tests in [`tests/unit-tests`](../../../tests/unit-tests/) and how code coverage is measured, both locally and in [continuous integration](continuous-integration.md). For the conventions the tests themselves follow, see [testing](../conventions/testing.md).
 
 ## The Test Project
 
@@ -51,7 +51,9 @@ dotnet tool run reportgenerator -reports:"coverage/**/coverage.cobertura*.xml" -
 
 Open `coverage-report/index.html` to browse coverage by assembly, class, and line. Neither `coverage/` nor `coverage-report/` is committed — both are covered by [`.gitignore`](../../../.gitignore) — so it is safe to regenerate them at any time.
 
-## No Minimum Coverage
+## In Continuous Integration
+
+[`tests.yml`](../../../.github/workflows/tests.yml) runs on every push and on every pull request from a fork, as its own workflow separate from the linters one. It restores in `--locked-mode`, verifies that every `packages.lock.json` is committed, and then builds and tests the solution in the Release configuration, with coverage collection enabled the same way as above. It additionally renders the ReportGenerator summary into the workflow run's own summary page, through `MarkdownSummaryGithub` and `$GITHUB_STEP_SUMMARY`, so the coverage percentages are visible without downloading anything, and uploads the full HTML report as a workflow artifact.
 
 There is no enforced minimum coverage percentage that fails the build. The expectation is stated as a rule instead of a number: a new feature arrives with tests, and a bug fix arrives with a test that would have caught it (see [testing](../conventions/testing.md)).
 
@@ -59,4 +61,5 @@ There is no enforced minimum coverage percentage that fails the build. The expec
 
 - [Testing](../conventions/testing.md) — the conventions the tests themselves follow.
 - [Dependency management](../conventions/dependency-management.md) — how the test packages and the local `dotnet` tool are pinned.
+- [Continuous integration](continuous-integration.md) — the workflow that runs this.
 - [Architecture](../architecture.md) — where the test project sits in the repository.

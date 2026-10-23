@@ -16,6 +16,10 @@ The root needs very little, and all of it is pinned:
 - **The verbatim license texts** are pinned to a tagged release of the SPDX license list, through `SPDX_LICENSE_LIST_VERSION` in [`scripts/refresh-licenses.py`](../../scripts/refresh-licenses.py). The choosealicense.com texts have no release tags, so they are pinned to a commit of the repository's `gh-pages` branch through `CHOOSE_A_LICENSE_COMMIT` instead. Review the diff of every refresh before keeping it (see [licensing](../project-template/licensing.md#where-the-texts-come-from)).
 - **Copier itself** is not pinned for consumers, since it runs on their machines, but `_min_copier_version` in [`copier.yml`](../../copier.yml) declares the oldest release the template works with. Raise it in the same change that starts relying on a newer Copier feature.
 
+## Dependabot in the Body
+
+The body ships a Dependabot configuration of its own, `template/.github/dependabot.yml`, which keeps a generated project's actions, NuGet packages, .NET SDK, npm and pip dependencies up to date once that project exists. It never runs in this repository, because Dependabot only reads the configuration at `.github/dependabot.yml`.
+
 ## The Body's Dependencies
 
 Everything the body pins becomes a pin in every generated project, so the body follows the generated project's [dependency management](../../template/docs/developer-manual/conventions/dependency-management.md) rules unchanged: exact package versions declared once in `template/Directory.Packages.props`, `RestorePackagesWithLockFile` on every project, exact versions in `template/package.json`, `template/requirements.txt` and `template/.config/dotnet-tools.json`, and a Node.js version pinned in `template/.nvmrc`.

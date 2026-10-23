@@ -39,13 +39,13 @@ Every project sets:
 
 which makes `dotnet restore` generate and verify a `packages.lock.json` next to the project, recording the exact resolved version and content hash of every direct and transitive dependency. These files are committed.
 
-With them in place, a restore fails loudly if the resolved graph would differ from what is locked — because a transitive dependency's range allows a newer release, for instance — instead of silently picking up a different set of packages than the last person who restored. `dotnet restore --locked-mode` turns that into a hard failure.
+With them in place, a restore fails loudly if the resolved graph would differ from what is locked — because a transitive dependency's range allows a newer release, for instance — instead of silently picking up a different set of packages than the last person who restored. Continuous integration runs `dotnet restore --locked-mode`, which turns that into a hard failure. Since `--locked-mode` writes a lock file instead of failing when a project has none, the workflow also fails if the restore created or changed any `packages.lock.json`, so a lock file that is missing from the commit is caught too (see [continuous integration](../tooling/continuous-integration.md)).
 
 **When a package reference or a package version changes, run `dotnet restore` and commit the resulting `packages.lock.json` files alongside the change to the project file or `Directory.Packages.props`.** They move together.
 
 ## Vulnerability Audit
 
-Every restore audits the dependencies for known vulnerabilities, and [`Directory.Build.props`](../../../Directory.Build.props) sets `NuGetAuditMode` to `all`, so the transitive dependencies are audited as well, not only the direct ones. A vulnerable package is a warning, which a Release build turns into an error. Upgrade the package, or the direct dependency that pulls it in, rather than suppressing the warning.
+Every restore audits the dependencies for known vulnerabilities, and [`Directory.Build.props`](../../../Directory.Build.props) sets `NuGetAuditMode` to `all`, so the transitive dependencies are audited as well, not only the direct ones. A vulnerable package is a warning, which a Release build — and therefore [continuous integration](../tooling/continuous-integration.md) — turns into an error. Upgrade the package, or the direct dependency that pulls it in, rather than suppressing the warning.
 
 ## Local .NET Tools
 
@@ -64,6 +64,17 @@ Restore them with `npm ci`, never `npm install` — `npm ci` fails instead of si
 
 Install scripts are blocked by default. The one package that genuinely needs one, `dprint`, is listed explicitly in the `allowScripts` map, keyed by exact name and version. A version bump means updating that key too, or the script silently stops being allowed.
 
+## Dependabot
+
+Pinning everything means nothing is ever upgraded implicitly, so [`.github/dependabot.yml`](../../../.github/dependabot.yml) is what keeps the pins from going stale. Once a week, Dependabot checks the GitHub Actions actions (their commit SHAs and version comments), the NuGet packages in `Directory.Packages.props`, the .NET SDK in `global.json`, the npm packages, and the Python packages in `requirements.txt`, and opens a pull request for whatever has a newer release. All updates of an ecosystem are grouped into a single pull request, so each arrives as one reviewable change rather than a pull request per package.
+
+A Dependabot pull request is reviewed like any other, and two things need a hand:
+
+- **The `allowScripts` key of `dprint`** is not updated by Dependabot. When the pull request bumps `dprint`, update the key in `package.json` in the same pull request, or the install script silently stops being allowed.
+- **An analyzer upgrade** can bring new rules, and the Release build in continuous integration fails on their findings, so it may need the fixes or configuration described above before it can be merged.
+
+The NuGet pull request has to bring the `packages.lock.json` files up to date as well, which the lock-file verification in continuous integration checks (see [continuous integration](../tooling/continuous-integration.md#dependabot)).
+
 ## Python Dependencies
 
 [`requirements.txt`](../../../requirements.txt) pins the exact versions of ProperDocs, its theme and its plugins. Unlike the NuGet and npm dependencies, there is **no lock file** recording transitive versions — only the direct dependencies are pinned.
@@ -73,5 +84,6 @@ Install it inside a virtual environment, never against the system or user Python
 ## Related
 
 - [Developer setup](../tooling/developer-setup.md) — running these installs on a fresh machine.
+- [Continuous integration](../tooling/continuous-integration.md) — where `--locked-mode`, the lock-file verification, and `npm ci` act as drift detectors, and where Dependabot is configured.
 - [Architecture](../architecture.md) — where the project files that set these properties live.
 - [Versioning](versioning.md) — how the project's own version moves.

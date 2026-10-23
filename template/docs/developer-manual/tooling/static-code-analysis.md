@@ -15,7 +15,7 @@ The library also sets `<IsAotCompatible>true</IsAotCompatible>`, which adds the 
 
 The analyzer packages are declared once, as `GlobalPackageReference` items in [`Directory.Packages.props`](../../../Directory.Packages.props), which adds them to every project as build-time-only dependencies, so they never become a dependency of the published package. They are pinned like every other dependency (see [dependency management](../conventions/dependency-management.md)). StyleCop Analyzers has only ever published modern C# support in prerelease versions, so it is the one dependency pinned to a `-beta` version.
 
-The build settings themselves live in [`Directory.Build.props`](../../../Directory.Build.props) at the repository root, which every project imports. Besides the analysis settings above, it treats warnings as errors in Release builds, turns on the compiler's `strict` mode, and audits the transitive dependencies for known vulnerabilities as well (`NuGetAuditMode`). A Debug build shows the findings without stopping, and a Release build fails on any of them.
+The build settings themselves live in [`Directory.Build.props`](../../../Directory.Build.props) at the repository root, which every project imports. Besides the analysis settings above, it treats warnings as errors in Release builds, turns on the compiler's `strict` mode, and audits the transitive dependencies for known vulnerabilities as well (`NuGetAuditMode`). A Debug build shows the findings without stopping, and [continuous integration](continuous-integration.md), which builds in Release, fails on any of them.
 
 ## Where the Configuration Lives
 
@@ -67,3 +67,4 @@ Formatting stays with [dprint](formatting-dprint.md). `IDE0055`, which reports f
 - [Dependency management](../conventions/dependency-management.md) — how the analyzer packages are pinned.
 - [Architecture](../architecture.md) — the `Directory.Build.props` and `Directory.Packages.props` files.
 - [Formatting (dprint)](formatting-dprint.md) — the formatter the analyzers leave formatting to.
+- [Continuous integration](continuous-integration.md) — the Release build that fails on a warning.

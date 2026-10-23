@@ -1,0 +1,99 @@
+# The display name of the workflow, shown in the "Actions" tab of the GitHub repository and in the checks of a commit or pull request
+name: Tests
+
+# Defines the events that trigger this workflow; it runs on every push to any branch of the repository, and on every pull request, just like the
+# "Linters" workflow; it is a separate workflow file (rather than another job or step in "linters.yml") so that the two concerns show up as two
+# independent checks on a commit or pull request and either one can be re-run or extended without touching the other
+on:
+  push:
+  pull_request:
+
+# Grants the workflow's token nothing but read access to the repository contents, instead of whatever the repository's or organization's default is,
+# which may be write access to everything; building and testing needs nothing else
+permissions:
+  contents: read
+
+# Cancels a run that is still in progress when a newer commit is pushed to the same branch or pull request, since only the result for the newest
+# commit matters
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Defines the jobs that make up the workflow
+jobs:
+  # Restores, builds, and tests the solution with code coverage collection enabled, on a virtual machine with the latest Ubuntu image, which is the
+  # fastest and cheapest of the available runners
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    # A pull request from a branch of this repository is already checked by the push to that branch, so the job only runs for a pull request when it
+    # comes from a fork
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+
+    # Stops a run that hangs instead of letting it use up the default limit of six hours
+    timeout-minutes: 20
+
+    # The sequence of tasks that are executed as part of the job; the steps run sequentially in the same runner and share the same file system; every
+    # action is pinned to the full commit SHA of a release, with the version in a comment, because a tag can be moved to point at different code,
+    # while a commit SHA cannot; Dependabot keeps the pins up to date (see Continuous Integration)
+    steps:
+      # Checks out the repository into the runner's working directory, so that the solution and its projects are available to the following steps
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # Installs the .NET SDK; the version is read from "global.json" instead of being duplicated here, so the SDK this workflow builds with can never
+      # drift from the exact version pinned there (see Dependency Management)
+      - name: Set Up .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+
+      # Restores every project of the solution; "--locked-mode" makes the restore fail instead of silently regenerating a project's
+      # "packages.lock.json" if the resolved dependency graph would no longer match what is locked, so a package change that was not restored and
+      # committed locally is caught here rather than only showing up as a mismatch later
+      - name: Restore Dependencies
+        run: dotnet restore "source/[[ product_name ]].slnx" --locked-mode
+
+      # "--locked-mode" only compares against lock files that exist: when a project has none, the restore succeeds and simply writes one, so a project
+      # whose lock files were never committed would pass the step above without anything being checked; this step fails whenever the restore created
+      # or changed a lock file, which means it was missing from or outdated in the commit (see Dependency Management)
+      - name: Verify Lock Files Are Committed
+        run: |
+          if [ -n "$(git status --porcelain -- '**/packages.lock.json')" ]; then
+            git status --short -- '**/packages.lock.json'
+            echo "::error::A packages.lock.json file is missing or outdated; run \"dotnet restore\" locally and commit the lock files"
+            exit 1
+          fi
+
+      # Builds and runs every test project of the solution and collects code coverage while doing so; "dotnet test" runs on Microsoft.Testing.Platform
+      # (see "global.json"), so the solution is passed through "--solution"; "--no-restore" reuses the restore from the previous step, the Release
+      # configuration is what makes every analyzer warning fail the build (see Static Code Analysis), "--coverlet" turns on the coverage extension of
+      # the "coverlet.MTP" package, and "--results-directory" gives the Cobertura report a predictable location for the next step to pick up (see
+      # Testing and Code Coverage)
+      - name: Run Tests With Coverage
+        run: >
+          dotnet test --solution "source/[[ product_name ]].slnx" --no-restore --configuration Release
+          --coverlet --coverlet-output-format cobertura --results-directory ./coverage
+
+      # Restores the pinned version of ReportGenerator from ".config/dotnet-tools.json" and turns the raw Cobertura XML into a human-readable HTML
+      # report plus a Markdown summary; the summary is appended to the job's own summary page, so the coverage percentages are visible directly on the
+      # workflow run without downloading anything
+      - name: Generate Coverage Report
+        id: coverage-report
+        run: |
+          dotnet tool restore
+          dotnet tool run reportgenerator \
+            -reports:"coverage/**/coverage.cobertura*.xml" \
+            -targetdir:coverage-report \
+            -reporttypes:"Html;MarkdownSummaryGithub"
+          cat coverage-report/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
+
+      # Uploads the HTML coverage report as a workflow artifact, so that the detailed, file-by-file coverage can be downloaded and inspected even
+      # though only the summary is shown inline; it only runs when the report was generated, since there is nothing to upload otherwise
+      - name: Upload Coverage Report
+        if: ${{ !cancelled() && steps.coverage-report.outcome == 'success' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: code-coverage-report
+          path: coverage-report

@@ -34,3 +34,4 @@ This documentation is spell-checked as well, so keep new prose free of unknown w
 
 - [Tooling](README.md) — the full linter set.
 - [MarkdownLint](linting-markdownlint.md) — the companion Markdown linter.
+- [Continuous integration](continuous-integration.md) — the pinned version used there.

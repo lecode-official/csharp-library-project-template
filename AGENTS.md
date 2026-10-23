@@ -30,6 +30,7 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 - **Anything touching `LICENSE` or `licenses/`** → [docs/project-template/licensing.md](docs/project-template/licensing.md). Check its table before substituting anything into a license text.
 - **Adding a file to the body, or verifying a change** → [docs/project-template/authoring.md](docs/project-template/authoring.md) and [docs/conventions/testing.md](docs/conventions/testing.md).
 - **What a consumer does with the template, or `_skip_if_exists`** → [docs/project-template/rendering-and-updating.md](docs/project-template/rendering-and-updating.md).
+- **Dependabot in the body** → [docs/conventions/dependency-management.md](docs/conventions/dependency-management.md).
 - **C# in the body, and placeholders in code** → [docs/conventions/csharp-style.md](docs/conventions/csharp-style.md).
 - **Comments, documentation comments, docstrings, or deciding where an explanation belongs** → [docs/conventions/comments-and-documentation.md](docs/conventions/comments-and-documentation.md).
 - **Markdown, including placeholders in body Markdown and tables** → [docs/conventions/markdown-style.md](docs/conventions/markdown-style.md).

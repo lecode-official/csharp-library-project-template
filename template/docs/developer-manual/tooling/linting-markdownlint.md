@@ -23,7 +23,7 @@ Under the hood that is:
 npx markdownlint-cli2 "**/*.md" "!**/node_modules/**" "!**/build/**" "!**/.venv/**" "!**/coverage/**" "!**/coverage-report/**" "!**/TestResults/**"
 ```
 
-`npx` resolves the exact version pinned in [`package.json`](../../../package.json) and locked in `package-lock.json`, so every developer runs the same version.
+`npx` resolves the exact version pinned in [`package.json`](../../../package.json) and locked in `package-lock.json`, the same version [continuous integration](continuous-integration.md) installs.
 
 The exclusions matter: unlike dprint and CSpell, `markdownlint-cli2` does **not** ignore `node_modules` or build output by default, and it has no `--ignore` flag. Exclusions are expressed as negated globs instead — `!`-prefixed in the npm script, or `#`-prefixed when they are passed as bare arguments in a shell that would otherwise expand them. A run that suddenly takes minutes and reports thousands of findings is almost always a lost exclusion.
 
@@ -36,3 +36,4 @@ Keep to standard Markdown: one top-level heading per file, blank lines around he
 - [Markdown style](../conventions/markdown-style.md) — the stylistic conventions that go beyond linting.
 - [Line length](../conventions/line-length.md) — why the line-length rule is off.
 - [CSpell](spell-checking-cspell.md) — the other check that runs over these files.
+- [Continuous integration](continuous-integration.md) — the pinned version used there.

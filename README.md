@@ -22,7 +22,7 @@ dotnet restore "source/<Product Name>.slnx"
 dotnet test --solution "source/<Product Name>.slnx"
 ```
 
-The template ships no lock files, so this first `npm install` resolves and writes `package-lock.json`, and `dotnet restore` writes a `packages.lock.json` per project. Commit them with the first commit. From then on, the project installs with `npm ci`, which fails without them.
+The template ships no lock files, so this first `npm install` resolves and writes `package-lock.json`, and `dotnet restore` writes a `packages.lock.json` per project. Commit them with the first commit. From then on, the project installs with `npm ci`, and its continuous integration fails without them. Enable GitHub Pages with "GitHub Actions" as its source as well, or the workflow that publishes the documentation website fails.
 
 The generated project builds, tests, formats and lints green out of the box. The library it ships is a placeholder class that exists so all of that is true on day one — replace it with the real thing.
 

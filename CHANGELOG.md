@@ -18,3 +18,4 @@ All notable changes to the C# library project template are documented here, newe
 - Added formatting with dprint, Markdown linting with MarkdownLint, and spell checking with CSpell to the generated project.
 - Added strict static code analysis to the generated project, with the .NET analyzers, StyleCop Analyzers, Roslynator, and Nullable.Extended.
 - Added the documentation website of the generated project, built with ProperDocs, including a generated API reference.
+- Added the continuous integration workflows and the Dependabot configuration of the generated project.

@@ -13,7 +13,8 @@ import re
 import urllib.parse
 from typing import Any
 
-# The branch the built site is published from, so a rewritten link always points at the same revision the live site itself was built from
+# The branch the built site is always deployed from (see docs/developer-manual/tooling/continuous-integration.md, the docs site is only ever built and
+# published on a push to this branch), so a rewritten link always points at the same revision the live site itself was built from
 branch_name = '[[ default_branch ]]'
 
 # The repository root, resolved relative to this script rather than the current working directory, the same way generate-api-docs.py does it; this

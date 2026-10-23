@@ -1,0 +1,54 @@
+# The Dependabot configuration, which opens a pull request whenever a newer version of a dependency is released; every dependency in this repository
+# is pinned to an exact version, and every GitHub Actions action to a commit SHA (see Dependency Management), so nothing is ever upgraded
+# implicitly, and these pull requests are what keeps the pins from going stale; every ecosystem is checked once a week, and all of its updates are
+# grouped into a single pull request, so that the upgrades arrive as one reviewable change per ecosystem instead of a pull request per package
+version: 2
+
+updates:
+  # The actions used by the workflows in ".github/workflows/"; the pull request updates both the commit SHA and the version in the comment next to it
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # The NuGet packages, whose versions are declared centrally in "Directory.Packages.props"; a pull request also has to bring the "packages.lock.json"
+  # files up to date, which continuous integration verifies
+  - package-ecosystem: nuget
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      nuget:
+        patterns:
+          - "*"
+
+  # The .NET SDK version pinned in "global.json"
+  - package-ecosystem: dotnet-sdk
+    directory: /
+    schedule:
+      interval: weekly
+
+  # The linters and the code formatter in "package.json" and "package-lock.json"; when the dprint version changes, its key in "allowScripts" has to be
+  # updated by hand in the same pull request, or its install script silently stops being allowed
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      npm:
+        patterns:
+          - "*"
+
+  # The Python packages that build the documentation website, pinned in "requirements.txt"
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      pip:
+        patterns:
+          - "*"
