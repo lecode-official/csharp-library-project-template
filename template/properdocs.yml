@@ -79,6 +79,7 @@ nav:
       - Tooling:
           - Overview: developer-manual/tooling/README.md
           - Developer Setup: developer-manual/tooling/developer-setup.md
+          - Visual Studio Code Integration: developer-manual/tooling/editor-integration.md
           - Code Formatting (dprint): developer-manual/tooling/formatting-dprint.md
           - Markdown Linting (MarkdownLint): developer-manual/tooling/linting-markdownlint.md
           - Spell Checking (CSpell): developer-manual/tooling/spell-checking-cspell.md

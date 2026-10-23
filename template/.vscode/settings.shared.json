@@ -1,0 +1,134 @@
+{
+    // A vertical ruler in the code editor at 150 characters, this is a visual aide to help users keep the 150 character line limit file files that
+    // warrant a line limit
+    "editor.rulers": [150],
+
+    // Maps file names to file types; this is required when Visual Studio Code does not correctly auto-detect file types based on file extension
+    "files.associations": {
+        "**/.cspell.json": "jsonc",
+        "**/.globalconfig": "ini",
+        "**/.vscode/*.json": "jsonc",
+        "**/dotnet-tools.json": "jsonc",
+        "**/dprint.json": "jsonc",
+        "**/global.json": "jsonc",
+        "LICENSE": "plaintext",
+    },
+
+    // Excludes certain files from being displayed in the file explorer
+    "files.exclude": {
+        ".VSCodeCounter": true,
+        "**/__pycache__": true,
+        "**/.DS_Store": true,
+        "**/.git": true,
+        "**/.mypy_cache": true,
+        "**/.venv": true,
+        "**/build": true,
+        "**/coverage-report": true,
+        "**/coverage": true,
+        "**/node_modules": true,
+        "**/Thumbs.db": true,
+    },
+
+    // Makes certain files read-only, so that they cannot be edited from within Visual Studio Code
+    "files.readonlyInclude": {
+        ".vscode/launch.json": true,
+        ".vscode/launch.shared.json": true,
+        ".vscode/settings.json": true,
+        ".vscode/settings.shared.json": true,
+        ".vscode/tasks.json": true,
+        ".vscode/tasks.shared.json": true,
+    },
+
+    // Excludes certain files from being watched by the file watcher, this is required, because if the data directory is inside of the workspace, then
+    // Visual Studio Code will watch the entire directory, which can not only cause performance issues, but will also cause the file watcher to run
+    // out of file handles, which are limited by the operating system, that are necessary to watch the files; although node_modules can be quite
+    // large, it is not excluded here, because the TypeScript extension uses Visual Studio Code's file watching service to watch changes to installed
+    // packages; it notices if node_modules is excluded and will gracefully fallback to Node.js-based file watching, which is not only slower (and
+    // thus defeats the purpose of excluding it from file watching, as it will be slower overall), but it also is even more expensive when on Linux,
+    // because it uses inotify, which is a Linux specific feature that requires a file handle per watched file, thus exacerbating the problem even
+    // more
+    "files.watcherExclude": {
+        ".VSCodeCounter": true,
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/build": true,
+    },
+
+    // Excludes certain files from the search
+    "search.exclude": {
+        "**/*.code-search": true,
+        "**/node_modules": true,
+        "**/package-lock.json": true,
+    },
+
+    // Configures the nesting of files that belong together in the explorer (the nested files are not expanded by default); this configuration nests
+    // all Node.js-related configuration files under the "package.json" file, and all linter, code formatter, analyzer, and repository-wide build
+    // configuration files under the ".editorconfig" file
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+        ".editorconfig": ".copier-answers.yml, .cspell.json, .git-blame-ignore-revs, .gitattributes, .gitignore, .markdownlint.yml, Directory.Build.props, Directory.Packages.props, dprint.json, .globalconfig, global.json",
+        "*.slnx": "*.Build.props",
+        "launch.json": "launch.local.json, launch.shared.json",
+        "package.json": ".nvmrc, package-lock.json, properdocs.yml, requirements.txt",
+        "README.md": "AGENTS.md, CHANGELOG.md, CODE_OF_CONDUCT.md, CONTRIBUTING.md, CONTRIBUTORS.md, LICENSE, SECURITY.md, TODO.md",
+        "settings.json": "settings.local.json, settings.shared.json",
+        "tasks.json": "tasks.local.json, tasks.shared.json",
+    },
+
+    // Specifies which Git branches are protected in this repository, Visual Studio will prevent users from committing to these branches (this only
+    // works for the commit feature that is built into Visual Studio Code and not in the terminal)
+    "git.branchProtection": [
+        "[[ default_branch ]]",
+        "[[ integration_branch ]]",
+    ],
+
+    // Specifies that Visual Studio Code should always open the merge editor when a file is opened that has conflicts, instead of the code editor
+    "git.mergeEditor": true,
+
+    // Allows users to force push to a remote Git repository, as "git commit --amend" and rebases are regularly used in this project
+    "git.allowForcePush": true,
+
+    // Tells Visual Studio Code to fetch all branches instead of only the current one when pulling from a remote repository and to prune references to
+    // remote objects that no longer exist
+    "git.fetchOnPull": true,
+    "git.pruneOnFetch": true,
+
+    // Specifies that Visual Studio Code should push tags and perform a rebase instead of a merge when synching with a remote repository
+    "git.followTagsWhenSync": true,
+    "git.rebaseWhenSync": true,
+
+    // Imports the external settings for the code spell checker CSPell, furthermore, the "ignorePaths" and the "useGitignore" settings are reset,
+    // because they overwrite the settings in the imported configuration, also the diagnostic level is increased from "Information" to "Error" to
+    // indicate that spelling mistakes must be corrected
+    "cSpell.ignorePaths": [],
+    "cSpell.useGitignore": false,
+    "cSpell.diagnosticLevel": "Error",
+    "cSpell.import": ["${workspaceFolder}/.cspell.json"],
+
+    // Configures the Markdown linter MarkdownLint to use the custom configuration of this repository
+    "markdownlint.configFile": "${workspaceFolder}/.markdownlint.yml",
+
+    // Points the C# extension at the solution explicitly; without it, the solution's non-standard location (in "source/", not the repository root)
+    // and its cross-directory reference to the test project under "tests/" can lead the extension to miss part of the solution and report a file as
+    // belonging to no project
+    "dotnet.defaultSolution": "source/[[ product_name ]].slnx",
+
+    // Configures the code formatter dprint
+    "dprint.verbose": true,
+    "editor.defaultFormatter": "dprint.dprint",
+    "editor.formatOnType": false,
+    "editor.formatOnSave": true,
+
+    // A list of domains from which JSON schema files are automatically downloaded
+    "json.schemaDownload.trustedDomains": {
+        "https://developer.microsoft.com/json-schemas/": true,
+        "https://json-schema.org/": true,
+        "https://json.schemastore.org/": true,
+        "https://plugins.dprint.dev/": true,
+        "https://raw.githubusercontent.com/devcontainers/spec/": true,
+        "https://raw.githubusercontent.com/microsoft/vscode/": true,
+        "https://schemastore.azurewebsites.net/": true,
+        "https://www.schemastore.org/": true,
+    },
+}

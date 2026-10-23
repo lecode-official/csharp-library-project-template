@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+
+    // Debug configurations that every developer of this project shares; a personal configuration goes into "launch.local.json", which is not
+    // committed, and Workspace Config Plus merges the two into the generated "launch.json"
+    "configurations": [
+        // Debugs the sample app; this builds the solution via the "Build" task (see "tasks.shared.json") before attaching the debugger to the
+        // resulting executable, whose output lives under "build/sample-app/" rather than next to the source (see Architecture)
+        {
+            "name": "Debug Sample App",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build",
+            "program": "${workspaceFolder}/build/sample-app/bin/Debug/[[ target_framework ]]/[[ product_name ]] Sample App.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/source/sample-app",
+            "console": "integratedTerminal",
+            "stopAtEntry": false,
+        },
+    ],
+}

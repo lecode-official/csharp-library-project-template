@@ -21,7 +21,7 @@ The build settings themselves live in [`Directory.Build.props`](../../../Directo
 
 The severity of every rule, and every option an analyzer reads, lives in [`.globalconfig`](../../../.globalconfig) at the repository root. Every setting in it carries a comment that says what the rule enforces and, where the setting turns a rule off, why.
 
-A `.globalconfig` is a *global analyzer configuration file*, not an EditorConfig file. It shares the EditorConfig syntax, but only the C# compiler reads it, which is why editors do not recognize it on their own:
+A `.globalconfig` is a *global analyzer configuration file*, not an EditorConfig file. It shares the EditorConfig syntax, but only the C# compiler reads it, which is why editors do not recognize it on their own ([`.vscode/settings.shared.json`](../../../.vscode/settings.shared.json) highlights it as an INI file):
 
 - **The compiler finds it on its own.** It looks for a file named `.globalconfig` in the directory of every source file and in all of its parent directories, so the one file at the root covers every project, without any reference from a project file.
 - **It applies to a whole project, not to a file glob.** It has no sections. A `[*.cs]` header is not an error, but everything below it is silently ignored.

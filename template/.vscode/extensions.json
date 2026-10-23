@@ -1,0 +1,37 @@
+{
+    // List of extensions which should be recommended for users of this workspace
+    "recommendations": [
+        // Claude Code integration for Visual Studio Code
+        "Anthropic.claude-code",
+
+        // Language support for .gitignore files
+        "codezombiech.gitignore",
+
+        // Integrates MarkdownLint into the editor
+        "DavidAnson.vscode-markdownlint",
+
+        // Integrates the dprint code formatter into the editor
+        "dprint.dprint",
+
+        // Base C# language support for Visual Studio Code
+        "ms-dotnettools.csharp",
+
+        // Perform spell-checking of the documentation, code, and comments with support for warnings/errors in Visual Studio Code
+        "streetsidesoftware.code-spell-checker",
+
+        // Enables a shared Visual Studio Code configuration, while allowing each user to locally add or overwrite settings
+        "Swellaby.workspace-config-plus",
+
+        // Adds useful features for editing Markdown tables
+        "TakumiI.markdowntable",
+
+        // Highlights TODOs, FIXMEs, HACKs, DEBUGs, REVIEWs, and NOTEs inside of code files
+        "wayou.vscode-todo-highlight",
+
+        // Adds support for exporting Markdown files to PDF
+        "yzane.markdown-pdf",
+
+        // Integrates many useful features for editing Markdown
+        "yzhang.markdown-all-in-one",
+    ],
+}

@@ -2,7 +2,7 @@
 
 This article covers what to install before building, testing, linting, or formatting [[ product_name ]] locally.
 
-Not every section is needed for every task: Python is only needed to build the documentation website locally.
+Not every section is needed for every task: Visual Studio Code is optional, and Python is only needed to build the documentation website locally.
 
 ## Node.js and npm
 
@@ -31,6 +31,14 @@ npm run format
 npm run lint
 npm test
 ```
+
+## Visual Studio Code
+
+Visual Studio Code is recommended, though not required. On first opening the repository it offers to install the extensions recommended in [`.vscode/extensions.json`](../../../.vscode/extensions.json) — install all of them.
+
+One of them, [Workspace Config Plus](https://marketplace.visualstudio.com/items?itemName=Swellaby.workspace-config-plus), is not optional in practice. This repository splits editor configuration into a committed `settings.shared.json` and a per-developer, Git-ignored `settings.local.json`, and that extension is what merges the two into the `settings.json` the editor actually reads. Without it, no `settings.json` is generated at all, so **none** of the shared configuration takes effect — format-on-save, the solution path the C# extension reads, and the linter integrations all silently do nothing, with no error to explain why.
+
+See [editor integration](editor-integration.md) for the full mechanism and what each setting does, including which extensions bundle their own engine and which use the project's `node_modules`.
 
 ## .NET SDK
 
@@ -62,6 +70,7 @@ Activate the environment in every new shell before running the documentation com
 
 ## Related
 
+- [Editor integration](editor-integration.md) — the shared and local settings mechanism.
 - [Tooling](README.md) — what each installed tool does.
 - [Dependency management](../conventions/dependency-management.md) — how these pinned versions are kept exact.
 - [Continuous integration](continuous-integration.md) — the versions to match locally.

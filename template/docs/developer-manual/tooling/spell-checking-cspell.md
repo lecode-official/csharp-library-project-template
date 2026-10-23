@@ -6,7 +6,7 @@ This article covers spell checking of code, comments, and documentation.
 
 ## Dictionaries
 
-The command-line interface does not bundle the German, Spanish, and French dictionaries, so they are installed as dev dependencies (`@cspell/dict-de-de`, `@cspell/dict-es-es`, `@cspell/dict-fr-fr`) and registered through the `import` field.
+The command-line interface does not bundle the German, Spanish, and French dictionaries, so they are installed as dev dependencies (`@cspell/dict-de-de`, `@cspell/dict-es-es`, `@cspell/dict-fr-fr`) and registered through the `import` field. The editor extension imports the same `.cspell.json` (see [editor integration](editor-integration.md)), including its `import` field, so it resolves the dictionaries from the same dev dependencies once `npm install` has run. That is why the extension recommendations name only the spell checker itself and none of its separate language add-ons.
 
 The language dictionaries are `en-us`, `de-DE`, `es-ES`, and `fr-FR`, together with `en-us-common-misspellings` and `en-common-misspellings`. Beyond them, the configuration enables the keyword dictionaries of the languages and tools in the repository (`bash`, `csharp`, `docker`, `git`, `node`, `npm`, `sql`), plus a set of general technical dictionaries, so that ordinary industry vocabulary does not have to be listed by hand: `companies`, `computing-acronyms`, `filetypes`, `fonts`, `fullstack`, `lorem-ipsum`, `misc`, `networking-terms`, `public-licenses`, `software-terms`, `software-term-suggestions`, `software-tools`, `coding-compound-words`, and `web-services`.
 
@@ -29,6 +29,10 @@ Do not disable the check, and do not add a real misspelling to `words`. There is
 `flagWords` holds short strings that are always treated as errors regardless of case — common typos too short for CSpell's default minimum word length to catch.
 
 This documentation is spell-checked as well, so keep new prose free of unknown words, or add legitimate terms to the dictionary in the same change.
+
+## Editor Task
+
+The Visual Studio Code "Lint Spelling" task uses a custom problem matcher, because CSpell has no built-in one (see [editor integration](editor-integration.md)).
 
 ## Related
 

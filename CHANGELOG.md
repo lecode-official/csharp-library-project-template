@@ -19,3 +19,4 @@ All notable changes to the C# library project template are documented here, newe
 - Added strict static code analysis to the generated project, with the .NET analyzers, StyleCop Analyzers, Roslynator, and Nullable.Extended.
 - Added the documentation website of the generated project, built with ProperDocs, including a generated API reference.
 - Added the continuous integration workflows and the Dependabot configuration of the generated project.
+- Added the Visual Studio Code integration of the generated project.
