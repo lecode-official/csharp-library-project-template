@@ -20,6 +20,19 @@ The practical consequence: **`{{ }}` in a template file is literal text**, which
 
 Copier copies a file verbatim if it cannot read it as a template, so binary files are unaffected.
 
+## Placeholders in File and Directory Names
+
+Copier renders path names too, which is why the body contains directories and files like:
+
+```text
+template/source/[[ product_name ]].slnx
+template/source/[[ library_slug ]]/[[ product_name ]].csproj
+```
+
+This is load-bearing for the C# layout, where a project file is named after the product rather than after its directory.
+
+One consequence to keep in mind: `[` and `]` are character-class syntax in a glob, so a shell pattern that spells out a literal placeholder path matches nothing. Quote such paths, or match the directory with a `*`.
+
 ## Adding a File to the Body
 
 1. Put it under [`template/`](../../template/), at the path it should have in the generated project.
@@ -39,6 +52,9 @@ copier copy --defaults --vcs-ref HEAD --data product_name="Render Test" --data r
     --data product_description="A scratch render." --data author="Example" \
     --data repository_url=https://example.com/x --data maintainer_url=https://example.com \
     . /tmp/render-test
+
+cd /tmp/render-test
+dotnet build "source/Render Test.slnx" --configuration Release
 ```
 
 Then check the things that only a render reveals:

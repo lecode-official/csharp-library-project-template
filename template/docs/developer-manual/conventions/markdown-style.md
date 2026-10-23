@@ -32,7 +32,7 @@ XML documentation comments are the one exception: they are XML, not Markdown, so
 
 ## Punctuation
 
-- **Prefer a period over a semicolon.** Where a semicolon joins two full sentences, split them into two sentences with a period instead. This applies to all prose — the documentation, `README.md`, and `AGENTS.md`. In-code comments are the one exception and follow their own rule (see [comments and documentation comments](comments-and-documentation.md)).
+- **Prefer a period over a semicolon.** Where a semicolon joins two full sentences, split them into two sentences with a period instead. This applies to all prose — the documentation, `README.md`, and `AGENTS.md`. In-code comments are the one exception and follow their own rule (see [C# style](csharp-style.md)).
 - **Use em and en dashes sparingly.** They fit a genuine aside or an abrupt break, not as a default connector. When a comma, a period, or parentheses reads just as well, use that instead.
 
 ## No Horizontal Rules
@@ -41,5 +41,5 @@ Never use horizontal rules (`---`) to separate sections. Headings already provid
 
 ## Related
 
-- The other conventions: [file and naming conventions](file-and-naming-conventions.md).
+- The other conventions: [C# style](csharp-style.md) and [file and naming conventions](file-and-naming-conventions.md).
 - [Commit messages](commit-messages.md) — the same title-case and punctuation rules, applied to the Git history.

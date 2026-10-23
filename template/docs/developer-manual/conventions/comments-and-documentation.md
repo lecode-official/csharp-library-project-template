@@ -59,4 +59,5 @@ Do not write a comment that only restates what the code already says. If removin
 
 ## Related
 
+- [C# style](csharp-style.md) — the surrounding style rules, including where regions go.
 - [Markdown style](markdown-style.md) — the prose punctuation rule these comments share.

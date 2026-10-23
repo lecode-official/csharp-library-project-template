@@ -26,10 +26,11 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 ## When Working on X, Read Y
 
 - **The two-level layout, or anything about how Copier walks this repository** → [docs/project-template/template-structure.md](docs/project-template/template-structure.md).
-- **Adding, changing, or removing a question or its validator** → [docs/project-template/questions.md](docs/project-template/questions.md).
+- **Adding, changing, or removing a question or its validator, including the .NET SDK default and bands** → [docs/project-template/questions.md](docs/project-template/questions.md).
 - **Anything touching `LICENSE` or `licenses/`** → [docs/project-template/licensing.md](docs/project-template/licensing.md). Check its table before substituting anything into a license text.
 - **Adding a file to the body, or verifying a change** → [docs/project-template/authoring.md](docs/project-template/authoring.md) and [docs/conventions/testing.md](docs/conventions/testing.md).
 - **What a consumer does with the template, or `_skip_if_exists`** → [docs/project-template/rendering-and-updating.md](docs/project-template/rendering-and-updating.md).
+- **C# in the body, and placeholders in code** → [docs/conventions/csharp-style.md](docs/conventions/csharp-style.md).
 - **Comments, documentation comments, docstrings, or deciding where an explanation belongs** → [docs/conventions/comments-and-documentation.md](docs/conventions/comments-and-documentation.md).
 - **Markdown, including placeholders in body Markdown and tables** → [docs/conventions/markdown-style.md](docs/conventions/markdown-style.md).
 - **Line length, or a placeholder that changes a line's width** → [docs/conventions/line-length.md](docs/conventions/line-length.md).
@@ -47,7 +48,7 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 
 **This is important.** A change here is not done until the documentation reflects it:
 
-- A new or changed question, default, or validator updates the tables in [docs/project-template/questions.md](docs/project-template/questions.md), including its validation rule.
+- A new or changed question, default, or validator updates the tables in [docs/project-template/questions.md](docs/project-template/questions.md), including its validation rule. A new SDK release raises the `dotnet_sdk_version` default and the bands in its help.
 - A new or changed `_skip_if_exists` entry updates the list in [docs/project-template/rendering-and-updating.md](docs/project-template/rendering-and-updating.md#files-the-template-only-creates).
 - A new license updates the table in [docs/project-template/licensing.md](docs/project-template/licensing.md) **and** `scripts/refresh-licenses.py`.
 - A new article under `template/docs/` is listed in two places, both hand-maintained: the generated project's documentation index and its section index.

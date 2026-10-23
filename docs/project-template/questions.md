@@ -2,11 +2,11 @@
 
 This article covers every question the template asks, what each answer feeds, how each answer is validated, and how to add a question.
 
-Copier asks questions **in declaration order**, and a question may only reference the answers above it.
+Copier asks questions **in declaration order**, and a question may only reference the answers above it — which is why `dotnet_sdk_version` is declared after `target_framework`.
 
 ## Types and Validation
 
-Every question is declared with `type: str`. Only `license` restricts the answer to a list of `choices`. Every other question accepts free text, and its `validator` rejects an answer that would break the generated project, with a message that says what is allowed.
+Every question is declared with `type: str`. Only `target_framework` and `license` restrict the answer to a list of `choices`. Every other question accepts free text, and its `validator` rejects an answer that would break the generated project, with a message that says what is allowed.
 
 An answer ends up in file names, C# code, XML, JSON, YAML, Markdown and Python strings. Rather than escaping every answer for every format it lands in, the validators only allow characters that are safe in all of them. Each validator uses the `regex_search` filter of the `jinja2_ansible_filters` extension, which Copier always loads, so none of them costs a `--trust`.
 
@@ -50,11 +50,33 @@ The `copyright_year` default is rendered as `[[ '%Y' | strftime ]]`, so it is al
 
 The branch names are limited to the characters Git allows in a branch name that are also safe in the YAML and JSON they end up in.
 
-## License
+## Toolchain and License
 
-| Question  | Default             | Validation            | Feeds               |
-| --------- | ------------------- | --------------------- | ------------------- |
-| `license` | `LGPL-3.0-or-later` | One of the `choices`. | The `LICENSE` file. |
+| Question             | Default                  | Validation                                                                                                         | Feeds                                                                               |
+| -------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| `target_framework`   | `net10.0`                | One of the `choices`, of which `net10.0` is the only one.                                                          | The `TargetFramework` of both projects, and the build output paths that contain it. |
+| `dotnet_sdk_version` | `10.0.402` for `net10.0` | A full release version of the form `X.Y.ZZZ`, starting with the target framework's version, `10.0.` for `net10.0`. | The SDK version pinned exactly in `global.json`.                                    |
+| `license`            | `LGPL-3.0-or-later`      | One of the `choices`.                                                                                              | The `LICENSE` file.                                                                 |
+
+### `target_framework`
+
+Only `net10.0` today. .NET 10 is the current LTS release, supported until 14 November 2028. .NET 11 is at release-candidate stage with no stable SDK, so there is nothing else to offer.
+
+It is still a question with `choices` rather than a constant, although it has a single answer. Every generated project records it in `.copier-answers.yml`, so the day a new .NET release is added as a second choice, a project can switch to it with `copier update` and keep every file that depends on it consistent. A constant would have to be turned into a question first. Add a choice here when a new release ships, together with its branch in the `dotnet_sdk_version` default.
+
+### `dotnet_sdk_version`
+
+The version pinned exactly in `global.json`. A .NET SDK version is `major.minor.<band><patch>`, and a new feature band opens when the tooling gains features rather than when the runtime changes, so every band of a release carries the same runtime.
+
+**It is a free string, not a list of choices.** Copier rejects any answer that is not one of a question's `choices`, and it does so also when it replays the recorded answers during `copier update`. With a list, dropping a superseded version from it would make every project that had picked that version impossible to update. A free string keeps every recorded version valid, and the validator still rejects an answer that is not a release version or that belongs to a different .NET release than the target framework.
+
+The `help` text names the feature bands that still receive servicing updates, with the newest patch of each: `10.0.4xx`, currently `10.0.402`, for the newest tooling, and `10.0.1xx`, currently `10.0.113`, for the original band. The `10.0.2xx` and `10.0.3xx` bands stopped receiving patches in May and August 2026, so the help no longer names them, although the validator still accepts their versions.
+
+The default is rendered from `target_framework`, as `[% if target_framework == 'net10.0' %]10.0.402[% endif %]`. When a new SDK ships:
+
+1. Raise the version in the default, if the new SDK is the newest patch of the newest serviced band.
+2. Update the bands and the versions named in the `help` text, and drop a band that stopped receiving patches.
+3. Render a project with the new version (see [testing](../conventions/testing.md)).
 
 ### `license`
 
@@ -69,7 +91,7 @@ An SPDX identifier, which selects the `LICENSE` file's content. See [licensing](
 5. Add it to the tables above, with its default, its validation rule and what it feeds.
 6. Render a project and confirm the answer lands everywhere you expected.
 
-A question that only ever has one sensible answer, and is not expected to grow a second one, is better expressed as a constant in the template body than as a question nobody reads.
+A question that only ever has one sensible answer, and is not expected to grow a second one, is better expressed as a constant in the template body than as a question nobody reads. `target_framework` is the exception, for the reason given above.
 
 ## Related
 

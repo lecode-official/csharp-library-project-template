@@ -6,7 +6,44 @@
 
 The repository is organized into a few top-level directories:
 
+- **[`source/`](source/)** — the source code of [[ product_name ]] itself, and the sample app that demonstrates it.
 - **[`docs/`](docs/README.md)** — the project documentation. Start with [`docs/README.md`](docs/README.md).
+
+The solution, [`source/[[ product_name ]].slnx`](source/), groups two projects: the library, and a runnable sample app that references it.
+
+## Development
+
+### Developer Setup
+
+Building and working on [[ product_name ]] requires the .NET SDK — the exact version pinned in [`global.json`](global.json).
+
+```shell
+git clone [[ repository_url ]]
+cd [[ product_slug ]]
+dotnet restore "source/[[ product_name ]].slnx"
+```
+
+See [developer setup](docs/developer-manual/tooling/developer-setup.md) for the full walkthrough.
+
+### Building
+
+```shell
+dotnet build "source/[[ product_name ]].slnx"
+```
+
+Build output does not land next to the source: `source/Directory.Build.props` redirects every project's `bin` and `obj` into `build/<project folder name>/` instead. See [architecture](docs/developer-manual/architecture.md).
+
+### Running
+
+```shell
+dotnet run --project "source/sample-app/[[ product_name ]] Sample App.csproj"
+```
+
+runs the sample app, which demonstrates the library.
+
+### Dependencies
+
+Every dependency is pinned to an exact version — NuGet packages and the .NET SDK itself.
 
 ## Use of AI
 

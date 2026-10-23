@@ -14,6 +14,7 @@ One render with the default answers catches most mistakes. A change that touches
 
 - **A product name with spaces and a dot**, such as `Render.Test Library`. It appears in file names, and it is the answer most likely to break one of them.
 - **Every choice of a multiple-choice question the change touches.** A change to `template/LICENSE` or `licenses/` is rendered once per license.
+- **Each serviced SDK band**, for a change to `template/global.json` or the workflows. `dotnet_sdk_version` is a free string, so render once with the newest version of each band its help text names (see [questions](../project-template/questions.md#dotnet_sdk_version)).
 - **An update, for a structural change.** When a file is moved, renamed or restructured, render a project from the last tag, commit it in its own Git repository, and run `copier update --vcs-ref HEAD` in it against your working tree. The conflicts you see there are the conflicts every consumer will see.
 
 After every render, check that no placeholder survived, and that none was rendered as a Python list (see [Markdown style](markdown-style.md)):
@@ -26,5 +27,6 @@ grep -rnE "\['[^']*'\]\(" /tmp/render-test
 ## Related
 
 - [Authoring](../project-template/authoring.md) — the render commands.
+- [C# style](csharp-style.md) — the conventions the test code also follows.
 - [Questions](../project-template/questions.md) — the answers worth varying between renders.
 - [Tooling](../tooling/README.md) — the linters the workflow runs on this repository's own files.

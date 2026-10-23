@@ -20,9 +20,14 @@ The [Claude Code hooks](claude-code-hooks.md) that run these tools read the edit
 
 Rendering the template needs [Copier](https://copier.readthedocs.io/en/stable/#installation), at least the version `_min_copier_version` in [`copier.yml`](../../copier.yml) names. Install it as an isolated command-line tool rather than into a project's Python environment, for example with `pipx install copier` or `uv tool install copier`.
 
-## Python
+## What a Render Needs
 
-[`scripts/refresh-licenses.py`](../../scripts/refresh-licenses.py) needs Python, and only its standard library.
+A rendered project is verified with its own toolchain, so checking a change to the body needs that toolchain too:
+
+- **The .NET SDK**, at the exact version the render's `global.json` pins. That is the answer to the `dotnet_sdk_version` question, so a change that is rendered once per serviced SDK band needs the SDK of each of those renders installed. `global.json` disables roll-forward, so a mismatched SDK fails outright.
+- **Python**, for [`scripts/refresh-licenses.py`](../../scripts/refresh-licenses.py), which uses only the standard library.
+
+The render's own [developer setup](../../template/docs/developer-manual/tooling/developer-setup.md) article covers each of these in detail, from the generated project's point of view.
 
 ## Visual Studio Code
 

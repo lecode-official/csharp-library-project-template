@@ -1,0 +1,8 @@
+<Solution>
+    <Folder Name="/[[ library_slug ]]/">
+        <Project Path="[[ library_slug ]]/[[ product_name ]].csproj" />
+    </Folder>
+    <Folder Name="/sample-app/">
+        <Project Path="sample-app/[[ product_name ]] Sample App.csproj" />
+    </Folder>
+</Solution>

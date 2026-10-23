@@ -100,3 +100,4 @@ Co-Authored-By: Claude Opus 5.5 Medium <noreply@anthropic.com>
 
 - [Git workflow](git-workflow.md) — who runs the commit, and what an instruction to write a message does and does not authorize.
 - [Markdown style](markdown-style.md) — the same title-case and punctuation rules used for headings and prose.
+- [C# style](csharp-style.md) — the surrounding code conventions.

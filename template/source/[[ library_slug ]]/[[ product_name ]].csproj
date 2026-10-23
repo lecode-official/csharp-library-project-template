@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- Build Configuration -->
+    <PropertyGroup>
+        <TargetFramework>[[ target_framework ]]</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>[[ root_namespace ]]</RootNamespace>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <!-- Assembly Info -->
+    <PropertyGroup>
+        <AssemblyTitle>[[ product_name ]]</AssemblyTitle>
+        <Product>[[ product_name ]]</Product>
+        <NeutralLanguage>en-US</NeutralLanguage>
+    </PropertyGroup>
+</Project>
