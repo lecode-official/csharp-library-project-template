@@ -1,0 +1,29 @@
+
+# This file is the top-most editor configuration file
+root = true
+
+# Default settings for all files
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = 150
+
+# YAML and TOML files use 2 spaces for indentation
+[*.{yml,yaml,toml}]
+indent_size = 2
+
+# The XML-based MSBuild files (C# project files, the shared ".props" and ".targets" files) and the XML-based solution files (.slnx) are indented with
+# 4 spaces like everything else; this section states that explicitly, so that an editor or Visual Studio, which writes solution and project files
+# itself, does not fall back to a different indentation of its own; unlike the legacy ".sln" format, which requires tabs, a byte order mark, and
+# CRLF line endings, ".slnx" is plain XML and needs none of these
+[*.{csproj,props,targets,slnx}]
+indent_style = space
+indent_size = 4
+
+# Turns the maximum line length off for Markdown files, as Markdown relies on the automatic word wrap of the code editor
+[*.md]
+max_line_length = off

@@ -1,0 +1,23 @@
+
+# Operating system thumbnail databases
+.DS_Store
+Thumbs.db
+
+# IDEs and code editors
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.shared.json
+!.vscode/tasks.shared.json
+.idea
+
+# Installed packages
+node_modules/
+
+# To Do Lists
+TODO.md
+
+# Miscellaneous tool logs, outputs, and caches
+__pycache__/
+.mypy_cache/
+.VSCodeCounter/
+*.log

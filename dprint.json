@@ -1,0 +1,88 @@
+{
+    // This configuration formats the template repository's own files only; the files under "template/" are Jinja templates, not valid documents of
+    // their own type, so formatting them here would mangle them; the generated project brings its own "dprint.json" that formats them once they have
+    // been rendered (see docs/project-template/template-structure.md)
+
+    // By default, dprint only formats files that have changed since the last time it was run; setting "incremental" to false forces dprint to always
+    // format all eligible files; unlike most settings, "incremental" is a global setting that cannot be inherited through "extends" (dprint reports
+    // it as an unknown property when it appears in an extended configuration), so it always has to be declared in the top-level configuration
+    "incremental": false,
+
+    // By default, everything should be indented with 4 space characters and no tabs should be used (exceptions are configured accordingly)
+    "indentWidth": 4,
+    "useTabs": false,
+
+    // No language should ever exceed 150 characters per line (although dprint may sometimes fail to break lines to fullfil this limit); some
+    // languages, like Markdown have separate settings to disable line breaking, so the character limit does not apply to them
+    "lineWidth": 150,
+
+    // Configuration for Markdown files
+    "markdown": {
+        "textWrap": "never",
+        "emphasisKind": "asterisks",
+    },
+
+    // Configuration for JSON files
+    "json": {
+        // The JSON standard does not allow trailing commas, but the JSONC standard does, so trailing commas are forced only for JSONC; this list
+        // replaces the plugin's defaults rather than extending them, so every JSONC file has to be named here
+        "trailingCommas": "jsonc",
+        "jsonTrailingCommaFiles": [
+            ".cspell.json",
+            ".vscode/extensions.json",
+            ".vscode/settings.json",
+            ".vscode/settings.local.json",
+            ".vscode/settings.shared.json",
+            ".vscode/tasks.json",
+            ".vscode/tasks.local.json",
+            ".vscode/tasks.shared.json",
+            "dprint.json",
+        ],
+    },
+
+    // Configuration for YAML files
+    "yaml": {
+        "indentWidth": 2,
+        "trimTrailingZero": true,
+
+        // Forces a whitespace at the beginning of a comment
+        "formatComments": true,
+
+        // Wraps prose text in plain scalars when they exceed the print width
+        "proseWrap": "always",
+    },
+
+    // Configuration for TOML files
+    "toml": {
+        "indentWidth": 2,
+    },
+
+    // Glob patterns for files that should be excluded
+    "excludes": [
+        // Re-includes files using the leading "!" that dprint would otherwise skip because they are ignored by Git
+        "!.vscode/settings.local.json",
+        "!.vscode/settings.shared.json",
+        "!.vscode/tasks.local.json",
+        "!.vscode/tasks.shared.json",
+        "!TODO.md",
+
+        // The template body is Jinja source; it is formatted by the generated project's own dprint configuration, after rendering
+        "template/",
+
+        // The vendored license texts are verbatim copies of upstream documents and must never be reformatted
+        "licenses/",
+
+        // Generated files: the npm and NuGet lock files, and the Copier answers file, whose contents and quoting style are written by the tool that
+        // owns them rather than by hand; note that "*-lock.json" does not match "packages.lock.json", so both patterns are needed
+        "**/*-lock.json",
+        "**/packages.lock.json",
+    ],
+
+    // A list of plugins that should be used by dprint
+    "plugins": [
+        "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.6.0.wasm",
+        "https://plugins.dprint.dev/json-0.25.2.wasm",
+        "https://plugins.dprint.dev/markdown-0.27.1.wasm",
+        "https://plugins.dprint.dev/toml-0.9.0.wasm",
+    ],
+}

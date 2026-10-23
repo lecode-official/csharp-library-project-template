@@ -1,0 +1,112 @@
+{
+    // The spell-checking configuration for the template repository's own files; the generated project brings its own configuration, at
+    // "template/.cspell.json" (see docs/project-template/template-structure.md)
+
+    // Version of the settings file, this should always be 0.2
+    "version": "0.2",
+
+    // The template's own documentation is written in American English
+    "language": "en-US",
+
+    // Words do not have to match in case
+    "caseSensitive": false,
+
+    // A list of file types that should be enabled (not all file types are enabled by default)
+    "enableFiletypes": [
+        "gitignore",
+    ],
+
+    // A list of paths that are ignored when spell-checking
+    "ignorePaths": [
+        // The CSpell configuration file is ignored, because it contains flag words that are always considered incorrect, which results in the
+        // configuration file being marked as containing spelling errors
+        "**/.cspell.json",
+
+        // Operating system file preview databases
+        "**/.DS_Store",
+        "**/Thumbs.db",
+
+        // Everything in the Git directory is ignored, except for the commit message file
+        "**/.git/!(COMMIT_EDITMSG)",
+
+        // The template body has its own spell-checking configuration, which the generated project runs
+        "template/",
+
+        // The vendored license texts are verbatim copies of upstream documents
+        "licenses/",
+
+        "**/node_modules/",
+        "**/package-lock.json",
+    ],
+
+    // A list of dictionaries that should be added beyond the American English dictionary
+    "dictionaries": [
+        "en-us",
+        "en-us-common-misspellings",
+        "en-common-misspellings",
+        "bash",
+        "csharp",
+        "git",
+        "node",
+        "npm",
+        "python",
+        "companies",
+        "computing-acronyms",
+        "filetypes",
+        "fullstack",
+        "misc",
+        "public-licenses",
+        "software-terms",
+        "software-term-suggestions",
+        "software-tools",
+        "coding-compound-words",
+    ],
+
+    // A list of words to be always considered incorrect
+    "flagWords": [
+        "adn",
+        "fo",
+        "fro",
+        "hte",
+        "ot",
+    ],
+
+    // A list of words that are not in the included default dictionary for American English
+    "words": [
+        "Anson",
+        "choosealicense",
+        "codezombiech",
+        "copier",
+        "csproj",
+        "docstrings",
+        "docz",
+        "dotnet",
+        "envops",
+        "globalconfig",
+        "globaltool",
+        "jinja",
+        "lecode",
+        "markdowntable",
+        "MulanPSL",
+        "Neumann",
+        "nuget",
+        "pasteable",
+        "properdocs",
+        "publiccode",
+        "renderable",
+        "reportgenerator",
+        "Roslynator",
+        "slnx",
+        "SPDX",
+        "Swellaby",
+        "TakumiI",
+        "unlicensed",
+        "unreviewed",
+        "vsicons",
+        "wayou",
+        "xmldoc",
+        "xunit",
+        "yzane",
+        "yzhang",
+    ],
+}

@@ -1,0 +1,51 @@
+
+# Operating system thumbnail databases
+.DS_Store
+Thumbs.db
+
+# IDEs and code editors (Visual Studio Code settings, launch configuration, tasks, and extensions are excluded)
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.shared.json
+!.vscode/settings.shared.json
+!.vscode/tasks.shared.json
+.c9/
+.classpath
+.history/*
+.project
+.settings/
+*.launch
+*.sublime-workspace
+.idea
+.vs/
+*.user
+*.suo
+*.DotSettings.user
+
+# Installed packages
+node_modules/
+.venv/
+
+# Build output; every project's "bin" and "obj" are redirected here, as is the documentation website (see Architecture)
+/build/
+
+# NuGet packages and symbol packages produced by "dotnet pack"
+*.nupkg
+*.snupkg
+
+# Local environment configuration, which contains secrets and machine-specific values
+.env
+
+# Test results and code coverage reports
+TestResults/
+/coverage/
+/coverage-report/
+
+# To Do Lists
+TODO.md
+
+# Miscellaneous tool logs, outputs, and caches
+__pycache__/
+.mypy_cache/
+.VSCodeCounter/
+*.log
