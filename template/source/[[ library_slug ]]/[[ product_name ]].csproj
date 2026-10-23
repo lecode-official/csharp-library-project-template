@@ -49,6 +49,12 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
 
         <!--
+            The icon nuget.org and the package managers of the editors show next to the package; NuGet only accepts a PNG or JPEG file inside the
+            package, so this is the badge, baked to 128 by 128 pixels from its vector master (see Logo Design)
+        -->
+        <PackageIcon>package-icon.png</PackageIcon>
+
+        <!--
             Packs the debug symbols into a separate symbol package (".snupkg") next to the package, which nuget.org serves to debuggers through its
             symbol server, so that a consumer can step into the library's code
         -->
@@ -62,10 +68,12 @@
     <!-- Packaged Files -->
     <ItemGroup>
         <!--
-            "PackageReadmeFile" above only names the file, it does not pack it; without this item, "dotnet pack" fails because the file it was told to
-            use is not in the package
+            "PackageReadmeFile" and "PackageIcon" above only name the files, they do not pack them; without these items, "dotnet pack" fails because a
+            file it was told to use is not in the package; the icon lives with the other images in "docs/assets/images/", and "Visible" keeps it out
+            of the project tree of the editor
         -->
         <None Include="README.md" Pack="true" PackagePath="\" />
+        <None Include="../../docs/assets/images/package-icon.png" Pack="true" PackagePath="\" Visible="false" />
     </ItemGroup>
 
     <!-- Referenced NuGet Packages -->

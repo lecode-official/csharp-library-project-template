@@ -83,6 +83,7 @@ This template is developed with the help of AI, and that is disclosed rather tha
 
 - **Boilerplate** — the configuration files, the workflows, the project scaffolding, and the sample code of the template body.
 - **Documentation** — writing and revising the documentation, the read me files, and the comments in the configuration files.
+- **Design assets** — drafting the placeholder logo, from which the final design was chosen and refined.
 - **Difficult bugs** — tracking down rendering and build problems where a second pair of eyes helps.
 - **Research and review** — researching tools and their configuration, and reviewing the template for inconsistencies. The resulting decisions are always made by a human.
 

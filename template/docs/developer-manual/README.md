@@ -3,7 +3,8 @@
 This manual is for people working on the [[ product_name ]] codebase itself: where things live, how the code is styled, and how the project is built, linted, and formatted.
 
 1. [Architecture](architecture.md)
-2. [Tooling](tooling/README.md)
+2. [Logo Design](logo-design.md)
+3. [Tooling](tooling/README.md)
    1. [Developer Setup](tooling/developer-setup.md)
    2. [Visual Studio Code Integration](tooling/editor-integration.md)
    3. [Code Formatting (dprint)](tooling/formatting-dprint.md)
@@ -14,7 +15,7 @@ This manual is for people working on the [[ product_name ]] codebase itself: whe
    8. [Continuous Integration](tooling/continuous-integration.md)
    9. [Testing and Code Coverage](tooling/testing-and-code-coverage.md)
    10. [Documentation Website](tooling/documentation-website.md)
-3. [Conventions](conventions/README.md)
+4. [Conventions](conventions/README.md)
    1. [C# Style](conventions/csharp-style.md)
    2. [Comments and Documentation Comments](conventions/comments-and-documentation.md)
    3. [Markdown Style](conventions/markdown-style.md)
@@ -26,4 +27,4 @@ This manual is for people working on the [[ product_name ]] codebase itself: whe
    9. [Versioning](conventions/versioning.md)
    10. [Dependency Management](conventions/dependency-management.md)
    11. [Testing](conventions/testing.md)
-4. [Contributing](contribution-guide.md)
+5. [Contributing](contribution-guide.md)

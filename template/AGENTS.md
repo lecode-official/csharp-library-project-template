@@ -46,6 +46,7 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 - **The GitHub Actions workflows, a failing check, or Dependabot** → [docs/developer-manual/tooling/continuous-integration.md](docs/developer-manual/tooling/continuous-integration.md).
 - **The Claude Code hooks that run after you edit a file** → [docs/developer-manual/tooling/claude-code-hooks.md](docs/developer-manual/tooling/claude-code-hooks.md).
 - **The documentation website, its navigation, or the generated API reference** → [docs/developer-manual/tooling/documentation-website.md](docs/developer-manual/tooling/documentation-website.md).
+- **The logo and the brand assets in `design/`, or the static files in `docs/assets/`** → [docs/developer-manual/logo-design.md](docs/developer-manual/logo-design.md) and [docs/assets/README.md](docs/assets/README.md).
 - **Markdown and documentation style** → [docs/developer-manual/conventions/markdown-style.md](docs/developer-manual/conventions/markdown-style.md).
 - **Line length, or filling a comment or a split string literal to the limit** → [docs/developer-manual/conventions/line-length.md](docs/developer-manual/conventions/line-length.md).
 - **Naming a new file or directory** → [docs/developer-manual/conventions/file-and-naming-conventions.md](docs/developer-manual/conventions/file-and-naming-conventions.md).
