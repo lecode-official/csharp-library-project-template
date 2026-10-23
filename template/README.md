@@ -32,7 +32,7 @@ See the [User Manual](docs/user-manual/README.md) for how to use it.
 
 ### Developer Setup
 
-Building and working on [[ product_name ]] requires the .NET SDK — the exact version pinned in [`global.json`](global.json) — and Node.js with npm, which is used to run the linters and the code formatter.
+Building and working on [[ product_name ]] requires the .NET SDK — the exact version pinned in [`global.json`](global.json) — and Node.js with npm, which is used to run the linters and the code formatter. Visual Studio Code is recommended, with the extensions recommended in [`.vscode/extensions.json`](.vscode/extensions.json) installed.
 
 ```shell
 git clone [[ repository_url ]]
@@ -79,7 +79,7 @@ The project separates *formatting* from *linting*: a single formatter, [dprint](
 
 #### Formatting
 
-[dprint](https://dprint.dev) is configured in [`dprint.json`](dprint.json) and formats C#, XML (including `.csproj` and `.slnx`), Markdown, JSON, YAML, and TOML. Run it with:
+[dprint](https://dprint.dev) is configured in [`dprint.json`](dprint.json) and formats C#, XML (including `.csproj` and `.slnx`), Markdown, JSON, YAML, and TOML. Visual Studio Code is set up to format on save. It can also be invoked manually:
 
 ```shell
 # Formats the entire code base
@@ -105,6 +105,12 @@ npm run lint:cspell
 ```
 
 `npm run lint` runs its steps with `run-s --continue-on-error`, so one failing linter does not hide the findings of the others, and the command still fails when any of them does.
+
+### Visual Studio Code Integration
+
+The npm scripts and the `dotnet` commands are integrated into Visual Studio Code as tasks. Run one by opening the command palette (<kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> / <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>), selecting "Tasks: Run Task", and picking the task. The build task is in the "build" category and the linting and testing tasks are in the "test" category, so "Tasks: Run Build Task" and "Tasks: Run Test Task" run the build and the combined lint directly.
+
+See [editor integration](docs/developer-manual/tooling/editor-integration.md) for the shared and local settings mechanism.
 
 ## Use of AI
 

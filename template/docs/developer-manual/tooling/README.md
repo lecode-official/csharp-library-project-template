@@ -3,13 +3,14 @@
 This section gives an overview of the tools used for development, including code editors, linters, and the code formatter:
 
 1. [Developer Setup](developer-setup.md)
-2. [Code Formatting (dprint)](formatting-dprint.md)
-3. [Markdown Linting (MarkdownLint)](linting-markdownlint.md)
-4. [Spell Checking (CSpell)](spell-checking-cspell.md)
-5. [Static Code Analysis](static-code-analysis.md)
-6. [Continuous Integration](continuous-integration.md)
-7. [Testing and Code Coverage](testing-and-code-coverage.md)
-8. [Documentation Website](documentation-website.md)
+2. [Visual Studio Code Integration](editor-integration.md)
+3. [Code Formatting (dprint)](formatting-dprint.md)
+4. [Markdown Linting (MarkdownLint)](linting-markdownlint.md)
+5. [Spell Checking (CSpell)](spell-checking-cspell.md)
+6. [Static Code Analysis](static-code-analysis.md)
+7. [Continuous Integration](continuous-integration.md)
+8. [Testing and Code Coverage](testing-and-code-coverage.md)
+9. [Documentation Website](documentation-website.md)
 
 Formatting and linting are kept strictly separate: **one formatter owns all formatting, and the linters only check quality.** No lint rule that would reformat code is ever added.
 
@@ -31,7 +32,7 @@ Every linter and formatter configuration lives at the repository root, where eac
 - [`.globalconfig`](../../../.globalconfig)
 - [`dprint.json`](../../../dprint.json)
 
-Several of them have no choice anyway: the compiler only discovers `.globalconfig` in the directory of a source file or one of its parents, and dprint rejects its own `incremental` setting inside an extended configuration.
+Several of them have no choice anyway: the compiler only discovers `.globalconfig` in the directory of a source file or one of its parents, and dprint rejects its own `incremental` setting inside an extended configuration. In the explorer of Visual Studio Code, they are nested under `.editorconfig` (see [editor integration](editor-integration.md)).
 
 ## How to Run
 
@@ -44,6 +45,8 @@ npm start          # run the sample app
 ```
 
 Each check also has its own script: `lint:dprint`, `lint:markdownlint`, and `lint:cspell`. The npm scripts are thin wrappers so that a single command works the same on a developer's machine and in [continuous integration](continuous-integration.md). The underlying `dotnet` and `npx` invocations are equally fine to run directly.
+
+Every script is mirrored as a Visual Studio Code task — see [editor integration](editor-integration.md).
 
 ## Why the Aggregate Uses `run-s --continue-on-error`
 

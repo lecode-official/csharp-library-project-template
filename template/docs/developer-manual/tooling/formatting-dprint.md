@@ -18,7 +18,7 @@ To check formatting without modifying anything, which is what [continuous integr
 npx dprint check "**/*"
 ```
 
-dprint is pinned in [`package.json`](../../../package.json) and locked in `package-lock.json` like the other tools (see [dependency management](../conventions/dependency-management.md)), so `npx` resolves the pinned version out of `node_modules/.bin` rather than downloading one.
+dprint is pinned in [`package.json`](../../../package.json) and locked in `package-lock.json` like the other tools (see [dependency management](../conventions/dependency-management.md)), so `npx` resolves the pinned version out of `node_modules/.bin` rather than downloading one. Visual Studio Code is configured to run dprint on save (see [editor integration](editor-integration.md)).
 
 ## dprint Owns Formatting — Linters Must Not
 
@@ -26,9 +26,9 @@ Because dprint is the single source of truth for formatting, the linters are con
 
 ## Some JSON Files Are Trailing-Comma JSONC
 
-Several JSON files in this repository are authored as JSONC, with `//` comments and trailing commas, including files whose extension has to stay `.json` for the tool that reads them — [`.cspell.json`](../../../.cspell.json) and `dprint.json` itself. Each one is listed explicitly in `json.jsonTrailingCommaFiles` in [`dprint.json`](../../../dprint.json).
+Several JSON files in this repository are authored as JSONC, with `//` comments and trailing commas, including files whose extension has to stay `.json` for the tool that reads them — [`.cspell.json`](../../../.cspell.json), `dprint.json` itself, and the `.vscode/*.json` files. Each one is listed explicitly in `json.jsonTrailingCommaFiles` in [`dprint.json`](../../../dprint.json).
 
-[`global.json`](../../../global.json) is the one file in between. It carries `//` comments, but it is not listed in `jsonTrailingCommaFiles`, so dprint writes it without trailing commas. The same goes for [`.config/dotnet-tools.json`](../../../.config/dotnet-tools.json).
+[`global.json`](../../../global.json) is the one file in between. It carries `//` comments, and Visual Studio Code associates it with JSONC so that they are not reported as errors, but it is not listed in `jsonTrailingCommaFiles`, so dprint writes it without trailing commas. The same goes for [`.config/dotnet-tools.json`](../../../.config/dotnet-tools.json), which Visual Studio Code also treats as JSONC.
 
 Since `jsonTrailingCommaFiles` **replaces** the plugin's defaults rather than extending them, adding a new JSONC-style file means listing it there and keeping every existing entry in place. A file that is not listed has its trailing commas removed, which breaks nothing — but a file that *is* listed and is read by a strict JSON parser does break, which is why a web app manifest is deliberately absent from the list.
 

@@ -1,6 +1,6 @@
 # Visual Studio Code Integration
 
-This article covers the Visual Studio Code setup under the root's [`.vscode/`](../../.vscode/).
+This article covers the Visual Studio Code setup under the root's [`.vscode/`](../../.vscode/), and how it differs from the editor configuration the template body ships.
 
 ## Shared and Local Configuration
 
@@ -35,11 +35,18 @@ Because the editor uses the root's configuration everywhere, it reports nothing 
 
 [`tasks.shared.json`](../../.vscode/tasks.shared.json) mirrors the root's npm scripts: Install Dependencies, Format, Lint Markdown, Lint Spelling, and the combined Lint, which is the default task of the `test` group. Every npm task depends on Install Dependencies, and the lint tasks carry problem matchers, so findings land in the Problems panel. There is no build or test task, because the root has nothing to build.
 
+## The Body's Editor Configuration
+
+The files under [`template/.vscode/`](../../template/.vscode/) are the **generated project's** editor configuration: its own shared settings, tasks, launch configurations and extension recommendations. Editing one is a body change like any other, and it is described in the generated project's [editor integration](../../template/docs/developer-manual/tooling/editor-integration.md) article.
+
+If you open `template/` on its own in the editor, Workspace Config Plus generates a `settings.json`, `tasks.json` and `launch.json` next to the shared files there. Those are ignored by Git, like their counterparts at the root, so they never reach a render taken from a commit. Leave them alone.
+
 ## Extensions
 
-[`extensions.json`](../../.vscode/extensions.json) recommends the extensions that back the settings above, plus Claude Code, a few Markdown conveniences, and `.gitignore` language support.
+[`extensions.json`](../../.vscode/extensions.json) recommends the extensions that back the settings above, plus Claude Code, a few Markdown conveniences, and `.gitignore` language support. Unlike the body's list, it does not recommend the C# extension, because the root has no C# to edit as a project.
 
 ## Related
 
 - [Developer setup](developer-setup.md) — installing the editor and its extensions.
 - [Formatting (dprint)](formatting-dprint.md), [MarkdownLint](linting-markdownlint.md), [CSpell](spell-checking-cspell.md) — the tools these settings configure.
+- [Editor integration](../../template/docs/developer-manual/tooling/editor-integration.md) — the generated project's editor setup.

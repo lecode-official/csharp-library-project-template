@@ -39,8 +39,8 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 
 - **Repository layout, the solution, the projects** → [docs/developer-manual/architecture.md](docs/developer-manual/architecture.md).
 - **C# source code** → [docs/developer-manual/conventions/csharp-style.md](docs/developer-manual/conventions/csharp-style.md) and [comments and documentation comments](docs/developer-manual/conventions/comments-and-documentation.md).
-- **Installing the SDK or Node.js** → [docs/developer-manual/tooling/developer-setup.md](docs/developer-manual/tooling/developer-setup.md).
-- **Linting, formatting, spell checking** → [docs/developer-manual/tooling/](docs/developer-manual/tooling/README.md).
+- **Installing the SDK, Node.js, or the editor** → [docs/developer-manual/tooling/developer-setup.md](docs/developer-manual/tooling/developer-setup.md).
+- **Linting, formatting, spell checking, editor setup** → [docs/developer-manual/tooling/](docs/developer-manual/tooling/README.md).
 - **An analyzer finding, or changing a rule's severity** → [docs/developer-manual/tooling/static-code-analysis.md](docs/developer-manual/tooling/static-code-analysis.md).
 - **The GitHub Actions workflows, a failing check, or Dependabot** → [docs/developer-manual/tooling/continuous-integration.md](docs/developer-manual/tooling/continuous-integration.md).
 - **The documentation website, its navigation, or the generated API reference** → [docs/developer-manual/tooling/documentation-website.md](docs/developer-manual/tooling/documentation-website.md).
