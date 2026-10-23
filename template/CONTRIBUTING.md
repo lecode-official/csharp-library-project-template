@@ -16,7 +16,7 @@ Fork the repository and work on a feature branch. Pull requests are always welco
 - **Comment and document your code** — see [comments and documentation comments](docs/developer-manual/conventions/comments-and-documentation.md) for what a documentation comment and a plain comment are each expected to cover.
 - **Add unit tests for any new feature, in the same pull request.** A bug fix adds a test that reproduces the bug — see [testing](docs/developer-manual/conventions/testing.md) for how tests are structured and named.
 - **Raise the version** in the same branch, before opening the pull request, in both the library's project file and `package.json` — see [versioning](docs/developer-manual/conventions/versioning.md).
-- **Run the linters, the formatter, and the tests before opening the pull request** (see [tooling](docs/developer-manual/tooling/README.md)).
+- **Run the linters, the formatter, and the tests before opening the pull request** (see [tooling](docs/developer-manual/tooling/README.md)). The same checks run in [continuous integration](docs/developer-manual/tooling/continuous-integration.md) on every push, so running them first saves a round trip.
 - **Write commit messages by [the project's rules](docs/developer-manual/conventions/commit-messages.md).**
 
 ## Using AI to Contribute

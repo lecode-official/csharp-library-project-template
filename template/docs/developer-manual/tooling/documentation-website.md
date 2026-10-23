@@ -2,7 +2,7 @@
 
 This article covers the [ProperDocs](https://properdocs.org/) site, themed with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/), that publishes everything under [`docs/`](../README.md).
 
-A project that does not publish a website deletes [`properdocs.yml`](../../../properdocs.yml), and [`requirements.txt`](../../../requirements.txt), and this article with them. The documentation itself is written to be read on the repository host either way — the site is an addition, never a prerequisite.
+A project that does not publish a website deletes [`properdocs.yml`](../../../properdocs.yml), [`requirements.txt`](../../../requirements.txt), and [`docs.yml`](../../../.github/workflows/docs.yml), and this article with them. The documentation itself is written to be read on the repository host either way — the site is an addition, never a prerequisite.
 
 ## Why ProperDocs, Not MkDocs
 
@@ -63,10 +63,11 @@ properdocs build     # the static site, into build/documentation-website/
 
 Both regenerate every generated section from scratch, so there is nothing to clean up afterwards.
 
-`properdocs build --strict` turns every warning into an error, above all a link to a page or file that does not exist. Run it before pushing a documentation change, so that a broken link is caught before it is published.
+[Continuous integration](continuous-integration.md) builds the site with `properdocs build --strict`, which turns every warning into an error, above all a link to a page or file that does not exist. Run the same command locally before pushing a documentation change, so that a broken link fails on your machine rather than in the deployment.
 
 ## Related
 
 - [Developer setup](developer-setup.md) — installing Python and the pinned dependencies.
 - [Dependency management](../conventions/dependency-management.md) — how `requirements.txt` and the local tools pin their versions.
+- [Continuous integration](continuous-integration.md) — the workflow that builds this site and deploys it.
 - [Markdown style](../conventions/markdown-style.md) — the conventions the published articles follow.

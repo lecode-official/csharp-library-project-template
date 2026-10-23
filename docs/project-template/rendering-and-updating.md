@@ -32,13 +32,14 @@ dotnet test --solution "source/<Product Name>.slnx"
 
 This is the one time `npm install` is right in a generated project. The template ships no `package-lock.json`, so `npm ci` has nothing to install from yet, and `npm install` resolves the pinned dependencies and writes the lock file. `dotnet restore` does the same for the `packages.lock.json` of every project. [Dependency management](../conventions/dependency-management.md#no-lock-files-in-the-body) explains why the template does not ship them.
 
-**Commit all of the lock files with the first commit.** From then on the project installs with `npm ci` and restores in locked mode, which both fail without them.
+**Commit all of the lock files with the first commit.** From then on the project installs with `npm ci` and restores in locked mode, and its continuous integration fails until the lock files are committed. The linters workflow runs `npm ci`, which fails without a `package-lock.json`. The tests workflow restores with `--locked-mode`, and then fails if the restore created or changed any `packages.lock.json`, which is exactly what happens when one is missing or outdated.
 
 Everything should pass immediately. The library that ships is a placeholder class whose only job is to make that true — replace it, and its test, with the real thing.
 
 A few things are worth doing early:
 
-- **Decide on the documentation website.** It works as soon as the Python dependencies are installed, but a project that will not publish one should delete `properdocs.yml`, `requirements.txt` and `docs/build/` rather than leave them to rot.
+- **Enable GitHub Pages**, with "GitHub Actions" as its source, in the repository settings on GitHub under **Settings** and **Pages**. The docs workflow deploys the documentation website through the Pages actions on every push to the default branch, and it fails until Pages is enabled that way.
+- **Decide on the documentation website.** It works as soon as the Python dependencies are installed, but a project that will not publish one should delete `properdocs.yml`, `requirements.txt`, `docs/build/` and the docs workflow rather than leave them to rot.
 
 ## Updating a Project
 

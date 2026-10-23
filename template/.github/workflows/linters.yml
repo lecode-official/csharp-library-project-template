@@ -1,0 +1,72 @@
+# The display name of the workflow, shown in the "Actions" tab of the GitHub repository and in the checks of a commit or pull request
+name: Linters
+
+# Defines the events that trigger this workflow; it runs on every push to any branch of the repository, and on every pull request, so that a pull
+# request from a fork, whose pushes happen in another repository, is checked as well (see the condition on the job below, which keeps a pull request
+# from a branch of this repository from being checked twice)
+on:
+  push:
+  pull_request:
+
+# Grants the workflow's token nothing but read access to the repository contents, instead of whatever the repository's or organization's default is,
+# which may be write access to everything; linting needs nothing else
+permissions:
+  contents: read
+
+# Cancels a run that is still in progress when a newer commit is pushed to the same branch or pull request, since only the result for the newest
+# commit matters
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Defines the jobs that make up the workflow; every linter is a separate step of a single job, so that they all share the same checked-out working
+# tree and the same Node.js installation
+jobs:
+  # A single job that runs all linters and the code formatter on a virtual machine with the latest Ubuntu image, which is the fastest and cheapest of
+  # the available runners
+  lint:
+    name: Run Linters
+    runs-on: ubuntu-latest
+
+    # A pull request from a branch of this repository is already checked by the push to that branch, so the job only runs for a pull request when it
+    # comes from a fork
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+
+    # Stops a run that hangs instead of letting it use up the default limit of six hours; linting takes about a minute
+    timeout-minutes: 10
+
+    # The sequence of tasks that are executed as part of the job; the steps run sequentially in the same runner and share the same file system; every
+    # action is pinned to the full commit SHA of a release, with the version in a comment, because a tag can be moved to point at different code,
+    # while a commit SHA cannot; Dependabot keeps the pins up to date (see Continuous Integration)
+    steps:
+      # Checks out the repository into the runner's working directory, so that the linters have access to the source code and their configuration
+      # files
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # Installs Node.js, which is required to run the linters and the dprint code formatter, all of which are distributed as npm packages; the
+      # version is read from ".nvmrc" instead of being duplicated here, so that the continuous integration environment can never drift from the
+      # version every developer runs locally
+      - name: Set Up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      # Installs the exact versions of the linters and the code formatter declared in "package.json" and locked in "package-lock.json"; "ci" (rather
+      # than "install") fails instead of silently updating the lock file if it would no longer match "package.json" (see Dependency Management)
+      - name: Install Linters
+        run: npm ci
+
+      # Every check runs through the npm script that developers run locally, so that the continuous integration environment and a developer's machine
+      # can never check different things; each step after the first carries "if: ${{ !cancelled() }}", so that the job runs every check instead of
+      # stopping at the first failure, and every finding is reported in a single run
+      - name: Check Formatting (dprint)
+        run: npm run lint:dprint
+
+      - name: Lint Markdown (MarkdownLint)
+        if: ${{ !cancelled() }}
+        run: npm run lint:markdownlint
+
+      - name: Spell Check (CSpell)
+        if: ${{ !cancelled() }}
+        run: npm run lint:cspell

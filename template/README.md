@@ -1,5 +1,11 @@
 # [[ product_name ]]
 
+<div align="center">
+
+[![Tests]([[ repository_url ]]/actions/workflows/tests.yml/badge.svg)]([[ repository_url ]]/actions/workflows/tests.yml) [![Linters]([[ repository_url ]]/actions/workflows/linters.yml/badge.svg)]([[ repository_url ]]/actions/workflows/linters.yml)
+
+</div>
+
 [[ product_description ]]
 
 ## Project Structure

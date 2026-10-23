@@ -42,6 +42,7 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 - **Installing the SDK or Node.js** → [docs/developer-manual/tooling/developer-setup.md](docs/developer-manual/tooling/developer-setup.md).
 - **Linting, formatting, spell checking** → [docs/developer-manual/tooling/](docs/developer-manual/tooling/README.md).
 - **An analyzer finding, or changing a rule's severity** → [docs/developer-manual/tooling/static-code-analysis.md](docs/developer-manual/tooling/static-code-analysis.md).
+- **The GitHub Actions workflows, a failing check, or Dependabot** → [docs/developer-manual/tooling/continuous-integration.md](docs/developer-manual/tooling/continuous-integration.md).
 - **The documentation website, its navigation, or the generated API reference** → [docs/developer-manual/tooling/documentation-website.md](docs/developer-manual/tooling/documentation-website.md).
 - **Markdown and documentation style** → [docs/developer-manual/conventions/markdown-style.md](docs/developer-manual/conventions/markdown-style.md).
 - **Line length, or filling a comment or a split string literal to the limit** → [docs/developer-manual/conventions/line-length.md](docs/developer-manual/conventions/line-length.md).

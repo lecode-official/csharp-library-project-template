@@ -64,5 +64,6 @@ Activate the environment in every new shell before running the documentation com
 
 - [Tooling](README.md) — what each installed tool does.
 - [Dependency management](../conventions/dependency-management.md) — how these pinned versions are kept exact.
+- [Continuous integration](continuous-integration.md) — the versions to match locally.
 - [Testing and code coverage](testing-and-code-coverage.md) — running the tests once everything is installed.
 - [Documentation website](documentation-website.md) — building the site locally.
