@@ -77,6 +77,7 @@ The chosen identifier goes straight into the library's `<PackageLicenseExpressio
 2. Add it to `SUBSTITUTING_LICENSES` or `VERBATIM_LICENSES` in [`scripts/refresh-licenses.py`](../../scripts/refresh-licenses.py) — decide which by the table above, not by convenience.
 3. Re-run the script, and check the vendored file is what you expect.
 4. Render a project with the new choice and confirm the `LICENSE` file is complete and carries no leftover placeholder.
+5. Add an entry for it to the render matrix of [`.github/workflows/template.yml`](../../.github/workflows/template.yml), which renders every license on every push.
 
 ## Related
 

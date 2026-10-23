@@ -8,7 +8,7 @@
 _subdirectory: template
 
 # The oldest Copier version the template supports; the template does not depend on a feature introduced in a specific release, so the floor is the
-# oldest version the template was tested with
+# oldest version the template was tested with; the continuous integration renders with the exact version pinned in ".github/workflows/template.yml"
 _min_copier_version: "9.5.0"
 
 # By default, files that should be processed by the Jinja templating engine, which add the ".jinja" extension to the file name (in addition to the

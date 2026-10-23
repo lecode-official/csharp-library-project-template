@@ -4,7 +4,7 @@ All notable changes to the C# library project template are documented here, newe
 
 ## Release v1.0.0
 
-*Release date to be determined.*
+*Released on October 23, 2026.*
 
 - Added the tooling of the template repository itself: formatting with dprint, Markdown linting with MarkdownLint, spell checking with CSpell, the Visual Studio Code integration, and the Claude Code hooks.
 - Added the conventions of the template repository, its `AGENTS.md`, and its community files.
@@ -22,3 +22,4 @@ All notable changes to the C# library project template are documented here, newe
 - Added the Visual Studio Code integration of the generated project.
 - Added the Claude Code integration of the generated project.
 - Added a placeholder logo to the generated project, used in its read me, its documentation website, its favicon, and its package icon.
+- Added the continuous integration of the template repository, which renders the template with every license and both serviced SDK bands.

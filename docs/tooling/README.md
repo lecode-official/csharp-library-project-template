@@ -29,8 +29,12 @@ npm run lint       # dprint check, then MarkdownLint, then CSpell
 
 Each tool also has its own script, `lint:dprint`, `lint:markdownlint` and `lint:cspell`. `npm run lint` runs them with `run-s --continue-on-error`, from the `npm-run-all2` package, rather than joining them with `&&`. So every tool runs even after one of them fails, a single run reports everything that is wrong, and the command still exits with an error if any of them failed. Joining them with `;` would do neither reliably. A shell returns only the last command's exit code, so a dprint or MarkdownLint failure would go unreported, and `cmd.exe`, which npm uses on Windows, does not treat `;` as a separator at all.
 
+## Continuous Integration
+
+The [`Template`](../../.github/workflows/template.yml) workflow runs `npm run lint` on every push and pull request, checks that no `[% if false %]` block crept into the body, and renders the body with several answer sets to run each generated project's own checks. [Testing](../conventions/testing.md#continuous-integration) covers it in full. It does not replace running `npm run lint` and rendering a change locally before pushing it, which is still where a change is verified first.
+
 ## Related
 
 - [Conventions](../conventions/README.md) — what the tools and the reviewers enforce.
-- [Testing](../conventions/testing.md) — rendering a change.
+- [Testing](../conventions/testing.md) — rendering a change, and the continuous integration that does it on every push.
 - [Tooling](../../template/docs/developer-manual/tooling/README.md) — the generated project's tooling, which the body configures.
