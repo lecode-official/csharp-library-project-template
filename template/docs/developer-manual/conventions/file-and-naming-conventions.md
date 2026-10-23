@@ -11,7 +11,7 @@ Files and directories are named in **kebab-case** — lowercase words separated 
 Files with a conventional, tool- or ecosystem-mandated name keep that name instead of being renamed to kebab-case. This covers two kinds of file:
 
 - **Files everyone recognizes by their standard name**: `README.md`, `AGENTS.md`, `LICENSE`, `CHANGELOG.md`, `CONTRIBUTORS.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`.
-- **Files whose name is dictated by the tool that reads them**: `.editorconfig`, `.gitignore`, `.gitattributes`, `global.json`, `Directory.Build.props`. Renaming these would simply stop the tool from finding them.
+- **Files whose name is dictated by the tool that reads them**: `.editorconfig`, `.gitignore`, `.gitattributes`, `global.json`, `Directory.Build.props`, `Directory.Packages.props`, `packages.lock.json`. Renaming these would simply stop the tool from finding them.
 
 ## PascalCase Inside a C# Project
 

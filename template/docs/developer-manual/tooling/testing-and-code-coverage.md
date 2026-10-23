@@ -52,4 +52,5 @@ There is no enforced minimum coverage percentage that fails the build. The expec
 ## Related
 
 - [Testing](../conventions/testing.md) — the conventions the tests themselves follow.
+- [Dependency management](../conventions/dependency-management.md) — how the test packages and the local `dotnet` tool are pinned.
 - [Architecture](../architecture.md) — where the test project sits in the repository.

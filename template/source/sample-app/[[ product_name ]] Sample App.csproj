@@ -6,6 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>[[ root_namespace ]].SampleApp</RootNamespace>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 
         <!-- The sample app demonstrates the library, it is not itself published -->
         <IsPackable>false</IsPackable>

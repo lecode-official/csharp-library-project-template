@@ -10,7 +10,7 @@ The repository is organized into a few top-level directories:
 - [`tests/`](../../tests/) — the unit tests.
 - [`docs/`](../README.md) — this documentation.
 
-Top-level files round out the repository. [`README.md`](../../README.md) is the project's front door, [`CHANGELOG.md`](../../CHANGELOG.md) records what changed in each version, [`CONTRIBUTORS.md`](../../CONTRIBUTORS.md) lists everyone who has contributed, and [`LICENSE`](../../LICENSE) is the full text of the license. [`CONTRIBUTING.md`](../../CONTRIBUTING.md), [`CODE_OF_CONDUCT.md`](../../CODE_OF_CONDUCT.md) and [`SECURITY.md`](../../SECURITY.md) round out the community-facing files a repository host recognizes by name. [`global.json`](../../global.json) pins the exact .NET SDK version, and [`.config/dotnet-tools.json`](../../.config/dotnet-tools.json) is the local tool manifest — both pin exact versions, like every package reference.
+Top-level files round out the repository. [`README.md`](../../README.md) is the project's front door, [`CHANGELOG.md`](../../CHANGELOG.md) records what changed in each version, [`CONTRIBUTORS.md`](../../CONTRIBUTORS.md) lists everyone who has contributed, and [`LICENSE`](../../LICENSE) is the full text of the license. [`CONTRIBUTING.md`](../../CONTRIBUTING.md), [`CODE_OF_CONDUCT.md`](../../CODE_OF_CONDUCT.md) and [`SECURITY.md`](../../SECURITY.md) round out the community-facing files a repository host recognizes by name. [`global.json`](../../global.json) pins the exact .NET SDK version, and [`.config/dotnet-tools.json`](../../.config/dotnet-tools.json) is the local tool manifest — both follow the same exact-version-only rule as everything else (see [dependency management](conventions/dependency-management.md)).
 
 ## Solution and Projects
 
@@ -31,7 +31,9 @@ The library also grants the test project access to its `internal` members throug
 
 ## Shared Build Settings
 
-[`Directory.Build.props`](../../Directory.Build.props) at the repository root holds the build settings every project shares: deterministic builds on the continuous integration runner (see [versioning](conventions/versioning.md#the-package-and-its-symbols)). MSBuild only imports the `Directory.Build.props` closest to a project, so the two files below import the root one explicitly before adding their own settings.
+[`Directory.Build.props`](../../Directory.Build.props) at the repository root holds the build settings every project shares: deterministic builds on the continuous integration runner (see [versioning](conventions/versioning.md#the-package-and-its-symbols)), and the dependency audit (see [dependency management](conventions/dependency-management.md#vulnerability-audit)). MSBuild only imports the `Directory.Build.props` closest to a project, so the two files below import the root one explicitly before adding their own settings.
+
+[`Directory.Packages.props`](../../Directory.Packages.props) turns on Central Package Management: it declares the version of every NuGet package, and the project files reference packages without a version (see [dependency management](conventions/dependency-management.md)).
 
 ## Build Output
 

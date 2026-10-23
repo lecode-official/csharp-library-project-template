@@ -6,6 +6,7 @@
         <Nullable>enable</Nullable>
         <RootNamespace>[[ root_namespace ]]</RootNamespace>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 
         <!--
             Validates the package when it is packed, e.g., that it is consistent across target frameworks; once a version has been published, set
@@ -65,10 +66,10 @@
         <!--
             Roslyn never expands <inheritdoc/> into real text in the generated XML documentation file, it is left in verbatim, so any tool reading
             that file (a consumer's IDE tooltip for the compiled package, a documentation generator, ...) sees an empty member; this task rewrites
-            <inheritdoc/> into the real, inherited text as a build step, for every non-Debug build; "PrivateAssets=all" keeps it a build-time-only
-            dependency of this project, it is never referenced by a consumer of the compiled package
+            <inheritdoc/> into the real, inherited text as a build step, for every non-Debug build (see Dependency Management); "PrivateAssets=all"
+            keeps it a build-time-only dependency of this project, it is never referenced by a consumer of the compiled package
         -->
-        <PackageReference Include="SauceControl.InheritDoc" Version="2.0.2" PrivateAssets="all" />
+        <PackageReference Include="SauceControl.InheritDoc" PrivateAssets="all" />
     </ItemGroup>
 
     <!-- Internals Visibility -->

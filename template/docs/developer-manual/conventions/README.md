@@ -9,6 +9,7 @@ This section summarizes the coding and styling conventions for the project:
 5. [Commit Messages](commit-messages.md)
 6. [Git Workflow](git-workflow.md)
 7. [Versioning](versioning.md)
-8. [Testing](testing.md)
+8. [Dependency Management](dependency-management.md)
+9. [Testing](testing.md)
 
 These conventions are not suggestions. The code base is heavily and consistently styled, and a change that departs from them is a change that makes the next reader stop and wonder why.

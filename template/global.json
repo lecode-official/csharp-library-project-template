@@ -1,6 +1,6 @@
 {
     // Pins the exact .NET SDK version this repository builds with; "rollForward": "disable" means an exact match is required, so a machine with a
-    // different patch level fails loudly at restore time instead of silently building with another toolchain
+    // different patch level fails loudly at restore time instead of silently building with another toolchain (see Dependency Management)
     "sdk": {
         "version": "[[ dotnet_sdk_version ]]",
         "rollForward": "disable",

@@ -10,7 +10,7 @@ Add the package to a project with the .NET CLI:
 dotnet add package [[ package_id ]]
 ```
 
-Or reference it directly in the project file, pinned to an exact version as [[ product_name ]]'s own dependencies are:
+Or reference it directly in the project file, pinned to an exact version as [[ product_name ]]'s own dependencies are (see [dependency management](../developer-manual/conventions/dependency-management.md)):
 
 ```xml
 <PackageReference Include="[[ package_id ]]" Version="0.1.0" />

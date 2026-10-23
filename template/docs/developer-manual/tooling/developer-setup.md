@@ -17,4 +17,5 @@ That installs [ReportGenerator](https://github.com/danielpalme/ReportGenerator),
 ## Related
 
 - [Tooling](README.md) — what each installed tool does.
+- [Dependency management](../conventions/dependency-management.md) — how these pinned versions are kept exact.
 - [Testing and code coverage](testing-and-code-coverage.md) — running the tests once everything is installed.

@@ -21,6 +21,8 @@ dotnet restore "source/<Product Name>.slnx"
 dotnet test --solution "source/<Product Name>.slnx"
 ```
 
+The template ships no lock files, so this first `dotnet restore` writes a `packages.lock.json` per project. Commit them with the first commit.
+
 The generated project builds and tests green out of the box. The library it ships is a placeholder class that exists so all of that is true on day one — replace it with the real thing.
 
 See [rendering and updating](docs/project-template/rendering-and-updating.md) for the full walkthrough, and [questions](docs/project-template/questions.md) for what each question means.
