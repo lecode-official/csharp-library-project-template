@@ -64,7 +64,7 @@ See [testing and code coverage](docs/developer-manual/tooling/testing-and-code-c
 
 ### Dependencies
 
-Every dependency is pinned to an exact version — NuGet packages and the .NET SDK itself.
+Every dependency is pinned to an exact version — NuGet packages and the .NET SDK itself. NuGet package versions are declared once, in `Directory.Packages.props`, and every project sets `RestorePackagesWithLockFile`, so a package change is followed by `dotnet restore` and the resulting `packages.lock.json` files are committed alongside it. See [dependency management](docs/developer-manual/conventions/dependency-management.md).
 
 ## Use of AI
 

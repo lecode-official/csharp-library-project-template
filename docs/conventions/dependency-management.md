@@ -18,12 +18,22 @@ The root needs very little, and all of it is pinned:
 
 ## The Body's Dependencies
 
-Everything the body pins becomes a pin in every generated project, so the body pins every dependency to an exact version: the package versions in its project files, and the tools in `template/.config/dotnet-tools.json`.
+Everything the body pins becomes a pin in every generated project, so the body follows the generated project's [dependency management](../../template/docs/developer-manual/conventions/dependency-management.md) rules unchanged: exact package versions declared once in `template/Directory.Packages.props`, `RestorePackagesWithLockFile` on every project, and exact versions in `template/.config/dotnet-tools.json`.
 
 Two pins are not constants at all:
 
 - **The .NET SDK version** in `template/global.json` is the answer to the `dotnet_sdk_version` question. Its default and its help text name the newest patches of the serviced feature bands, and are raised when a new SDK ships (see [questions](../project-template/questions.md#dotnet_sdk_version)).
 - **The target framework** is the answer to `target_framework`, and a new choice is added when a new .NET release ships.
+
+## No Lock Files in the Body
+
+The body ships no `packages.lock.json`. A generated project runs `dotnet restore` once, right after it is generated, and commits the lock files it writes (see [rendering and updating](../project-template/rendering-and-updating.md#after-generating)). From then on it restores in locked mode, like any other project.
+
+Generating the lock files during rendering is not an option, because running a command at render time needs a Copier task, and a task forces every consumer to render with `--trust`.
+
+Shipping them in the body would work for a first render, but it breaks `copier update`. A lock file records the whole resolved dependency graph, including every dependency a consumer has added since. As soon as a project's graph differs from the template's, every template change to the lock file arrives as a large merge conflict in a file nobody edits by hand. Without a lock file in the body, a template update only changes version strings in a project file, and the consumer's own `dotnet restore` brings their lock files up to date.
+
+The cost is that a generated project's first install resolves transitive dependencies on the day it runs, rather than to versions the template chose. The direct dependencies are still pinned exactly, and everything is locked from the first commit on.
 
 ## Upgrading a Body Dependency
 
@@ -39,3 +49,4 @@ The upgrade reaches existing generated projects through `copier update`, as an o
 - [Questions](../project-template/questions.md) — the SDK version and the target framework.
 - [Licensing](../project-template/licensing.md) — the vendored license texts and where they are pinned.
 - [Developer setup](../tooling/developer-setup.md) — installing the root's dependencies.
+- [Dependency management](../../template/docs/developer-manual/conventions/dependency-management.md) — the generated project's full rule set.

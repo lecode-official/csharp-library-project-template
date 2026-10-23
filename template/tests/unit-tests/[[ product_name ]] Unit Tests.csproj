@@ -19,6 +19,7 @@
             requires both to be public, so the compiler check actually reaches them (see Testing)
         -->
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     </PropertyGroup>
 
     <!-- Assembly Info -->
@@ -35,8 +36,8 @@
             "Microsoft.NET.Test.Sdk" nor "xunit.runner.visualstudio", which only the legacy VSTest runner uses; "coverlet.MTP" is the code coverage
             extension for Microsoft.Testing.Platform, which the "coverlet" option of "dotnet test" turns on (see Testing and Code Coverage)
         -->
-        <PackageReference Include="coverlet.MTP" Version="10.1.0" />
-        <PackageReference Include="xunit.v3" Version="4.0.2" />
+        <PackageReference Include="coverlet.MTP" />
+        <PackageReference Include="xunit.v3" />
     </ItemGroup>
 
     <!-- Global Usings -->

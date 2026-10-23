@@ -96,3 +96,4 @@ A package built on a GitHub Actions runner is deterministic. The root [`Director
 - [Git workflow](git-workflow.md) — who runs which Git commands, which includes creating and pushing a release tag.
 - [Commit messages](commit-messages.md) — how the bump is described, and the [tag message](commit-messages.md#tag-messages) rules.
 - [Markdown style](markdown-style.md) — the conventions the changelog is written to.
+- [Dependency management](dependency-management.md) — the lock files that move with the project files.

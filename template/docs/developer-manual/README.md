@@ -14,5 +14,6 @@ This manual is for people working on the [[ product_name ]] codebase itself: whe
    5. [Commit Messages](conventions/commit-messages.md)
    6. [Git Workflow](conventions/git-workflow.md)
    7. [Versioning](conventions/versioning.md)
-   8. [Testing](conventions/testing.md)
+   8. [Dependency Management](conventions/dependency-management.md)
+   9. [Testing](conventions/testing.md)
 4. [Contributing](contribution-guide.md)
