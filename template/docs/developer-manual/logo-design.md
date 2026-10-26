@@ -43,7 +43,7 @@ Vector masters live in [`design/`](../../design/) and are the source of truth. T
 - **The mark**, `mark-light.svg` and `mark-dark.svg`, for the read me header and the favicon.
 - **The badge**, `badge-light.svg` and `badge-dark.svg`, for the header of the documentation website and the package icon, where the mark needs a ground of its own to stand out against a colored header bar or an unknown background.
 
-The copies are the masters with a fixed size added (`header-logo-*.svg` at 56 pixels, `logo-*.svg` at 48 pixels), and the favicon SVGs are the mark as it is. Two files have to be raster images, because their formats leave no choice: `docs/assets/images/package-icon.png`, which NuGet requires as a PNG or JPEG, baked from the light badge at 128 by 128 pixels, and `docs/assets/favicon/favicon.ico`, baked from the light mark at 16, 32, and 48 pixels. With `rsvg-convert` and ImageMagick installed:
+The copies are the masters with a fixed size added (`logo-*.svg` at 48 pixels), and the favicon SVGs are the mark as it is. The read me copies, `header-logo-*.svg`, are also cropped to the drawing, with `viewBox="3.5 12.5 57 42"`, and are 40 pixels high, so that the book fills the height of the title rather than floating in the empty margin of the 64-unit canvas. Two files have to be raster images, because their formats leave no choice: `docs/assets/images/package-icon.png`, which NuGet requires as a PNG or JPEG, baked from the light badge at 128 by 128 pixels, and `docs/assets/favicon/favicon.ico`, baked from the light mark at 16, 32, and 48 pixels. With `rsvg-convert` and ImageMagick installed:
 
 ```shell
 rsvg-convert -w 128 -h 128 design/badge-light.svg -o docs/assets/images/package-icon.png
@@ -55,7 +55,9 @@ magick favicon-16.png favicon-32.png favicon-48.png docs/assets/favicon/favicon.
 
 The rule that catches everyone: **a repository host strips SVG filter effects when an SVG is rendered through an `<img>` element.** The placeholder is flat, without gradients, blurs, or any other filter, which is why its copies can stay SVG. A logo that relies on a filter has to be baked to PNG before it can appear in a read me, and its copies in `docs/assets/images/` become PNG files.
 
-Light and dark variants are selected with the host's own URL-suffix convention, `#gh-dark-mode-only` and `#gh-light-mode-only`, on two Markdown images, which the host renders as `<img>` elements, so the filter rule above applies to them. The documentation website honors the same suffixes through a stylesheet, so one Markdown image pair works in both places (see [documentation website](tooling/documentation-website.md)).
+Light and dark variants are selected with the host's own URL-suffix convention, `#gh-dark-mode-only` and `#gh-light-mode-only`, on two images, so the filter rule above applies to them. The documentation website honors the same suffixes through a stylesheet, so one image pair works in both places (see [documentation website](tooling/documentation-website.md)).
+
+The read me header writes that pair as two `<img>` elements rather than Markdown images, because a Markdown image sits on the baseline of the title and towers over it. `align="top"` with `height="40"` makes the logo exactly as tall as the line box of the host's top-level heading, whose font size of `2em` at a line height of `1.25` comes to 40 pixels, so the logo is centered on the title text without making the line any taller. A replacement logo keeps both attributes, and its read me copies are cropped to the drawing and kept 40 pixels high.
 
 ## Replacing the Placeholder
 

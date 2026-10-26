@@ -1,9 +1,4 @@
-# ![Logo](docs/assets/images/header-logo-light.svg#gh-light-mode-only) ![Logo](docs/assets/images/header-logo-dark.svg#gh-dark-mode-only) [[ product_name ]]
-
-<!--
-The logo is a light/dark pair of Markdown images, of which the repository host shows only the one matching the color scheme; replace the files with
-the project's own logo rather than changing this line (see docs/assets/README.md and docs/developer-manual/logo-design.md)
--->
+# <img src="docs/assets/images/header-logo-light.svg#gh-light-mode-only" alt="Logo" height="40" align="top"> <img src="docs/assets/images/header-logo-dark.svg#gh-dark-mode-only" alt="Logo" height="40" align="top"> [[ product_name ]]
 
 <div align="center">
 

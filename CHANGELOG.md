@@ -2,6 +2,12 @@
 
 All notable changes to the C# library project template are documented here, newest release first. Each release corresponds to an annotated Git tag of the same name.
 
+## Release v1.1.0
+
+*To be determined.*
+
+- Fixed the alignment of the logo in the title of the generated read me, which sat above the title text. An existing project keeps its read me on `copier update`, because the template only creates it, so it copies the new title line by hand.
+
 ## Release v1.0.0
 
 *Released on October 23, 2026.*
