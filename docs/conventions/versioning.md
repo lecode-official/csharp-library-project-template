@@ -48,9 +48,29 @@ git tag -a v0.2.0 <commit> -F <message-file>
 git push origin v0.2.0
 ```
 
+The GitHub Release is created after the tag is pushed, from that existing tag. Typing a new tag name into GitHub's release form makes GitHub create the tag itself, and a tag GitHub creates is always lightweight, so the release would lose its tag message. Pick the pushed tag in the form instead, or create the release from it with the GitHub CLI, which also takes the release notes from the tag message:
+
+```shell
+gh release create v0.2.0 --verify-tag --notes-from-tag --title "Release v0.2.0"
+```
+
 A tag that turns out to be wrong is deleted with `git tag -d` and recreated, but only while it is still local. Once it is pushed, generated projects may already record it in their answers file, so it is treated as immutable. Release a new version instead.
 
 Creating and pushing a tag only ever happens when it was asked for (see [Git workflow](git-workflow.md#tags-are-releases)).
+
+## Bringing `development` Back in Step
+
+A release merges `development` into `main` with a merge commit, so afterwards `main` is one commit ahead of `development`: the release merge itself. `development` has no commits of its own at that point, so it is fast-forwarded to `main`, which moves the branch without creating a commit or rewriting any history:
+
+```shell
+git switch development
+git merge --ff-only main
+git push origin development
+```
+
+Do it right after the release pull request is merged, before the next feature branch is created, so that every feature branch starts from a `development` that contains the release. Deleting and re-creating `development` reaches the same state, but closes every open pull request into it. Merging `main` into it adds a merge commit that changes nothing. If `--ff-only` refuses, something was merged into `development` after the release pull request was opened, and `main` is merged into `development` through a pull request instead.
+
+Like the tag, the fast-forward and its push only happen when they were asked for.
 
 ## Related
 

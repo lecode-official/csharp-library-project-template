@@ -30,6 +30,12 @@ Verifying a change means rendering the template (see [authoring](../project-temp
 
 Render into a directory outside the repository, such as `/tmp/render-test`, so that none of the repository's own linters picks it up. A render is never committed.
 
+## Merged Branches Are Deleted
+
+A feature branch has done its job once its pull request is merged into `development` and its issue is closed, so it is deleted, on the repository host and locally. That keeps the branch list down to work in progress. GitHub offers to delete the branch right after the merge, and `gh pr merge --delete-branch` does it as part of the merge. Nothing is lost, because the merge commit keeps every commit of the branch in the history. `main` and `development` are never deleted (see [versioning](versioning.md#bringing-development-back-in-step)).
+
+Deleting a branch changes the repository's state like any other command in this article, so an assistant only does it when it was asked to.
+
 ## Tags Are Releases
 
 A tag is what makes a template change reach consumers, because `copier update` moves between tags (see [versioning](versioning.md)). Creating or pushing one is therefore a release, and only ever happens when it was asked for.

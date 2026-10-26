@@ -80,7 +80,27 @@ git tag -n99 v0.1.0    # one tag's message
 git show v0.1.0        # the message plus the commit it points at
 ```
 
+The GitHub Release is created after the tag is pushed, from that existing tag. Typing a new tag name into GitHub's release form makes GitHub create the tag itself, and a tag GitHub creates is always lightweight, so the release would lose its tag message. Pick the pushed tag in the form instead, or create the release from it with the GitHub CLI, which also takes the release notes from the tag message:
+
+```shell
+gh release create v0.1.0 --verify-tag --notes-from-tag --title "Release v0.1.0"
+```
+
 A tag that turns out to be wrong is deleted with `git tag -d v0.1.0` and recreated. Do that only while the tag is still local. Once it is pushed, other clones have it and it is treated as immutable — release a new version instead.
+
+## Bringing `[[ integration_branch ]]` Back in Step
+
+A release merges `[[ integration_branch ]]` into `[[ default_branch ]]` with a merge commit, so afterwards `[[ default_branch ]]` is one commit ahead of `[[ integration_branch ]]`: the release merge itself. `[[ integration_branch ]]` has no commits of its own at that point, so it is fast-forwarded to `[[ default_branch ]]`, which moves the branch without creating a commit or rewriting any history:
+
+```shell
+git switch [[ integration_branch ]]
+git merge --ff-only [[ default_branch ]]
+git push origin [[ integration_branch ]]
+```
+
+Do it right after the release pull request is merged, before the next feature branch is created, so that every feature branch starts from a `[[ integration_branch ]]` that contains the release. Deleting and re-creating `[[ integration_branch ]]` reaches the same state, but closes every open pull request into it. Merging `[[ default_branch ]]` into it adds a merge commit that changes nothing. If `--ff-only` refuses, something was merged into `[[ integration_branch ]]` after the release pull request was opened, and `[[ default_branch ]]` is merged into `[[ integration_branch ]]` through a pull request instead.
+
+Like creating and pushing a tag, the fast-forward and its push only happen when they were asked for (see [Git workflow](git-workflow.md)).
 
 ## Package Validation
 

@@ -22,6 +22,12 @@ An instruction to do one of these once does not carry over to later work in the 
 
 The staging area is not a step on the way to a commit here, it is how a reviewer tracks what they have already read. Staging or unstaging on someone's behalf destroys that record, which is why `git add` and `git restore --staged` are on the same footing as `git commit`.
 
+## Merged Branches Are Deleted
+
+A feature branch has done its job once its pull request is merged into `[[ integration_branch ]]` and its issue is closed, so it is deleted, on the repository host and locally. That keeps the branch list down to work in progress. GitHub offers to delete the branch right after the merge, and `gh pr merge --delete-branch` does it as part of the merge. Nothing is lost, because the merge commit keeps every commit of the branch in the history. `[[ default_branch ]]` and `[[ integration_branch ]]` are never deleted (see [versioning](versioning.md)).
+
+Deleting a branch changes the repository's state like any other command in this article, so an assistant only does it when it was asked to.
+
 ## When a Rebase Was Asked For
 
 Rewriting history moves every commit after the one that changed, which invalidates anything that recorded a commit identifier — [`.git-blame-ignore-revs`](git-blame.md) above all. After a rebase, check whether a recorded identifier still points at a commit on the branch, and correct it in the commit that records it.
