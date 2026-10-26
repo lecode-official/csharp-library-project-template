@@ -11,6 +11,7 @@ The root's Markdown follows the same conventions as the generated project's [Mar
 - **Identifiers, file names, paths, commands and code go in backticks**, in prose everywhere: `copier.yml`, `template/LICENSE`, `copier copy`.
 - **Prose uses periods, not semicolons**, and em and en dashes sparingly.
 - **No horizontal rules.** Headings provide the structure.
+- **No comments.** A Markdown file is meant to read well without a renderer, and an HTML comment is clutter in the source and invisible once rendered. An explanation belongs in the prose, or in the article about the thing it explains. Inline HTML in general is limited to the few elements the linter allows.
 - **Prose is never hard-wrapped.** Markdown is exempt from the [line length](line-length.md) limit on both sides.
 
 One thing to watch: a heading that ends in `C#` reads to MarkdownLint as a closed ATX heading, which it reports, and which its `--fix` mode would "repair" into `C #`. Word such a heading so that it does not end in the `#`.
