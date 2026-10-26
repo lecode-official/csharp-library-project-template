@@ -1,6 +1,6 @@
 {
     "name": "csharp-library-project-template",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "private": true,
     "description": "A Copier template for C# library projects.",
     "type": "module",

@@ -9,7 +9,7 @@ Markdown — including this documentation, [`README.md`](../../../README.md), an
 The configuration keeps the default rules and changes two things:
 
 - **Line length is off.** Prose is never hard-wrapped, so do not manually wrap a Markdown line (see [line length](../conventions/line-length.md) and [Markdown style](../conventions/markdown-style.md)).
-- **Two inline-HTML elements are allowed**: `kbd`, for keyboard shortcuts, and `div`, which the `README.md` uses to center-align its logo and badge row. Everything else is still reported, because inline HTML in Markdown should stay the exception.
+- **Three inline-HTML elements are allowed**: `kbd`, for keyboard shortcuts, `div`, which the `README.md` uses to center-align its badge row, and `img`, which it uses to align the logo with its title. Everything else is still reported, because inline HTML in Markdown should stay the exception.
 
 ## Running It
 
