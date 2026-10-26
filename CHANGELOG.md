@@ -8,6 +8,7 @@ All notable changes to the C# library project template are documented here, newe
 
 - Fixed the alignment of the logo in the title of the generated read me, which sat above the title text. An existing project keeps its read me on `copier update`, because the template only creates it, so it copies the new title line by hand.
 - Documented fast-forwarding the integration branch after a release, creating the GitHub Release from an existing annotated tag, and deleting merged feature branches, in the conventions of the template repository and of the generated project.
+- Added the rule that Markdown files contain no comments to the conventions of the template repository and of the generated project.
 
 ## Release v1.0.0
 
