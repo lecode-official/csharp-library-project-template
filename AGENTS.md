@@ -39,7 +39,8 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 - **Naming a file or directory, or putting a placeholder in a path** → [docs/conventions/file-and-naming-conventions.md](docs/conventions/file-and-naming-conventions.md).
 - **Writing commit or tag messages** → [docs/conventions/commit-messages.md](docs/conventions/commit-messages.md).
 - **Committing, staging, tagging, or anything else touching Git** → [docs/conventions/git-workflow.md](docs/conventions/git-workflow.md).
-- **Releasing a template version, or the changelog** → [docs/conventions/versioning.md](docs/conventions/versioning.md).
+- **Releasing a template version** → [docs/conventions/versioning.md](docs/conventions/versioning.md).
+- **Writing a changelog entry, or the date of an unreleased version** → [docs/conventions/changelog.md](docs/conventions/changelog.md).
 - **Adding or upgrading a dependency, at the root or in the body** → [docs/conventions/dependency-management.md](docs/conventions/dependency-management.md).
 - **Installing what working on the template needs** → [docs/tooling/developer-setup.md](docs/tooling/developer-setup.md).
 - **Formatting, linting, spell checking, or the editor setup** → [docs/tooling/](docs/tooling/README.md).

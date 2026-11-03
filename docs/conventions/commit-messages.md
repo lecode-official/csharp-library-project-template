@@ -73,6 +73,7 @@ Co-Authored-By: Claude Opus 5.5 Medium <noreply@anthropic.com>
 ## Related
 
 - [Git workflow](git-workflow.md) — who runs the commit, and what an instruction to write a message authorizes.
-- [Versioning](versioning.md) — the changelog and the release tags.
+- [Versioning](versioning.md) — the release tags.
+- [Changelog](changelog.md) — the list of changes a tag message repeats.
 - [Markdown style](markdown-style.md) — the same title-case and punctuation rules.
 - [Commit messages](../../template/docs/developer-manual/conventions/commit-messages.md) — the generated project's full rule set.

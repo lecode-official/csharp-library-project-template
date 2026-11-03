@@ -10,8 +10,9 @@ This section covers the conventions for authoring the template: how the files in
 6. [Commit Messages](commit-messages.md)
 7. [Git Workflow](git-workflow.md)
 8. [Versioning](versioning.md)
-9. [Dependency Management](dependency-management.md)
-10. [Testing](testing.md)
+9. [Changelog](changelog.md)
+10. [Dependency Management](dependency-management.md)
+11. [Testing](testing.md)
 
 ## Two Sets of Files, One Set of Rules
 
