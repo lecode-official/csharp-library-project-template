@@ -4,9 +4,9 @@ This article covers the template's own version number: what it measures, when it
 
 ## The Version Is a Tag
 
-`copier update` moves a generated project from the template version recorded in its `.copier-answers.yml` to a newer one, and Copier only knows a version by its Git tag. So a template change is not available to any consumer until it is released, and a release is an annotated tag named after the version, prefixed with `v`: `v0.1.0`, `v0.2.0`, and so on (see [rendering and updating](../project-template/rendering-and-updating.md#updating-a-project)).
+`copier update` moves a generated project from the template version recorded in its `.copier-answers.yml` to a newer one, and Copier only knows a version by its Git tag. So a template change is not available to any consumer until it is released, and a release is an annotated tag named after the version, prefixed with `v`: `v0.1.0`, `v0.2.0`, and so on (see [rendering and updating](../project-template/rendering-and-updating.md#updating-a-project)). The [Git workflow](git-workflow.md#tags) explains what a tag is and the rules every tag follows.
 
-Lightweight tags are not used, because the tag message is part of the release record. A release is not complete until its tag exists and is pushed.
+A release is not complete until its tag exists and is pushed.
 
 ## Semantic Versioning, Against the Generated Project
 
@@ -26,7 +26,7 @@ The template's own version lives at the root: in the tag, in the root [`CHANGELO
 
 ## Creating the Tag
 
-The tag message repeats the release's [changelog](changelog.md) entry and follows the [tag message](commit-messages.md#tag-messages) rules. Write it into a file and pass it with `-F`, then push the tag explicitly, since pushing a branch does not carry its tags along:
+The tag points at the merge commit that brought the release into `main`, so it is created after the release pull request is merged. The tag message repeats the release's [changelog](changelog.md) entry and follows the [tag message](commit-messages.md#tag-messages) rules. Write it into a file and pass it with `-F`, then push the tag explicitly, since pushing a branch does not carry its tags along:
 
 ```shell
 git tag -a v0.2.0 <commit> -F <message-file>
@@ -41,26 +41,12 @@ gh release create v0.2.0 --verify-tag --notes-from-tag --title "Release v0.2.0"
 
 A tag that turns out to be wrong is deleted with `git tag -d` and recreated, but only while it is still local. Once it is pushed, generated projects may already record it in their answers file, so it is treated as immutable. Release a new version instead.
 
-Creating and pushing a tag only ever happens when it was asked for (see [Git workflow](git-workflow.md#tags-are-releases)).
-
-## Bringing `development` Back in Step
-
-A release merges `development` into `main` with a merge commit, so afterwards `main` is one commit ahead of `development`: the release merge itself. `development` has no commits of its own at that point, so it is fast-forwarded to `main`, which moves the branch without creating a commit or rewriting any history:
-
-```shell
-git switch development
-git merge --ff-only main
-git push origin development
-```
-
-Do it right after the release pull request is merged, before the next feature branch is created, so that every feature branch starts from a `development` that contains the release. Deleting and re-creating `development` reaches the same state, but closes every open pull request into it. Merging `main` into it adds a merge commit that changes nothing. If `--ff-only` refuses, something was merged into `development` after the release pull request was opened, and `main` is merged into `development` through a pull request instead.
-
-Like the tag, the fast-forward and its push only happen when they were asked for.
+After the release pull request is merged, `development` is fast-forwarded to `main` (see [bringing `development` back in step](git-workflow.md#bringing-development-back-in-step)). Creating and pushing a tag, and the fast-forward, only ever happen when they were asked for (see [Git workflow](git-workflow.md#the-working-tree-belongs-to-the-author)).
 
 ## Related
 
 - [Rendering and updating](../project-template/rendering-and-updating.md) — what a consumer does with a released version.
 - [Changelog](changelog.md) — the release's entry, which the tag message repeats.
 - [Commit messages](commit-messages.md) — the tag message rules.
-- [Git workflow](git-workflow.md) — who creates the tag.
+- [Git workflow](git-workflow.md) — what a tag is, bringing `development` back in step after a release, and who creates the tag.
 - [Versioning](../../template/docs/developer-manual/conventions/versioning.md) — the generated project's own versioning rules.

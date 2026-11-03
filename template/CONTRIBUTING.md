@@ -10,7 +10,7 @@ Before forking the repository and starting work, open an issue describing what y
 
 ## Fork, Branch, and Pull Request
 
-Fork the repository and work on a feature branch. Pull requests are always welcome once the corresponding issue has been discussed. To help the pull request merge quickly:
+Fork the repository and work on a feature or fix branch (see [Git workflow](docs/developer-manual/conventions/git-workflow.md#branch-names)). Pull requests are always welcome once the corresponding issue has been discussed. To help the pull request merge quickly:
 
 - **Match the project's conventions** — [C# style](docs/developer-manual/conventions/csharp-style.md) for code, [Markdown style](docs/developer-manual/conventions/markdown-style.md) for documentation, and [file and naming conventions](docs/developer-manual/conventions/file-and-naming-conventions.md) for anything new.
 - **Comment and document your code** — see [comments and documentation comments](docs/developer-manual/conventions/comments-and-documentation.md) for what a documentation comment and a plain comment are each expected to cover.

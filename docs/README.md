@@ -15,7 +15,7 @@ This is the documentation for the template itself: how it is laid out, what it a
    4. [Line Length](conventions/line-length.md) — the 150-character limit, and what a placeholder does to it.
    5. [File and Naming Conventions](conventions/file-and-naming-conventions.md) — naming files, and placeholders in paths.
    6. [Commit Messages](conventions/commit-messages.md) — the 50/72 rule, AI disclosure, and tag messages.
-   7. [Git Workflow](conventions/git-workflow.md) — who runs which Git command, and rendering without committing.
+   7. [Git Workflow](conventions/git-workflow.md) — the branches and their names, rebasing, tags, and who runs which Git command.
    8. [Versioning](conventions/versioning.md) — the template's version, and its tags.
    9. [Changelog](conventions/changelog.md) — recording each release, and the date of an unreleased one.
    10. [Dependency Management](conventions/dependency-management.md) — exact pins on both sides, and keeping shared tools in step.

@@ -10,5 +10,5 @@ Participation is governed by [`CODE_OF_CONDUCT.md`](../../CODE_OF_CONDUCT.md), a
 
 - [Architecture](architecture.md) — where the code you are changing likely lives.
 - [Tooling](tooling/README.md) — the tools that check a change before it merges.
-- [Git workflow](conventions/git-workflow.md) — who runs which Git commands on the way there.
+- [Git workflow](conventions/git-workflow.md) — the branches, their names, and who runs which Git commands on the way there.
 - [Testing](conventions/testing.md) — the unit test a new feature is expected to bring with it.
