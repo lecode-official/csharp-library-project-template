@@ -16,9 +16,10 @@ This is the documentation for the template itself: how it is laid out, what it a
    5. [File and Naming Conventions](conventions/file-and-naming-conventions.md) — naming files, and placeholders in paths.
    6. [Commit Messages](conventions/commit-messages.md) — the 50/72 rule, AI disclosure, and tag messages.
    7. [Git Workflow](conventions/git-workflow.md) — who runs which Git command, and rendering without committing.
-   8. [Versioning](conventions/versioning.md) — the template's version, its tags, and its changelog.
-   9. [Dependency Management](conventions/dependency-management.md) — exact pins on both sides, and keeping shared tools in step.
-   10. [Testing](conventions/testing.md) — rendering as the test suite, and the tests the body ships.
+   8. [Versioning](conventions/versioning.md) — the template's version, and its tags.
+   9. [Changelog](conventions/changelog.md) — recording each release, and the date of an unreleased one.
+   10. [Dependency Management](conventions/dependency-management.md) — exact pins on both sides, and keeping shared tools in step.
+   11. [Testing](conventions/testing.md) — rendering as the test suite, and the tests the body ships.
 3. [Tooling](tooling/README.md) — the tools used to work on the template.
    1. [Developer Setup](tooling/developer-setup.md) — Node.js, Copier, and what a render needs.
    2. [Visual Studio Code Integration](tooling/editor-integration.md) — the root's shared and local editor configuration.

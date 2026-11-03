@@ -55,6 +55,7 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 - **Writing or running unit tests, measuring code coverage** → [docs/developer-manual/conventions/testing.md](docs/developer-manual/conventions/testing.md) and [testing and code coverage](docs/developer-manual/tooling/testing-and-code-coverage.md).
 - **Writing commit messages** → [docs/developer-manual/conventions/commit-messages.md](docs/developer-manual/conventions/commit-messages.md).
 - **Releasing, or raising the version** → [docs/developer-manual/conventions/versioning.md](docs/developer-manual/conventions/versioning.md).
+- **Writing a changelog entry, or the date of an unreleased version** → [docs/developer-manual/conventions/changelog.md](docs/developer-manual/conventions/changelog.md).
 - **Committing, pushing, rebasing, or anything else touching Git** → [docs/developer-manual/conventions/git-workflow.md](docs/developer-manual/conventions/git-workflow.md).
 - **A formatting-only commit, or `.git-blame-ignore-revs`** → [docs/developer-manual/conventions/git-blame.md](docs/developer-manual/conventions/git-blame.md).
 - **Opening an issue, submitting a pull request, the AI-contribution policy** → [CONTRIBUTING.md](CONTRIBUTING.md).

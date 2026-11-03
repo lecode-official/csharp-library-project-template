@@ -1,6 +1,6 @@
 # Versioning
 
-This article covers the version number: what it means here, when it is raised, everywhere it has to be raised at once, and how a release is recorded.
+This article covers the version number: what it means here, when it is raised, everywhere it has to be raised at once, and how a release is tagged. The [changelog](changelog.md) that records each release has an article of its own.
 
 ## One Number for the Whole Repository
 
@@ -37,7 +37,7 @@ The version lives in two manifests, and nowhere else by default:
 
 - **`source/[[ library_slug ]]/[[ product_name ]].csproj`** — the `<Version>` property, which is what NuGet publishes.
 - **`package.json`** — the `"version"` field. The npm manifest is private and only declares the tooling, so nothing publishes it, but it is a manifest of this repository all the same, and it carries the same number rather than one of its own.
-- **`CHANGELOG.md`** — the release's own heading and date line.
+- **`CHANGELOG.md`** — the release's own heading and date line (see [changelog](changelog.md)).
 - **Any version literal in the source** — a version a running program reports about itself.
 
 The sample app and the unit test project deliberately carry **no** version: neither is published, both set `IsPackable` to `false`, so a version on them would be a number nobody reads and everybody forgets to bump.
@@ -46,26 +46,11 @@ A repository that later grows a second publishable library raises both together,
 
 A version literal in the source is kept in step by nothing but this list. It is the one version an outside party actually reads. Reading it from the assembly instead would be better than remembering it — `Assembly.GetExecutingAssembly().GetName().Version` — and is worth doing the moment a second place needs it.
 
-## The Changelog
-
-[`CHANGELOG.md`](../../../CHANGELOG.md) at the repository root lists every release, newest first. Each release is a level-two heading naming the version, followed by a single italic paragraph with the release date, followed by a flat list of changes:
-
-```markdown
-## Release v0.3.0
-
-*Released on August 12, 2026.*
-
-- Change 1
-- Change 2
-```
-
-An unreleased version's date paragraph reads `*Release date to be determined.*` until it ships. The entries follow the same prose rules as everything else here: past tense, periods rather than semicolons, and backticks around file names, paths, identifiers, and code.
-
 ## The Release Tags
 
 Every release has an **annotated** Git tag named exactly like the version, prefixed with `v` (`v0.1.0`, `v0.2.0`, and so on), pointing at the commit that bumped the version. Lightweight tags are not used, because the tag message is part of the release record. A release is not complete until its tag exists and is pushed.
 
-The tag message repeats the release's changelog entry in plain text, and follows the rules in [tag messages](commit-messages.md#tag-messages). Write it into a file first and pass it with `-F`, so the wrapping is preserved exactly rather than being re-wrapped or mangled by a shell quoting mistake. Tags are pushed explicitly — pushing a branch does not carry its tags along:
+The tag message repeats the release's [changelog](changelog.md) entry in plain text, and follows the rules in [tag messages](commit-messages.md#tag-messages). Write it into a file first and pass it with `-F`, so the wrapping is preserved exactly rather than being re-wrapped or mangled by a shell quoting mistake. Tags are pushed explicitly — pushing a branch does not carry its tags along:
 
 ```shell
 git tag -a v0.1.0 <commit> -F <message-file>
@@ -116,5 +101,5 @@ A package built on a GitHub Actions runner is deterministic. The root [`Director
 
 - [Git workflow](git-workflow.md) — who runs which Git commands, which includes creating and pushing a release tag.
 - [Commit messages](commit-messages.md) — how the bump is described, and the [tag message](commit-messages.md#tag-messages) rules.
-- [Markdown style](markdown-style.md) — the conventions the changelog is written to.
+- [Changelog](changelog.md) — the release's entry, which the tag message repeats.
 - [Dependency management](dependency-management.md) — the lock files that move with the project files.

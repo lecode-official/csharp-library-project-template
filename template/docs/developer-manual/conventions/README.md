@@ -11,7 +11,8 @@ This section summarizes the coding and styling conventions for the project:
 7. [Git Workflow](git-workflow.md)
 8. [Git Blame](git-blame.md)
 9. [Versioning](versioning.md)
-10. [Dependency Management](dependency-management.md)
-11. [Testing](testing.md)
+10. [Changelog](changelog.md)
+11. [Dependency Management](dependency-management.md)
+12. [Testing](testing.md)
 
 These conventions are not suggestions. The code base is heavily and consistently styled, and a change that departs from them is a change that makes the next reader stop and wonder why.

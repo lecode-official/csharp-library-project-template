@@ -32,7 +32,7 @@ A pull request that is raw, unreviewed AI output — one the contributor cannot 
 A pull request that adds a contribution is expected to also update the records that track the template's history:
 
 - **[`CONTRIBUTORS.md`](CONTRIBUTORS.md)** — add yourself, in alphabetical order, if this is your first contribution. You may use your real name or a pseudonym, and you may link to your profile.
-- **[`CHANGELOG.md`](CHANGELOG.md)** — document what changed, under the version it will ship in, from the point of view of a consumer deciding whether to run `copier update` (see [versioning](docs/conventions/versioning.md)).
+- **[`CHANGELOG.md`](CHANGELOG.md)** — document what changed, under the version it will ship in, from the point of view of a consumer deciding whether to run `copier update` (see [changelog](docs/conventions/changelog.md)).
 - **[`docs/`](docs/README.md)** — if your change affects how the template is used, rendered, or worked on, update or add the relevant article. A new article goes into the section it belongs to and is listed in the [documentation index](docs/README.md) and in its section's index.
 
 ## Licensing of Contributions

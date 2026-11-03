@@ -106,7 +106,7 @@ git tag -a v1.1.0 -F <message-file>
 git push origin v1.1.0
 ```
 
-Use semantic versioning against the *generated project's* surface: a renamed or removed question, or a restructured layout that an update cannot reconcile cleanly, is a major change. A new optional question with a default is minor. A documentation or wording fix is a patch. [Versioning](../conventions/versioning.md) covers the version number, the changelog and the tag message in full.
+Use semantic versioning against the *generated project's* surface: a renamed or removed question, or a restructured layout that an update cannot reconcile cleanly, is a major change. A new optional question with a default is minor. A documentation or wording fix is a patch. [Versioning](../conventions/versioning.md) covers the version number and the tag message in full, and [changelog](../conventions/changelog.md) covers the release's entry.
 
 ## Related
 

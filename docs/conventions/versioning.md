@@ -1,6 +1,6 @@
 # Versioning
 
-This article covers the template's own version number: what it measures, when it is raised, and how a release is recorded.
+This article covers the template's own version number: what it measures, when it is raised, and how a release is tagged. The [changelog](changelog.md) that records each release has an article of its own.
 
 ## The Version Is a Tag
 
@@ -24,24 +24,9 @@ The body carries version numbers of its own: `<Version>` in the library's projec
 
 The template's own version lives at the root: in the tag, in the root [`CHANGELOG.md`](../../CHANGELOG.md), and in the `version` field of the root [`package.json`](../../package.json). All three carry the same number, and they are raised together, in the branch, before the pull request. A bump that is left for after the merge is a bump that eventually does not happen.
 
-## The Changelog
-
-[`CHANGELOG.md`](../../CHANGELOG.md) at the root lists every release of the template, newest first, in the same format the generated project's changelog uses:
-
-```markdown
-## Release v0.2.0
-
-*Released on November 2, 2026.*
-
-- Updated the serviced SDK bands named in the help of `dotnet_sdk_version`.
-- Raised the pinned dprint plugins to their newest releases.
-```
-
-An unreleased version's date paragraph reads `*Release date to be determined.*` until it ships. The entries are written for a consumer deciding whether to run `copier update`: past tense, periods rather than semicolons, backticks around file names, paths, identifiers and code, and an explicit note on anything that changes a generated project.
-
 ## Creating the Tag
 
-The tag message repeats the release's changelog entry and follows the [tag message](commit-messages.md#tag-messages) rules. Write it into a file and pass it with `-F`, then push the tag explicitly, since pushing a branch does not carry its tags along:
+The tag message repeats the release's [changelog](changelog.md) entry and follows the [tag message](commit-messages.md#tag-messages) rules. Write it into a file and pass it with `-F`, then push the tag explicitly, since pushing a branch does not carry its tags along:
 
 ```shell
 git tag -a v0.2.0 <commit> -F <message-file>
@@ -75,6 +60,7 @@ Like the tag, the fast-forward and its push only happen when they were asked for
 ## Related
 
 - [Rendering and updating](../project-template/rendering-and-updating.md) — what a consumer does with a released version.
+- [Changelog](changelog.md) — the release's entry, which the tag message repeats.
 - [Commit messages](commit-messages.md) — the tag message rules.
 - [Git workflow](git-workflow.md) — who creates the tag.
 - [Versioning](../../template/docs/developer-manual/conventions/versioning.md) — the generated project's own versioning rules.
