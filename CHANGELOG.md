@@ -10,6 +10,7 @@ All notable changes to the C# library project template are documented here, newe
 - Documented fast-forwarding the integration branch after a release, creating the GitHub Release from an existing annotated tag, and deleting merged feature branches, in the conventions of the template repository and of the generated project.
 - Added the rule that Markdown files contain no comments to the conventions of the template repository and of the generated project.
 - Moved the changelog conventions out of the versioning articles into an article of their own, in the conventions of the template repository and of the generated project.
+- Rewrote the Git workflow articles of the template repository and of the generated project to cover the branches, the `feature/` and `fix/` branch names, rebasing a branch to bring it up to date, and tags, stated that a release tag points at the merge commit that brought the release into the default branch, and moved fast-forwarding the integration branch after a release there from the versioning articles.
 
 ## Release v1.0.0
 

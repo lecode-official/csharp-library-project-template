@@ -48,7 +48,7 @@ A version literal in the source is kept in step by nothing but this list. It is 
 
 ## The Release Tags
 
-Every release has an **annotated** Git tag named exactly like the version, prefixed with `v` (`v0.1.0`, `v0.2.0`, and so on), pointing at the commit that bumped the version. Lightweight tags are not used, because the tag message is part of the release record. A release is not complete until its tag exists and is pushed.
+Every release has an annotated Git tag named exactly like the version, prefixed with `v` (`v0.1.0`, `v0.2.0`, and so on), pointing at the merge commit that brought the release into `[[ default_branch ]]`. The [Git workflow](git-workflow.md#tags) explains what a tag is and the rules every tag follows. A release is not complete until its tag exists and is pushed.
 
 The tag message repeats the release's [changelog](changelog.md) entry in plain text, and follows the rules in [tag messages](commit-messages.md#tag-messages). Write it into a file first and pass it with `-F`, so the wrapping is preserved exactly rather than being re-wrapped or mangled by a shell quoting mistake. Tags are pushed explicitly — pushing a branch does not carry its tags along:
 
@@ -73,19 +73,7 @@ gh release create v0.1.0 --verify-tag --notes-from-tag --title "Release v0.1.0"
 
 A tag that turns out to be wrong is deleted with `git tag -d v0.1.0` and recreated. Do that only while the tag is still local. Once it is pushed, other clones have it and it is treated as immutable — release a new version instead.
 
-## Bringing `[[ integration_branch ]]` Back in Step
-
-A release merges `[[ integration_branch ]]` into `[[ default_branch ]]` with a merge commit, so afterwards `[[ default_branch ]]` is one commit ahead of `[[ integration_branch ]]`: the release merge itself. `[[ integration_branch ]]` has no commits of its own at that point, so it is fast-forwarded to `[[ default_branch ]]`, which moves the branch without creating a commit or rewriting any history:
-
-```shell
-git switch [[ integration_branch ]]
-git merge --ff-only [[ default_branch ]]
-git push origin [[ integration_branch ]]
-```
-
-Do it right after the release pull request is merged, before the next feature branch is created, so that every feature branch starts from a `[[ integration_branch ]]` that contains the release. Deleting and re-creating `[[ integration_branch ]]` reaches the same state, but closes every open pull request into it. Merging `[[ default_branch ]]` into it adds a merge commit that changes nothing. If `--ff-only` refuses, something was merged into `[[ integration_branch ]]` after the release pull request was opened, and `[[ default_branch ]]` is merged into `[[ integration_branch ]]` through a pull request instead.
-
-Like creating and pushing a tag, the fast-forward and its push only happen when they were asked for (see [Git workflow](git-workflow.md)).
+After the release pull request is merged, `[[ integration_branch ]]` is fast-forwarded to `[[ default_branch ]]` (see [bringing the integration branch back in step](git-workflow.md#bringing-the-integration-branch-back-in-step)). Creating and pushing a tag, and the fast-forward, only happen when they were asked for (see [Git workflow](git-workflow.md#the-working-tree-belongs-to-the-author)).
 
 ## Package Validation
 
@@ -99,7 +87,7 @@ A package built on a GitHub Actions runner is deterministic. The root [`Director
 
 ## Related
 
-- [Git workflow](git-workflow.md) — who runs which Git commands, which includes creating and pushing a release tag.
+- [Git workflow](git-workflow.md) — what a tag is, bringing `[[ integration_branch ]]` back in step after a release, and who runs which Git commands.
 - [Commit messages](commit-messages.md) — how the bump is described, and the [tag message](commit-messages.md#tag-messages) rules.
 - [Changelog](changelog.md) — the release's entry, which the tag message repeats.
 - [Dependency management](dependency-management.md) — the lock files that move with the project files.
