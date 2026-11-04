@@ -20,7 +20,7 @@ The root needs very little, and all of it is pinned:
 
 ## Dependabot at the Root
 
-[`.github/dependabot.yml`](../../.github/dependabot.yml) checks two ecosystems at the root once a week, groups each one's updates into a single pull request, and labels it with the `Dependabot:` label of its ecosystem (see [GitHub workflow](github-workflow.md#dependabot-pull-requests)):
+[`.github/dependabot.yml`](../../.github/dependabot.yml) checks two ecosystems at the root once a week, groups each one's updates into a single pull request, labels it with the `Dependabot:` label of its ecosystem, and opens it against `development`, like every other pull request (see [GitHub workflow](github-workflow.md#dependabot-pull-requests)):
 
 - **`github-actions`**, for the actions of the root's own workflow. Its pull request updates both the commit SHA and the version in the comment.
 - **`npm`**, for the formatter and the linters in the root `package.json`.

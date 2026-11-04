@@ -2,13 +2,16 @@
 # not reach into "template/", whose dependencies are raised deliberately and verified by rendering (see docs/conventions/dependency-management.md),
 # and Copier, which ".github/workflows/template.yml" installs at an exact version, is raised by hand as well; every pull request is labeled with the
 # "Dependabot:" label of its ecosystem instead of Dependabot's own labels, which Dependabot silently drops if the label does not exist, so the labels
-# are created first (see docs/development-setup/setting-up-github.md)
+# are created first (see docs/development-setup/setting-up-github.md); every pull request targets "development", like every other pull request, since
+# Dependabot would otherwise open it against "main"; this and every other setting here only applies to version updates, so a security update is still
+# opened against "main", and without a label, and is pointed at "development" and labeled by hand (see docs/conventions/github-workflow.md)
 version: 2
 
 updates:
   # The actions used by ".github/workflows/template.yml"; the pull request updates both the commit SHA and the version in the comment next to it
   - package-ecosystem: github-actions
     directory: /
+    target-branch: development
     labels:
       - "Dependabot: GitHub Actions Update"
     schedule:
@@ -22,6 +25,7 @@ updates:
   # them has to raise the body's version in the same change, and the key of dprint in "allowScripts" has to follow its version by hand
   - package-ecosystem: npm
     directory: /
+    target-branch: development
     labels:
       - "Dependabot: npm Update"
     schedule:

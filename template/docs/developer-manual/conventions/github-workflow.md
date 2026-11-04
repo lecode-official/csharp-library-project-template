@@ -87,7 +87,15 @@ GitHub only closes an issue through `Resolves #12.` when the pull request goes i
 
 ## Dependabot Pull Requests
 
-Dependabot opens a pull request whenever a newer version of a dependency is released (see [dependency management](dependency-management.md)). Such a pull request has no issue, so it carries the `Dependabot:` label of its ecosystem instead of a `Type:` label, and it is assigned to the milestone of the next release like every other pull request.
+Dependabot opens a pull request whenever a newer version of a dependency is released (see [dependency management](dependency-management.md)). Such a pull request has no issue, so it carries the `Dependabot:` label of its ecosystem instead of a `Type:` label, and it is assigned to the milestone of the next release like every other pull request. Dependabot opens it against `[[ integration_branch ]]`, like every other pull request, because its configuration sets `target-branch`.
+
+A security update is the exception. Dependabot applies its configuration only to version updates, so it opens a security update against the default branch, `[[ default_branch ]]`, and without a label. Before anything else, point it at `[[ integration_branch ]]` and give it its label:
+
+```shell
+gh pr edit 14 --base [[ integration_branch ]] --add-label "Dependabot: npm Update"
+```
+
+A pull request that is merged into `[[ default_branch ]]` by mistake is brought back into `[[ integration_branch ]]` by merging `[[ default_branch ]]` into `[[ integration_branch ]]` through a pull request, never by rewriting either branch.
 
 Before it is merged, it is reviewed like any other change:
 
