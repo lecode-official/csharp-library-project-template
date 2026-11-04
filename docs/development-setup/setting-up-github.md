@@ -31,6 +31,8 @@ Status: Confirmed|#0E8A16|The issue or pull request concerns a bug, which was co
 Status: Duplicate|#FEB6A8|The issue or pull request is a duplicate of another issue or pull request.
 Status: Needs Information|#FBCA04|The issue or pull request needs more information to proceed.
 Status: Won't Do/Fix|#5319E7|The issue or pull request concerns a feature request or bug that will not be addressed.
+Dependabot: GitHub Actions Update|#0366D6|The pull request was opened by Dependabot and updates the GitHub Actions actions.
+Dependabot: npm Update|#0366D6|The pull request was opened by Dependabot and updates the npm packages.
 EOF
 ```
 
@@ -43,6 +45,8 @@ done
 ```
 
 A label that is added to the GitHub workflow is added to the script in the same change, so that the two never disagree.
+
+Run the script before Dependabot opens its first pull request. Dependabot labels its pull requests with the `Dependabot:` labels, but it never creates a label, and it silently leaves out one that does not exist.
 
 ## Repository Settings
 

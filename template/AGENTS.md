@@ -72,10 +72,11 @@ Files use file-scoped namespaces and always group members into `#region` blocks 
 **This is important.** Whenever you change, add, remove, or discover something about the project, update the relevant [`docs/`](docs/README.md) article **and** this `AGENTS.md` in the same change:
 
 - Keep the "When Working on X" routing table above accurate.
-- Keep the indexes accurate — every article must be listed. An article is listed in the index of its manual, the [Developer Manual index](docs/developer-manual/README.md) or the [User Manual index](docs/user-manual/README.md), and an article in the tooling or conventions section also in that section's index, [tooling](docs/developer-manual/tooling/README.md) or [conventions](docs/developer-manual/conventions/README.md). The [documentation index](docs/README.md) lists only the two manuals.
+- Keep the indexes accurate — every article must be listed. An article is listed in the index of its manual, the [Developer Manual index](docs/developer-manual/README.md) or the [User Manual index](docs/user-manual/README.md), and an article in the development setup, tooling, or conventions section also in that section's index, [development setup](docs/developer-manual/development-setup/README.md), [tooling](docs/developer-manual/tooling/README.md), or [conventions](docs/developer-manual/conventions/README.md). The [documentation index](docs/README.md) lists only the two manuals.
 - Keep the `nav` list in [`properdocs.yml`](properdocs.yml) accurate, since the published website's navigation comes from it rather than from the indexes.
 - A change to the public API updates the User Manual (how consumers use it), not only the Developer Manual (how the codebase itself is built) — the two serve different audiences, and the same change often needs a separate edit to each.
 - If a change introduces a topic that does not fit an existing article, add a new small, single-topic article, link it from the relevant index, and reference it here if relevant.
 - If a change invalidates something a doc says, fix the doc — do not leave it stale.
+- A new ecosystem in [`.github/dependabot.yml`](.github/dependabot.yml) gets its own `Dependabot:` label, in the [GitHub workflow](docs/developer-manual/conventions/github-workflow.md#labels) and in the label script of [setting up GitHub](docs/developer-manual/development-setup/setting-up-github.md#labels).
 
 Treat the docs as part of the code: a change is not done until the docs and this file reflect it.

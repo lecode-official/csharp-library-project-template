@@ -66,9 +66,9 @@ Install scripts are blocked by default. The one package that genuinely needs one
 
 ## Dependabot
 
-Pinning everything means nothing is ever upgraded implicitly, so [`.github/dependabot.yml`](../../../.github/dependabot.yml) is what keeps the pins from going stale. Once a week, Dependabot checks the GitHub Actions actions (their commit SHAs and version comments), the NuGet packages in `Directory.Packages.props`, the .NET SDK in `global.json`, the npm packages, and the Python packages in `requirements.txt`, and opens a pull request for whatever has a newer release. All updates of an ecosystem are grouped into a single pull request, so each arrives as one reviewable change rather than a pull request per package.
+Pinning everything means nothing is ever upgraded implicitly, so [`.github/dependabot.yml`](../../../.github/dependabot.yml) is what keeps the pins from going stale. Once a week, Dependabot checks the GitHub Actions actions (their commit SHAs and version comments), the NuGet packages in `Directory.Packages.props`, the .NET SDK in `global.json`, the npm packages, and the Python packages in `requirements.txt`, and opens a pull request for whatever has a newer release. All updates of an ecosystem are grouped into a single pull request, so each arrives as one reviewable change rather than a pull request per package. Each pull request is labeled with the `Dependabot:` label of its ecosystem (see [GitHub workflow](github-workflow.md#dependabot-pull-requests)).
 
-A Dependabot pull request is reviewed like any other, and two things need a hand:
+A Dependabot pull request is reviewed like any other (see [GitHub workflow](github-workflow.md#dependabot-pull-requests)), and two things need a hand:
 
 - **The `allowScripts` key of `dprint`** is not updated by Dependabot. When the pull request bumps `dprint`, update the key in `package.json` in the same pull request, or the install script silently stops being allowed.
 - **An analyzer upgrade** can bring new rules, and the Release build in continuous integration fails on their findings, so it may need the fixes or configuration described above before it can be merged.

@@ -58,7 +58,7 @@ The docs workflow cannot deploy until GitHub Pages is enabled for the repository
 
 [`.github/dependabot.yml`](../../../.github/dependabot.yml) opens a pull request whenever a newer version of a dependency is released. Since every dependency is pinned to an exact version and every action to a commit SHA, nothing is ever upgraded implicitly, and these pull requests are what keeps the pins from going stale.
 
-Every ecosystem is checked once a week: the GitHub Actions actions, the NuGet packages, the .NET SDK in `global.json`, the npm packages, and the Python packages in `requirements.txt`. All updates of an ecosystem are grouped into a single pull request, so the upgrades arrive as one reviewable change per ecosystem instead of a pull request per package. Such a pull request runs through the same workflows as any other, including the lock-file verification. What a Dependabot pull request cannot do on its own is described in [dependency management](../conventions/dependency-management.md).
+Every ecosystem is checked once a week: the GitHub Actions actions, the NuGet packages, the .NET SDK in `global.json`, the npm packages, and the Python packages in `requirements.txt`. All updates of an ecosystem are grouped into a single pull request, so the upgrades arrive as one reviewable change per ecosystem instead of a pull request per package, labeled with the `Dependabot:` label of the ecosystem. Such a pull request runs through the same workflows as any other, including the lock-file verification. What a Dependabot pull request cannot do on its own is described in [dependency management](../conventions/dependency-management.md).
 
 ## Related
 
