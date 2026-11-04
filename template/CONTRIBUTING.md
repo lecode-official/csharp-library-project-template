@@ -6,7 +6,7 @@ All participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). Secu
 
 ## Open an Issue First
 
-Before forking the repository and starting work, open an issue describing what you want to do. This aligns your idea with where the project is already headed, and it can save you from doing work that overlaps with something already planned.
+Before forking the repository and starting work, open an issue describing what you want to do (see [GitHub workflow](docs/developer-manual/conventions/github-workflow.md#issues)). This aligns your idea with where the project is already headed, and it can save you from doing work that overlaps with something already planned.
 
 ## Fork, Branch, and Pull Request
 

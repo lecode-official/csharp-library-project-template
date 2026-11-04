@@ -77,7 +77,7 @@ Release v0.4.0 (August 12, 2026)
   feature band stopped receiving servicing updates.
 ```
 
-See [versioning](versioning.md#the-release-tags) for how the tag is created, and [changelog](changelog.md) for the entry that goes with it.
+See [versioning](versioning.md#the-release-tags) for how the tag is created, and [changelog](changelog-entries.md) for the entry that goes with it.
 
 ## Example
 
@@ -101,6 +101,6 @@ Co-Authored-By: Claude Opus 5.5 Medium <noreply@anthropic.com>
 
 - [Git workflow](git-workflow.md) — who runs the commit, and what an instruction to write a message does and does not authorize.
 - [Versioning](versioning.md) — the release tags these messages go on.
-- [Changelog](changelog.md) — the list of changes a tag message repeats.
+- [Changelog](changelog-entries.md) — the list of changes a tag message repeats.
 - [Markdown style](markdown-style.md) — the same title-case and punctuation rules used for headings and prose.
 - [C# style](csharp-style.md) — the surrounding code conventions.

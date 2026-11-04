@@ -1,6 +1,6 @@
 # Versioning
 
-This article covers the template's own version number: what it measures, when it is raised, and how a release is tagged. The [changelog](changelog.md) that records each release has an article of its own.
+This article covers the template's own version number: what it measures, when it is raised, and how a release is tagged. The [changelog](changelog-entries.md) that records each release has an article of its own.
 
 ## The Version Is a Tag
 
@@ -26,7 +26,7 @@ The template's own version lives at the root: in the tag, in the root [`CHANGELO
 
 ## Creating the Tag
 
-The tag points at the merge commit that brought the release into `main`, so it is created after the release pull request is merged. The tag message repeats the release's [changelog](changelog.md) entry and follows the [tag message](commit-messages.md#tag-messages) rules. Write it into a file and pass it with `-F`, then push the tag explicitly, since pushing a branch does not carry its tags along:
+The tag points at the merge commit that brought the release into `main`, so it is created after the release pull request is merged. The tag message repeats the release's [changelog](changelog-entries.md) entry and follows the [tag message](commit-messages.md#tag-messages) rules. Write it into a file and pass it with `-F`, then push the tag explicitly, since pushing a branch does not carry its tags along:
 
 ```shell
 git tag -a v0.2.0 <commit> -F <message-file>
@@ -46,7 +46,8 @@ After the release pull request is merged, `development` is fast-forwarded to `ma
 ## Related
 
 - [Rendering and updating](../project-template/rendering-and-updating.md) — what a consumer does with a released version.
-- [Changelog](changelog.md) — the release's entry, which the tag message repeats.
+- [Changelog](changelog-entries.md) — the release's entry, which the tag message repeats.
+- [GitHub workflow](github-workflow.md) — the release issue, the release pull request, and the milestone.
 - [Commit messages](commit-messages.md) — the tag message rules.
 - [Git workflow](git-workflow.md) — what a tag is, bringing `development` back in step after a release, and who creates the tag.
 - [Versioning](../../template/docs/developer-manual/conventions/versioning.md) — the generated project's own versioning rules.

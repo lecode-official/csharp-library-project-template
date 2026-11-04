@@ -1,6 +1,6 @@
 # Versioning
 
-This article covers the version number: what it means here, when it is raised, everywhere it has to be raised at once, and how a release is tagged. The [changelog](changelog.md) that records each release has an article of its own.
+This article covers the version number: what it means here, when it is raised, everywhere it has to be raised at once, and how a release is tagged. The [changelog](changelog-entries.md) that records each release has an article of its own.
 
 ## One Number for the Whole Repository
 
@@ -37,7 +37,7 @@ The version lives in two manifests, and nowhere else by default:
 
 - **`source/[[ library_slug ]]/[[ product_name ]].csproj`** — the `<Version>` property, which is what NuGet publishes.
 - **`package.json`** — the `"version"` field. The npm manifest is private and only declares the tooling, so nothing publishes it, but it is a manifest of this repository all the same, and it carries the same number rather than one of its own.
-- **`CHANGELOG.md`** — the release's own heading and date line (see [changelog](changelog.md)).
+- **`CHANGELOG.md`** — the release's own heading and date line (see [changelog](changelog-entries.md)).
 - **Any version literal in the source** — a version a running program reports about itself.
 
 The sample app and the unit test project deliberately carry **no** version: neither is published, both set `IsPackable` to `false`, so a version on them would be a number nobody reads and everybody forgets to bump.
@@ -50,7 +50,7 @@ A version literal in the source is kept in step by nothing but this list. It is 
 
 Every release has an annotated Git tag named exactly like the version, prefixed with `v` (`v0.1.0`, `v0.2.0`, and so on), pointing at the merge commit that brought the release into `[[ default_branch ]]`. The [Git workflow](git-workflow.md#tags) explains what a tag is and the rules every tag follows. A release is not complete until its tag exists and is pushed.
 
-The tag message repeats the release's [changelog](changelog.md) entry in plain text, and follows the rules in [tag messages](commit-messages.md#tag-messages). Write it into a file first and pass it with `-F`, so the wrapping is preserved exactly rather than being re-wrapped or mangled by a shell quoting mistake. Tags are pushed explicitly — pushing a branch does not carry its tags along:
+The tag message repeats the release's [changelog](changelog-entries.md) entry in plain text, and follows the rules in [tag messages](commit-messages.md#tag-messages). Write it into a file first and pass it with `-F`, so the wrapping is preserved exactly rather than being re-wrapped or mangled by a shell quoting mistake. Tags are pushed explicitly — pushing a branch does not carry its tags along:
 
 ```shell
 git tag -a v0.1.0 <commit> -F <message-file>
@@ -89,5 +89,6 @@ A package built on a GitHub Actions runner is deterministic. The root [`Director
 
 - [Git workflow](git-workflow.md) — what a tag is, bringing `[[ integration_branch ]]` back in step after a release, and who runs which Git commands.
 - [Commit messages](commit-messages.md) — how the bump is described, and the [tag message](commit-messages.md#tag-messages) rules.
-- [Changelog](changelog.md) — the release's entry, which the tag message repeats.
+- [Changelog](changelog-entries.md) — the release's entry, which the tag message repeats.
+- [GitHub workflow](github-workflow.md) — the release issue, the release pull request, and the milestone.
 - [Dependency management](dependency-management.md) — the lock files that move with the project files.

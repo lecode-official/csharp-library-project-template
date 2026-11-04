@@ -24,7 +24,7 @@ The rules are the generated project's rules:
 
 - **A 150-character ruler**, matching the root's `lineWidth` (see [line length](../conventions/line-length.md)).
 - **File associations** that map `.cspell.json`, `dprint.json`, `global.json`, `dotnet-tools.json` and `.vscode/*.json` to JSONC, so their comments are not reported as syntax errors.
-- **Exclusions and file nesting**, which nest the configuration files under `.editorconfig`, `copier.yml`, `package.json` and `README.md`.
+- **Exclusions and file nesting**, which nest the configuration files under `.editorconfig`, `copier.yml`, `package.json` and `README.md`. Nesting matches file names regardless of their case and in every directory, so a documentation article is never named like a nested file. That is why the changelog article is [`changelog-entries.md`](../conventions/changelog-entries.md) rather than `changelog.md`, which would be nested under the `README.md` next to it.
 - **Branch protection** on `main`, and the same Git behavior a generated project has: the merge editor on conflicts, force-push allowed, rebase on sync.
 - **CSpell and MarkdownLint** pointed at the root's own [`.cspell.json`](../../.cspell.json) and [`.markdownlint.yml`](../../.markdownlint.yml), not at the body's.
 - **dprint as the default formatter**, with format-on-save on.

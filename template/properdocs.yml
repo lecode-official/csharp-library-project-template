@@ -121,8 +121,9 @@ nav:
           - Commit Messages: developer-manual/conventions/commit-messages.md
           - Git Workflow: developer-manual/conventions/git-workflow.md
           - Git Blame: developer-manual/conventions/git-blame.md
+          - GitHub Workflow: developer-manual/conventions/github-workflow.md
           - Versioning: developer-manual/conventions/versioning.md
-          - Changelog: developer-manual/conventions/changelog.md
+          - Changelog: developer-manual/conventions/changelog-entries.md
           - Dependency Management: developer-manual/conventions/dependency-management.md
           - Testing: developer-manual/conventions/testing.md
       - Contributing: developer-manual/contribution-guide.md

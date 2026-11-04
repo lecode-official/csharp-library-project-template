@@ -1,6 +1,6 @@
 # Changelog
 
-This article covers the template's own [`CHANGELOG.md`](../../CHANGELOG.md): what it records, how a release is laid out in it, and how its entries are written. It follows the generated project's [changelog](../../template/docs/developer-manual/conventions/changelog.md) conventions and adds what is different about a template.
+This article covers the template's own [`CHANGELOG.md`](../../CHANGELOG.md): what it records, how a release is laid out in it, and how its entries are written. It follows the generated project's [changelog](../../template/docs/developer-manual/conventions/changelog-entries.md) conventions and adds what is different about a template.
 
 ## What It Records
 
@@ -54,4 +54,4 @@ The message of a release tag repeats the release's list of changes, so the chang
 - [Versioning](versioning.md) — the version number the headings name, and the release tags.
 - [Commit messages](commit-messages.md) — the tag message that repeats a release's changes.
 - [Rendering and updating](../project-template/rendering-and-updating.md) — what a consumer does with a release.
-- [Changelog](../../template/docs/developer-manual/conventions/changelog.md) — the generated project's own changelog conventions.
+- [Changelog](../../template/docs/developer-manual/conventions/changelog-entries.md) — the generated project's own changelog conventions.
