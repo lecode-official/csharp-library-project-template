@@ -79,11 +79,11 @@ The NuGet pull request has to bring the `packages.lock.json` files up to date as
 
 [`requirements.txt`](../../../requirements.txt) pins the exact versions of ProperDocs, its theme and its plugins. Unlike the NuGet and npm dependencies, there is **no lock file** recording transitive versions — only the direct dependencies are pinned.
 
-Install it inside a virtual environment, never against the system or user Python installation (see [developer setup](../tooling/developer-setup.md)). Without one, `pip` either installs the packages globally, where they are invisible to every other project, or refuses outright with an externally-managed-environment error.
+Install it inside a virtual environment, never against the system or user Python installation (see [installing the tools](../development-setup/installing-the-tools.md#python-and-the-documentation-website)). Without one, `pip` either installs the packages globally, where they are invisible to every other project, or refuses outright with an externally-managed-environment error.
 
 ## Related
 
-- [Developer setup](../tooling/developer-setup.md) — running these installs on a fresh machine.
+- [Installing the tools](../development-setup/installing-the-tools.md) — running these installs on a fresh machine.
 - [Continuous integration](../tooling/continuous-integration.md) — where `--locked-mode`, the lock-file verification, and `npm ci` act as drift detectors, and where Dependabot is configured.
 - [Architecture](../architecture.md) — where the project files that set these properties live.
 - [Versioning](versioning.md) — how the project's own version moves.

@@ -43,7 +43,9 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 - **Releasing a template version** → [docs/conventions/versioning.md](docs/conventions/versioning.md).
 - **Writing a changelog entry, or the date of an unreleased version** → [docs/conventions/changelog-entries.md](docs/conventions/changelog-entries.md).
 - **Adding or upgrading a dependency, at the root or in the body** → [docs/conventions/dependency-management.md](docs/conventions/dependency-management.md).
-- **Installing what working on the template needs** → [docs/tooling/developer-setup.md](docs/tooling/developer-setup.md).
+- **Installing what working on the template needs** → [docs/development-setup/installing-the-tools.md](docs/development-setup/installing-the-tools.md).
+- **The labels or the repository settings on GitHub, and the scripts that create them** → [docs/development-setup/setting-up-github.md](docs/development-setup/setting-up-github.md).
+- **Installing Visual Studio Code and its extensions** → [docs/development-setup/setting-up-visual-studio-code.md](docs/development-setup/setting-up-visual-studio-code.md).
 - **Formatting, linting, spell checking, or the editor setup** → [docs/tooling/](docs/tooling/README.md).
 - **The Claude Code hooks, at the root or in the body** → [docs/tooling/claude-code-hooks.md](docs/tooling/claude-code-hooks.md).
 - **The conventions the *generated* project follows** → [template/docs/developer-manual/](template/docs/developer-manual/README.md). Those are the rules for the code the template emits, and they are what a change to `template/` has to keep satisfying.

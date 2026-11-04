@@ -33,16 +33,7 @@ See the [User Manual](docs/user-manual/README.md) for how to use it.
 
 ### Developer Setup
 
-Building and working on [[ product_name ]] requires the .NET SDK — the exact version pinned in [`global.json`](global.json) — and Node.js with npm, which is used to run the linters and the code formatter. Visual Studio Code is recommended, with the extensions recommended in [`.vscode/extensions.json`](.vscode/extensions.json) installed.
-
-```shell
-git clone [[ repository_url ]]
-cd [[ product_slug ]]
-npm ci
-dotnet restore "source/[[ product_name ]].slnx"
-```
-
-Use `npm ci` rather than `npm install` for a fresh clone, so that the exact locked versions are installed. See [developer setup](docs/developer-manual/tooling/developer-setup.md) for the full walkthrough, including the Python toolchain the documentation website needs.
+Building and working on [[ product_name ]] requires Git, the .NET SDK at the exact version pinned in [`global.json`](global.json), and Node.js with npm, which runs the linters and the code formatter. Building the documentation website locally also needs Python. Visual Studio Code is recommended, and the GitHub CLI is optional. The [development setup](docs/developer-manual/development-setup/README.md) covers installing all of it, setting up the repository on GitHub, and setting up Visual Studio Code.
 
 ### Building
 
@@ -106,12 +97,6 @@ npm run lint:cspell
 ```
 
 `npm run lint` runs its steps with `run-s --continue-on-error`, so one failing linter does not hide the findings of the others, and the command still fails when any of them does.
-
-### Visual Studio Code Integration
-
-The npm scripts and the `dotnet` commands are integrated into Visual Studio Code as tasks. Run one by opening the command palette (<kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> / <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>), selecting "Tasks: Run Task", and picking the task. The build task is in the "build" category and the linting and testing tasks are in the "test" category, so "Tasks: Run Build Task" and "Tasks: Run Test Task" run the build and the combined lint directly.
-
-See [editor integration](docs/developer-manual/tooling/editor-integration.md) for the shared and local settings mechanism.
 
 ## Use of AI
 

@@ -2,16 +2,17 @@
 
 This section gives an overview of the tools used for development, including code editors, linters, and the code formatter:
 
-1. [Developer Setup](developer-setup.md)
-2. [Visual Studio Code Integration](editor-integration.md)
-3. [Code Formatting (dprint)](formatting-dprint.md)
-4. [Markdown Linting (MarkdownLint)](linting-markdownlint.md)
-5. [Spell Checking (CSpell)](spell-checking-cspell.md)
-6. [Static Code Analysis](static-code-analysis.md)
-7. [Claude Code Hooks](claude-code-hooks.md)
-8. [Continuous Integration](continuous-integration.md)
-9. [Testing and Code Coverage](testing-and-code-coverage.md)
-10. [Documentation Website](documentation-website.md)
+1. [Visual Studio Code Integration](editor-integration.md)
+2. [Code Formatting (dprint)](formatting-dprint.md)
+3. [Markdown Linting (MarkdownLint)](linting-markdownlint.md)
+4. [Spell Checking (CSpell)](spell-checking-cspell.md)
+5. [Static Code Analysis](static-code-analysis.md)
+6. [Claude Code Hooks](claude-code-hooks.md)
+7. [Continuous Integration](continuous-integration.md)
+8. [Testing and Code Coverage](testing-and-code-coverage.md)
+9. [Documentation Website](documentation-website.md)
+
+Installing the tools is covered by the [development setup](../development-setup/README.md).
 
 Formatting and linting are kept strictly separate: **one formatter owns all formatting, and the linters only check quality.** No lint rule that would reformat code is ever added.
 
