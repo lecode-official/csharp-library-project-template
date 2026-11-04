@@ -1,15 +1,19 @@
 # The Dependabot configuration, which opens a pull request whenever a newer version of a dependency is released; every dependency in this repository
-# is pinned to an exact version, and every GitHub Actions action to a commit SHA (see Dependency Management), so nothing is ever upgraded
-# implicitly, and these pull requests are what keeps the pins from going stale; every ecosystem is checked once a week, and all of its updates are
-# grouped into a single pull request, so that the upgrades arrive as one reviewable change per ecosystem instead of a pull request per package; every
-# pull request is labeled with the "Dependabot:" label of its ecosystem instead of Dependabot's own labels, which Dependabot silently drops if the
-# label does not exist, so the labels are created first (see Setting up GitHub)
+# is pinned to an exact version, and every GitHub Actions action to a commit SHA (see Dependency Management), so nothing is ever upgraded implicitly,
+# and these pull requests are what keeps the pins from going stale; every ecosystem is checked once a week, and all of its updates are grouped into a
+# single pull request, so that the upgrades arrive as one reviewable change per ecosystem instead of a pull request per package; every pull request is
+# labeled with the "Dependabot:" label of its ecosystem instead of Dependabot's own labels, which Dependabot silently drops if the label does not
+# exist, so the labels are created first (see Setting up GitHub); every pull request targets the integration branch, like every other pull request,
+# since Dependabot would otherwise open it against the default branch; this and every other setting here only applies to version updates, so a
+# security update is still opened against the default branch, and without a label, and is pointed at the integration branch and labeled by hand (see
+# GitHub Workflow)
 version: 2
 
 updates:
   # The actions used by the workflows in ".github/workflows/"; the pull request updates both the commit SHA and the version in the comment next to it
   - package-ecosystem: github-actions
     directory: /
+    target-branch: "[[ integration_branch ]]"
     labels:
       - "Dependabot: GitHub Actions Update"
     schedule:
@@ -23,6 +27,7 @@ updates:
   # files up to date, which continuous integration verifies
   - package-ecosystem: nuget
     directory: /
+    target-branch: "[[ integration_branch ]]"
     labels:
       - "Dependabot: NuGet Update"
     schedule:
@@ -35,6 +40,7 @@ updates:
   # The .NET SDK version pinned in "global.json"
   - package-ecosystem: dotnet-sdk
     directory: /
+    target-branch: "[[ integration_branch ]]"
     labels:
       - "Dependabot: .NET SDK Update"
     schedule:
@@ -44,6 +50,7 @@ updates:
   # updated by hand in the same pull request, or its install script silently stops being allowed
   - package-ecosystem: npm
     directory: /
+    target-branch: "[[ integration_branch ]]"
     labels:
       - "Dependabot: npm Update"
     schedule:
@@ -56,6 +63,7 @@ updates:
   # The Python packages that build the documentation website, pinned in "requirements.txt"
   - package-ecosystem: pip
     directory: /
+    target-branch: "[[ integration_branch ]]"
     labels:
       - "Dependabot: pip Update"
     schedule:
