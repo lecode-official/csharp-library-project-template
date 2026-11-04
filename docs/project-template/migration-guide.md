@@ -15,7 +15,14 @@ Some steps apply to every update, whatever changed (see [rendering and updating]
 
 ## Migrate from v1.0.0 to v1.1.0
 
-No dependency changed, so the lock files stay as they are.
+### The Lock Files
+
+The update raises dprint in `package.json` and Nullable.Extended.Analyzer in `Directory.Packages.props`, so bring the lock files up to date and commit them with the update:
+
+```shell
+npm install
+dotnet restore "source/<Product Name>.slnx"
+```
 
 ### The Read Me
 
@@ -37,6 +44,16 @@ A fresh render with the project's own answers shows the new read me in full (see
 From v1.1.0 on, an update also leaves the logo files, the logo design article, and the index of the User Manual alone, so that a project's own logo and articles are never overwritten, and it no longer creates a file the template only creates again once the project has deleted it (see [files the template only creates](rendering-and-updating.md#files-the-template-only-creates)). This already applies to the update to v1.1.0 itself.
 
 The new title line of the read me expects the header logos cropped to the drawing and 40 pixels high, which the placeholder's `docs/assets/images/header-logo-dark.svg` and `header-logo-light.svg` now are. A project that still uses the placeholder logo copies both files from a fresh render. A project with its own logo crops its own header logos the same way instead (see the project's `docs/developer-manual/logo-design.md`).
+
+### The .NET SDK
+
+The default SDK is now 10.0.403, and the newest patch of the 10.0.1xx band is 10.0.114. Both carry the security fixes of .NET 10.0.14. The pinned SDK is the answer to `dotnet_sdk_version`, so an update keeps the recorded version. Raise it with the update itself, which rewrites `global.json`:
+
+```shell
+copier update --defaults --data dotnet_sdk_version=10.0.403
+```
+
+A project on the 10.0.1xx band passes `10.0.114` instead. Install the new SDK before building (see the project's `docs/developer-manual/development-setup/installing-the-tools.md`).
 
 ### The Labels on GitHub
 

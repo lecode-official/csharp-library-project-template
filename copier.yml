@@ -103,6 +103,8 @@ _message_after_update: |-
   - README.md: replace the title line, replace the "Developer Setup" section, and remove the "Visual Studio Code Integration" section.
   - Logo: if the project still uses the placeholder logo, copy docs/assets/images/header-logo-*.svg from a fresh render, since the new
     title line expects them cropped to 40 pixels high. From now on, an update leaves the logo files alone.
+  - .NET SDK: the version is an answer, so an update keeps it; raise it to 10.0.403 or 10.0.114 for the security fixes of .NET 10.0.14,
+    with "copier update --defaults --data dotnet_sdk_version=10.0.403".
   - GitHub: create the "Dependabot:" labels with the label script in docs/developer-manual/development-setup/setting-up-github.md, delete
     the labels Dependabot created itself, and add the new labels to the open Dependabot pull requests.
 
@@ -254,14 +256,14 @@ target_framework:
 # bands named in the help, are raised whenever a new SDK is released (see docs/project-template/questions.md)
 dotnet_sdk_version:
   type: str
-  default: "[% if target_framework == 'net10.0' %]10.0.402[% endif %]"
+  default: "[% if target_framework == 'net10.0' %]10.0.403[% endif %]"
   help: >-
     The .NET SDK version pinned exactly in "global.json". The feature bands of .NET 10 that still receive servicing updates are 10.0.4xx (newest
-    tooling, currently 10.0.402) and 10.0.1xx (the original band, currently 10.0.113). Both carry the same runtime and the same security fixes. Any
+    tooling, currently 10.0.403) and 10.0.1xx (the original band, currently 10.0.114). Both carry the same runtime and the same security fixes. Any
     other released SDK version of the target framework's major version is accepted as well.
   validator: >-
     [% if not dotnet_sdk_version | regex_search('^[0-9]+\\.[0-9]+\\.[0-9]{3}$') %]The .NET SDK version must be a full release version, e.g.,
-    "10.0.402".[% elif not dotnet_sdk_version.startswith(target_framework[3:] ~ '.') %]The .NET SDK version must belong to the target framework, i.e.,
+    "10.0.403".[% elif not dotnet_sdk_version.startswith(target_framework[3:] ~ '.') %]The .NET SDK version must belong to the target framework, i.e.,
     start with "[[ target_framework[3:] ]].".[% endif %]
 
 license:

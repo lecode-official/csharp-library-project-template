@@ -56,7 +56,7 @@ The branch names are limited to the characters Git allows in a branch name that 
 | Question             | Default                  | Validation                                                                                                         | Feeds                                                                                    |
 | -------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
 | `target_framework`   | `net10.0`                | One of the `choices`, of which `net10.0` is the only one.                                                          | The `TargetFramework` of all three projects, and the build output paths that contain it. |
-| `dotnet_sdk_version` | `10.0.402` for `net10.0` | A full release version of the form `X.Y.ZZZ`, starting with the target framework's version, `10.0.` for `net10.0`. | The SDK version pinned exactly in `global.json`.                                         |
+| `dotnet_sdk_version` | `10.0.403` for `net10.0` | A full release version of the form `X.Y.ZZZ`, starting with the target framework's version, `10.0.` for `net10.0`. | The SDK version pinned exactly in `global.json`.                                         |
 | `license`            | `LGPL-3.0-or-later`      | One of the `choices`.                                                                                              | The `LICENSE` file, and the library's `PackageLicenseExpression`.                        |
 
 ### `target_framework`
@@ -71,9 +71,9 @@ The version pinned exactly in `global.json`. A .NET SDK version is `major.minor.
 
 **It is a free string, not a list of choices.** Copier rejects any answer that is not one of a question's `choices`, and it does so also when it replays the recorded answers during `copier update`. With a list, dropping a superseded version from it would make every project that had picked that version impossible to update. A free string keeps every recorded version valid, and the validator still rejects an answer that is not a release version or that belongs to a different .NET release than the target framework.
 
-The `help` text names the feature bands that still receive servicing updates, with the newest patch of each: `10.0.4xx`, currently `10.0.402`, for the newest tooling, and `10.0.1xx`, currently `10.0.113`, for the original band. The `10.0.2xx` and `10.0.3xx` bands stopped receiving patches in May and August 2026, so the help no longer names them, although the validator still accepts their versions.
+The `help` text names the feature bands that still receive servicing updates, with the newest patch of each: `10.0.4xx`, currently `10.0.403`, for the newest tooling, and `10.0.1xx`, currently `10.0.114`, for the original band. The `10.0.2xx` and `10.0.3xx` bands stopped receiving patches in May and August 2026, so the help no longer names them, although the validator still accepts their versions.
 
-The default is rendered from `target_framework`, as `[% if target_framework == 'net10.0' %]10.0.402[% endif %]`. When a new SDK ships:
+The default is rendered from `target_framework`, as `[% if target_framework == 'net10.0' %]10.0.403[% endif %]`. When a new SDK ships:
 
 1. Raise the version in the default, if the new SDK is the newest patch of the newest serviced band.
 2. Update the bands and the versions named in the `help` text, and drop a band that stopped receiving patches.

@@ -73,13 +73,13 @@ jobs:
             product_name: Render Test
             root_namespace: RenderTest
             license: LGPL-3.0-or-later
-            dotnet_sdk_version: 10.0.402
+            dotnet_sdk_version: 10.0.403
             build_documentation: true
           - name: Spaces and Dots
             product_name: Render.Test Library
             root_namespace: RenderTest.Library
             license: MIT
-            dotnet_sdk_version: 10.0.113
+            dotnet_sdk_version: 10.0.114
           - name: Apache-2.0
             license: Apache-2.0
           - name: BSD-2-Clause
@@ -102,7 +102,7 @@ jobs:
     env:
       PRODUCT_NAME: ${{ matrix.product_name || 'Render Test' }}
       ROOT_NAMESPACE: ${{ matrix.root_namespace || 'RenderTest' }}
-      DOTNET_SDK_VERSION: ${{ matrix.dotnet_sdk_version || '10.0.402' }}
+      DOTNET_SDK_VERSION: ${{ matrix.dotnet_sdk_version || '10.0.403' }}
       RENDER_DIRECTORY: ${{ github.workspace }}/../render
 
     steps:
@@ -157,7 +157,7 @@ jobs:
           node-version-file: ${{ env.RENDER_DIRECTORY }}/.nvmrc
 
       - name: Set Up .NET
-        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
         with:
           global-json-file: ${{ env.RENDER_DIRECTORY }}/global.json
 
