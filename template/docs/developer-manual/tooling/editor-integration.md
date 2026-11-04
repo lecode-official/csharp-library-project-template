@@ -1,6 +1,6 @@
 # Visual Studio Code Integration
 
-This article covers the Visual Studio Code setup under [`.vscode/`](../../../.vscode/).
+This article covers the Visual Studio Code setup under [`.vscode/`](../../../.vscode/). Installing the editor and its extensions is covered by [setting up Visual Studio Code](../development-setup/setting-up-visual-studio-code.md).
 
 ## Shared and Local Configuration
 
@@ -39,7 +39,7 @@ The extension is effectively mandatory. Without it installed, no `settings.json`
 
 [`tasks.shared.json`](../../../.vscode/tasks.shared.json) mirrors the npm and `dotnet` commands as tasks: Install Dependencies, Format, Check Formatting, Lint Markdown, Lint Spelling, the combined Lint, Build, Test, and Run Sample App. The npm-backed tasks depend on Install Dependencies, so none of them can run against a stale or missing `node_modules`.
 
-Lint is the default task of the `test` group and Build the default of the `build` group, so "Run Test Task" and "Run Build Task" do the obvious thing.
+Run a task by opening the command palette (<kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> / <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>), selecting "Tasks: Run Task", and picking the task. Lint is the default task of the `test` group and Build the default of the `build` group, so "Tasks: Run Test Task" and "Tasks: Run Build Task" run them directly.
 
 Every linter task carries a problem matcher, so findings land in the Problems panel instead of only in the terminal. The .NET tasks use the built-in `$msCompile` matcher. MarkdownLint and CSpell have no built-in matcher, so the tasks define custom patterns inline — and the aggregate Lint task repeats both, because a task only reports through the matchers it declares itself.
 
@@ -61,4 +61,4 @@ Which engine an extension uses matters, because it decides whether the editor an
 - [Tooling](README.md) — the tools these settings configure.
 - [Formatting (dprint)](formatting-dprint.md), [MarkdownLint](linting-markdownlint.md), [CSpell](spell-checking-cspell.md) — the individual tools.
 - [Continuous integration](continuous-integration.md) — the pinned versions these extensions approximate.
-- [Developer setup](developer-setup.md) — installing all of this on a fresh machine.
+- [Setting up Visual Studio Code](../development-setup/setting-up-visual-studio-code.md) — what the editor is, and installing it and its extensions.

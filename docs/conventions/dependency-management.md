@@ -70,5 +70,5 @@ The upgrade reaches existing generated projects through `copier update`, as an o
 - [Questions](../project-template/questions.md) — the SDK version and the target framework.
 - [Testing](testing.md) — the continuous integration that renders with the pinned Copier.
 - [Licensing](../project-template/licensing.md) — the vendored license texts and where they are pinned.
-- [Developer setup](../tooling/developer-setup.md) — installing the root's dependencies.
+- [Installing the tools](../development-setup/installing-the-tools.md) — installing the root's dependencies.
 - [Dependency management](../../template/docs/developer-manual/conventions/dependency-management.md) — the generated project's full rule set.

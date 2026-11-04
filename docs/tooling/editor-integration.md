@@ -1,6 +1,6 @@
 # Visual Studio Code Integration
 
-This article covers the Visual Studio Code setup under the root's [`.vscode/`](../../.vscode/), and how it differs from the editor configuration the template body ships.
+This article covers the Visual Studio Code setup under the root's [`.vscode/`](../../.vscode/), and how it differs from the editor configuration the template body ships. Installing the editor and its extensions is covered by [setting up Visual Studio Code](../development-setup/setting-up-visual-studio-code.md).
 
 ## Shared and Local Configuration
 
@@ -47,6 +47,6 @@ If you open `template/` on its own in the editor, Workspace Config Plus generate
 
 ## Related
 
-- [Developer setup](developer-setup.md) — installing the editor and its extensions.
+- [Setting up Visual Studio Code](../development-setup/setting-up-visual-studio-code.md) — what the editor is, and installing it and its extensions.
 - [Formatting (dprint)](formatting-dprint.md), [MarkdownLint](linting-markdownlint.md), [CSpell](spell-checking-cspell.md) — the tools these settings configure.
 - [Editor integration](../../template/docs/developer-manual/tooling/editor-integration.md) — the generated project's editor setup.

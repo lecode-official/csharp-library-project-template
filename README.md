@@ -22,7 +22,7 @@ dotnet restore "source/<Product Name>.slnx"
 dotnet test --solution "source/<Product Name>.slnx"
 ```
 
-The template ships no lock files, so this first `npm install` resolves and writes `package-lock.json`, and `dotnet restore` writes a `packages.lock.json` per project. Commit them with the first commit. From then on, the project installs with `npm ci`, and its continuous integration fails without them. Enable GitHub Pages with "GitHub Actions" as its source as well, or the workflow that publishes the documentation website fails.
+The template ships no lock files, so this first `npm install` resolves and writes `package-lock.json`, and `dotnet restore` writes a `packages.lock.json` per project. Commit them with the first commit. From then on, the project installs with `npm ci`, and its continuous integration fails without them. Enable GitHub Pages with "GitHub Actions" as its source as well, or the workflow that publishes the documentation website fails (see the generated project's [setting up GitHub](template/docs/developer-manual/development-setup/setting-up-github.md#github-pages)).
 
 The generated project builds, tests, formats and lints green out of the box. The library it ships is a placeholder class that exists so all of that is true on day one — replace it with the real thing.
 
@@ -59,7 +59,7 @@ Everything outside `template/` belongs to the template itself and is never copie
 
 ## Documentation
 
-The [documentation index](docs/README.md) lists every article. It is split into three sections:
+The [documentation index](docs/README.md) lists every article. It is split into four sections:
 
 - [Project template](docs/project-template/README.md) — the repository as a Copier template.
   - [Template structure](docs/project-template/template-structure.md) — the two-level layout, and the four problems it solves.
@@ -67,6 +67,7 @@ The [documentation index](docs/README.md) lists every article. It is split into 
   - [Licensing](docs/project-template/licensing.md) — how the `LICENSE` file is produced, and which licenses take a copyright substitution.
   - [Rendering and updating](docs/project-template/rendering-and-updating.md) — generating a project, and keeping it in step with the template.
   - [Authoring](docs/project-template/authoring.md) — the delimiters, adding a file, and verifying a change.
+- [Development setup](docs/development-setup/README.md) — what to install and set up before working on the template.
 - [Conventions](docs/conventions/README.md) — how the files on both sides of the split are written, styled, named, committed, and released.
 - [Tooling](docs/tooling/README.md) — the formatter, the linters, the editor setup, and the Claude Code hooks used to work on the template.
 
@@ -75,8 +76,9 @@ The [documentation index](docs/README.md) lists every article. It is split into 
 - **Copier 9.5.0 or newer**, the floor `copier.yml` declares with `_min_copier_version`. The template's continuous integration renders it with Copier 9.19.1.
 - **The .NET SDK** pinned by the generated project's `global.json`, to build what comes out.
 - **Node.js and Python**, for the generated project's linters and its documentation website respectively.
+- **The GitHub CLI**, optionally, to run the scripts that set up a repository on GitHub.
 
-Working on the template's own files needs only Node.js, for the formatter and the linters that check them. Verifying a change to the template body also needs Copier and everything a render needs, the .NET SDK and Python (see [developer setup](docs/tooling/developer-setup.md)).
+Working on the template's own files needs only Git and Node.js, for the formatter and the linters that check them. Verifying a change to the template body also needs Copier and everything a render needs. The [development setup](docs/development-setup/README.md) covers installing all of it, setting up the repository on GitHub, and setting up Visual Studio Code.
 
 ## Continuous Integration
 

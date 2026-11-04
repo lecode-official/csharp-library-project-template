@@ -76,7 +76,7 @@ Browsers and crawlers also request `/favicon.ico` at the site root directly, reg
 
 ## Running It Locally
 
-Install the pinned Python dependencies into a virtual environment (see [developer setup](developer-setup.md)), then, from the repository root:
+Install the pinned Python dependencies into a virtual environment (see [installing the tools](../development-setup/installing-the-tools.md#python-and-the-documentation-website)), then, from the repository root:
 
 ```shell
 properdocs serve     # http://127.0.0.1:8000, with live reload
@@ -89,7 +89,8 @@ Both regenerate every generated section from scratch, so there is nothing to cle
 
 ## Related
 
-- [Developer setup](developer-setup.md) — installing Python and the pinned dependencies.
+- [Installing the tools](../development-setup/installing-the-tools.md) — installing Python and the pinned dependencies.
+- [Setting up GitHub](../development-setup/setting-up-github.md#github-pages) — enabling GitHub Pages, which the website is published to.
 - [Dependency management](../conventions/dependency-management.md) — how `requirements.txt` and the local tools pin their versions.
 - [Continuous integration](continuous-integration.md) — the workflow that builds this site and deploys it.
 - [Markdown style](../conventions/markdown-style.md) — the conventions the published articles follow.

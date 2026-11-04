@@ -53,7 +53,7 @@ A pull request carries the same `Type:` labels as the issue it resolves.
 | `Status: Needs Information` | `#FBCA04` | Needs more information to proceed.                                      |
 | `Status: Won't Do/Fix`      | `#5319E7` | Concerns a feature request or bug that will not be addressed.           |
 
-On GitHub, each label's description is its meaning, prefixed with "The issue or pull request", as in "The issue or pull request concerns the fixing of a bug."
+On GitHub, each label's description is its meaning, prefixed with "The issue or pull request", as in "The issue or pull request concerns the fixing of a bug." The labels are created with the script in [setting up GitHub](../development-setup/setting-up-github.md#labels), which is changed together with this table.
 
 Only a maintainer can set labels, milestones, and assignees. A contributor who opens an issue or a pull request from a fork leaves them to the maintainers.
 
