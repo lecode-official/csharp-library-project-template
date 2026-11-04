@@ -54,7 +54,7 @@ The documentation website builds into `build/documentation-website/` alongside t
 
 ## Versioning and Licensing
 
-The NuGet package version is the `<Version>` property of the library's project file. [`CHANGELOG.md`](../../CHANGELOG.md) is the human-readable history of what each version changed. It is not generated from Git history, so it is updated by hand (see [changelog](conventions/changelog.md)).
+The NuGet package version is the `<Version>` property of the library's project file. [`CHANGELOG.md`](../../CHANGELOG.md) is the human-readable history of what each version changed. It is not generated from Git history, so it is updated by hand (see [changelog](conventions/changelog-entries.md)).
 
 The project is licensed under `[[ license ]]`. The library's project file declares it as `<PackageLicenseExpression>`, which is the SPDX identifier NuGet expects, and [`LICENSE`](../../LICENSE) carries the full text of the same license.
 

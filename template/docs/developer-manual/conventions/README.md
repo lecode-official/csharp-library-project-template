@@ -10,9 +10,10 @@ This section summarizes the coding and styling conventions for the project:
 6. [Commit Messages](commit-messages.md)
 7. [Git Workflow](git-workflow.md)
 8. [Git Blame](git-blame.md)
-9. [Versioning](versioning.md)
-10. [Changelog](changelog.md)
-11. [Dependency Management](dependency-management.md)
-12. [Testing](testing.md)
+9. [GitHub Workflow](github-workflow.md)
+10. [Versioning](versioning.md)
+11. [Changelog](changelog-entries.md)
+12. [Dependency Management](dependency-management.md)
+13. [Testing](testing.md)
 
 These conventions are not suggestions. The code base is heavily and consistently styled, and a change that departs from them is a change that makes the next reader stop and wonder why.

@@ -58,7 +58,7 @@ A tag is a name for one commit. Unlike a branch, it never moves, so it marks a s
 This repository uses tags for one thing only, releases, and they matter more here than in the generated project: `copier update` moves a generated project between tags, so a template change does not reach any consumer until it is tagged.
 
 - **Every release has exactly one tag**, and every tag is a release. A tag is named exactly like the version it releases, prefixed with `v`, as in `v1.1.0`, and it points at the merge commit that brought the release into `main`.
-- **Tags are always annotated.** Lightweight tags are not used, because the tag message is part of the release record. It repeats the release's entry in the [changelog](changelog.md) and follows the [tag message](commit-messages.md#tag-messages) rules.
+- **Tags are always annotated.** Lightweight tags are not used, because the tag message is part of the release record. It repeats the release's entry in the [changelog](changelog-entries.md) and follows the [tag message](commit-messages.md#tag-messages) rules.
 - **Tags are pushed explicitly.** Pushing a branch does not carry its tags along, so a tag is pushed by name.
 - **A pushed tag is immutable.** A tag that turns out to be wrong is deleted and recreated only while it is still local. Once it is pushed, generated projects may already record it in their answers file, so a mistake is corrected by releasing a new version instead.
 
@@ -95,6 +95,7 @@ Render into a directory outside the repository, such as `/tmp/render-test`, so t
 ## Related
 
 - [Commit messages](commit-messages.md) — what a message says once you are asked to write one.
+- [GitHub workflow](github-workflow.md) — the issues, labels, milestones, and pull requests around a branch, and the GitHub Release around a tag.
 - [Versioning](versioning.md) — the version number and creating the release tag.
-- [Changelog](changelog.md) — the release's entry, which the tag message repeats.
+- [Changelog](changelog-entries.md) — the release's entry, which the tag message repeats.
 - [Git workflow](../../template/docs/developer-manual/conventions/git-workflow.md) — the same rules, as the generated project states them.

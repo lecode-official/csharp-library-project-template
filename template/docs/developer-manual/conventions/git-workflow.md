@@ -60,7 +60,7 @@ A tag is a name for one commit. Unlike a branch, it never moves, so it marks a s
 This project uses tags for one thing only, releases:
 
 - **Every release has exactly one tag**, and every tag is a release. A tag is named exactly like the version it releases, prefixed with `v`, as in `v1.2.0`, and it points at the merge commit that brought the release into `[[ default_branch ]]`.
-- **Tags are always annotated.** Lightweight tags are not used, because the tag message is part of the release record. It repeats the release's entry in the [changelog](changelog.md) and follows the [tag message](commit-messages.md#tag-messages) rules.
+- **Tags are always annotated.** Lightweight tags are not used, because the tag message is part of the release record. It repeats the release's entry in the [changelog](changelog-entries.md) and follows the [tag message](commit-messages.md#tag-messages) rules.
 - **Tags are pushed explicitly.** Pushing a branch does not carry its tags along, so a tag is pushed by name.
 - **A pushed tag is immutable.** A tag that turns out to be wrong is deleted and recreated only while it is still local. Once it is pushed, other clones have it, so a mistake is corrected by releasing a new version instead.
 
@@ -89,7 +89,8 @@ The staging area is not a step on the way to a commit here, it is how a reviewer
 ## Related
 
 - [Commit messages](commit-messages.md) — what a message should say once you are asked to write one.
+- [GitHub workflow](github-workflow.md) — the issues, labels, milestones, and pull requests around a branch, and the GitHub Release around a tag.
 - [Git blame](git-blame.md) — the revisions that blame skips.
 - [Versioning](versioning.md) — the version bump that happens in the branch, before the pull request, and the release tags.
-- [Changelog](changelog.md) — the release's entry, which the tag message repeats.
+- [Changelog](changelog-entries.md) — the release's entry, which the tag message repeats.
 - [Contribution guide](../contribution-guide.md) — the process a change goes through.

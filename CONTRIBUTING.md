@@ -6,7 +6,7 @@ All participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). Secu
 
 ## Open an Issue First
 
-Before forking the repository and starting work, open an issue describing what you want to do. This aligns your idea with where the template is already headed, and it can save you from doing work that overlaps with something already planned. A change to the template body reaches every project generated from it, so a new tool, question, or convention is worth discussing before it is built.
+Before forking the repository and starting work, open an issue describing what you want to do (see [GitHub workflow](docs/conventions/github-workflow.md#issues)). This aligns your idea with where the template is already headed, and it can save you from doing work that overlaps with something already planned. A change to the template body reaches every project generated from it, so a new tool, question, or convention is worth discussing before it is built.
 
 ## Fork, Branch, and Pull Request
 
