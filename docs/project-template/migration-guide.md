@@ -59,7 +59,7 @@ A project on the 10.0.1xx band passes `10.0.114` instead. Install the new SDK be
 
 Dependabot now labels its pull requests with a `Dependabot:` label per ecosystem instead of the labels it created itself. Dependabot never creates a label, so:
 
-1. Create the new labels with the label script in the project's `docs/developer-manual/development-setup/setting-up-github.md`. The script also brings the existing labels in step with the GitHub workflow.
+1. Create the new labels, and the new `Type: Release` label for the release issue and its pull requests, with the label script in the project's `docs/developer-manual/development-setup/setting-up-github.md`. The script also brings the existing labels in step with the GitHub workflow.
 2. Delete the labels Dependabot created itself: `dependencies`, and one per ecosystem, such as `github_actions` and `javascript`.
 3. Add the new labels to the Dependabot pull requests that are still open, since Dependabot does not relabel them.
 

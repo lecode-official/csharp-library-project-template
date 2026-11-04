@@ -102,7 +102,7 @@
     "pylint.enabled": false,
     "flake8.enabled": false,
 
-    // Imports the external settings for the code spell checker CSPell, furthermore, the "ignorePaths" and the "useGitignore" settings are reset,
+    // Imports the external settings for the code spell checker CSpell, furthermore, the "ignorePaths" and the "useGitignore" settings are reset,
     // because they overwrite the settings in the imported configuration, also the diagnostic level is increased from "Information" to "Error" to
     // indicate that spelling mistakes must be corrected
     "cSpell.ignorePaths": [],

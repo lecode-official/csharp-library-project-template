@@ -56,6 +56,7 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 - **Adding or upgrading a dependency** → [docs/developer-manual/conventions/dependency-management.md](docs/developer-manual/conventions/dependency-management.md).
 - **Writing or running unit tests, measuring code coverage** → [docs/developer-manual/conventions/testing.md](docs/developer-manual/conventions/testing.md) and [testing and code coverage](docs/developer-manual/tooling/testing-and-code-coverage.md).
 - **Writing commit messages** → [docs/developer-manual/conventions/commit-messages.md](docs/developer-manual/conventions/commit-messages.md).
+- **Preparing or making a release: the release issue, the release branch, and the release pull request** → [docs/developer-manual/conventions/github-workflow.md](docs/developer-manual/conventions/github-workflow.md#releases).
 - **Releasing, or raising the version** → [docs/developer-manual/conventions/versioning.md](docs/developer-manual/conventions/versioning.md).
 - **Writing a changelog entry, or the date of an unreleased version** → [docs/developer-manual/conventions/changelog-entries.md](docs/developer-manual/conventions/changelog-entries.md).
 - **Branches, branch names, committing, pushing, rebasing, or anything else touching Git** → [docs/developer-manual/conventions/git-workflow.md](docs/developer-manual/conventions/git-workflow.md).

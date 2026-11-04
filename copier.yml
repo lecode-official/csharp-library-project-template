@@ -105,8 +105,9 @@ _message_after_update: |-
     title line expects them cropped to 40 pixels high. From now on, an update leaves the logo files alone.
   - .NET SDK: the version is an answer, so an update keeps it; raise it to 10.0.403 or 10.0.114 for the security fixes of .NET 10.0.14,
     with "copier update --defaults --data dotnet_sdk_version=10.0.403".
-  - GitHub: create the "Dependabot:" labels with the label script in docs/developer-manual/development-setup/setting-up-github.md, delete
-    the labels Dependabot created itself, and add the new labels to the open Dependabot pull requests.
+  - GitHub: create the new "Dependabot:" labels and the "Type: Release" label with the label script in
+    docs/developer-manual/development-setup/setting-up-github.md, delete the labels Dependabot created itself, and add the new labels to
+    the open Dependabot pull requests.
 
   The migration guide describes every step in detail, for every release:
   https://github.com/lecode-official/csharp-library-project-template/blob/main/docs/project-template/migration-guide.md
