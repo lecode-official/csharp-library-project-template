@@ -23,37 +23,43 @@ Issue and pull request titles are title case, like headings, commit subjects, an
 
 ## Labels
 
-Labels sort issues and pull requests into three groups, each named by its prefix:
+Labels sort issues and pull requests into four groups, each named by its prefix:
 
 - **`Type:`** says what kind of change it is. Every issue and every pull request has at least one, and one for each kind of change it makes, so an issue that updates the documentation, implements a feature, and changes a GitHub Actions workflow has three.
 - **`Priority:`** says how urgent it is. Every issue has one, unless its priority has not been decided yet, and never more than one.
 - **`Status:`** says where it stands, when that is more than open or closed: blocked, waiting for information, or not going to be done at all. The `Status:` labels mostly exclude each other, so an issue has one or none, and more than one only for a good reason.
+- **`Dependabot:`** says which ecosystem a [Dependabot pull request](#dependabot-pull-requests) updates. Dependabot sets it itself, and nobody else uses it.
 
 A pull request carries the same `Type:` labels as the issue it resolves.
 
-| Label                       | Color     | Meaning                                                                 |
-| --------------------------- | --------- | ----------------------------------------------------------------------- |
-| `Type: Bug`                 | `#B60205` | Concerns the fixing of a bug.                                           |
-| `Type: CI/CD`               | `#6800E7` | Concerns the continuous integration and deployment (CI/CD) pipeline.    |
-| `Type: Content`             | `#A7DA8B` | Concerns the addition or updating of content, for example on a website. |
-| `Type: Design`              | `#E99695` | Concerns visual design.                                                 |
-| `Type: Documentation`       | `#3545AF` | Concerns the updating or adding of content to the documentation.        |
-| `Type: Idea or Request`     | `#1D76DB` | Concerns an idea or the request for adding a new feature.               |
-| `Type: Implementation`      | `#006B75` | Concerns the implementation of a new feature.                           |
-| `Type: Testing & Linting`   | `#FF7518` | Concerns unit tests, integration tests, linting, or formatting.         |
-| `Priority: Critical`        | `#B60205` | Has a critical priority.                                                |
-| `Priority: High`            | `#E99695` | Has a high priority.                                                    |
-| `Priority: Medium`          | `#1D76DB` | Has a medium priority.                                                  |
-| `Priority: Low`             | `#0E8A16` | Has a low priority.                                                     |
-| `Status: Abandoned`         | `#B60205` | Was abandoned and no longer needs to be addressed.                      |
-| `Status: Blocked`           | `#D93F0B` | Is blocked until other issues or pull requests are completed.           |
-| `Status: Can't Reproduce`   | `#750DB3` | Tries to address a bug, which cannot be reproduced.                     |
-| `Status: Confirmed`         | `#0E8A16` | Concerns a bug, which was confirmed to be reproducible.                 |
-| `Status: Duplicate`         | `#FEB6A8` | Is a duplicate of another issue or pull request.                        |
-| `Status: Needs Information` | `#FBCA04` | Needs more information to proceed.                                      |
-| `Status: Won't Do/Fix`      | `#5319E7` | Concerns a feature request or bug that will not be addressed.           |
+| Label                               | Color     | Meaning                                                                 |
+| ----------------------------------- | --------- | ----------------------------------------------------------------------- |
+| `Type: Bug`                         | `#B60205` | Concerns the fixing of a bug.                                           |
+| `Type: CI/CD`                       | `#6800E7` | Concerns the continuous integration and deployment (CI/CD) pipeline.    |
+| `Type: Content`                     | `#A7DA8B` | Concerns the addition or updating of content, for example on a website. |
+| `Type: Design`                      | `#E99695` | Concerns visual design.                                                 |
+| `Type: Documentation`               | `#3545AF` | Concerns the updating or adding of content to the documentation.        |
+| `Type: Idea or Request`             | `#1D76DB` | Concerns an idea or the request for adding a new feature.               |
+| `Type: Implementation`              | `#006B75` | Concerns the implementation of a new feature.                           |
+| `Type: Testing & Linting`           | `#FF7518` | Concerns unit tests, integration tests, linting, or formatting.         |
+| `Priority: Critical`                | `#B60205` | Has a critical priority.                                                |
+| `Priority: High`                    | `#E99695` | Has a high priority.                                                    |
+| `Priority: Medium`                  | `#1D76DB` | Has a medium priority.                                                  |
+| `Priority: Low`                     | `#0E8A16` | Has a low priority.                                                     |
+| `Status: Abandoned`                 | `#B60205` | Was abandoned and no longer needs to be addressed.                      |
+| `Status: Blocked`                   | `#D93F0B` | Is blocked until other issues or pull requests are completed.           |
+| `Status: Can't Reproduce`           | `#750DB3` | Tries to address a bug, which cannot be reproduced.                     |
+| `Status: Confirmed`                 | `#0E8A16` | Concerns a bug, which was confirmed to be reproducible.                 |
+| `Status: Duplicate`                 | `#FEB6A8` | Is a duplicate of another issue or pull request.                        |
+| `Status: Needs Information`         | `#FBCA04` | Needs more information to proceed.                                      |
+| `Status: Won't Do/Fix`              | `#5319E7` | Concerns a feature request or bug that will not be addressed.           |
+| `Dependabot: GitHub Actions Update` | `#0366D6` | Was opened by Dependabot and updates the GitHub Actions actions.        |
+| `Dependabot: NuGet Update`          | `#0366D6` | Was opened by Dependabot and updates the NuGet packages.                |
+| `Dependabot: .NET SDK Update`       | `#0366D6` | Was opened by Dependabot and updates the .NET SDK.                      |
+| `Dependabot: npm Update`            | `#0366D6` | Was opened by Dependabot and updates the npm packages.                  |
+| `Dependabot: pip Update`            | `#0366D6` | Was opened by Dependabot and updates the Python packages.               |
 
-On GitHub, each label's description is its meaning, prefixed with "The issue or pull request", as in "The issue or pull request concerns the fixing of a bug." The labels are created with the script in [setting up GitHub](../development-setup/setting-up-github.md#labels), which is changed together with this table.
+On GitHub, each label's description is its meaning, prefixed with "The issue or pull request", as in "The issue or pull request concerns the fixing of a bug." The `Dependabot:` labels only ever apply to a pull request, so theirs are prefixed with "The pull request" instead. The labels are created with the script in [setting up GitHub](../development-setup/setting-up-github.md#labels), which is changed together with this table.
 
 Only a maintainer can set labels, milestones, and assignees. A contributor who opens an issue or a pull request from a fork leaves them to the maintainers.
 
@@ -78,6 +84,18 @@ gh pr merge 13 --merge --subject 'Merged `feature/configurable-greeting`' --body
 ```
 
 GitHub only closes an issue through `Resolves #12.` when the pull request goes into the default branch, `[[ default_branch ]]`. A pull request into `[[ integration_branch ]]` leaves the issue open, so the issue is closed by hand right after the merge, and the work branch is [deleted](git-workflow.md#merged-branches-are-deleted).
+
+## Dependabot Pull Requests
+
+Dependabot opens a pull request whenever a newer version of a dependency is released (see [dependency management](dependency-management.md)). Such a pull request has no issue, so it carries the `Dependabot:` label of its ecosystem instead of a `Type:` label, and it is assigned to the milestone of the next release like every other pull request.
+
+Before it is merged, it is reviewed like any other change:
+
+- **What changed.** Read the release notes of every dependency it raises, and note what the new versions change for the project, above all anything that breaks or that brings new findings.
+- **What has to change with it.** Check whether the documentation or anything else has to change in the same pull request. [Dependency management](dependency-management.md) lists what Dependabot cannot do on its own, such as updating the `allowScripts` key of `dprint`. Such a change is pushed to the pull request's branch.
+- **The checks.** Continuous integration has to pass, like for every other pull request.
+
+It is then merged with a merge commit and a message written by hand, like every other pull request. Its body names the pull request alone, as in `Merged pull request #14.`, since there is no issue to resolve.
 
 ## Releases
 

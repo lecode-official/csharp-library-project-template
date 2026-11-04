@@ -92,7 +92,7 @@
     "git.followTagsWhenSync": true,
     "git.rebaseWhenSync": true,
 
-    // Disables Python linters in Visual Studio Code, as we only use Python very sparingly and therefore do not need to have extensive linting
+    // Disables the Python linters in Visual Studio Code, as Python is only used very sparingly here and therefore does not need extensive linting
     "pylint.enabled": false,
     "flake8.enabled": false,
 
