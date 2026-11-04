@@ -29,7 +29,8 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 - **Adding, changing, or removing a question or its validator, including the .NET SDK default and bands** → [docs/project-template/questions.md](docs/project-template/questions.md).
 - **Anything touching `LICENSE` or `licenses/`** → [docs/project-template/licensing.md](docs/project-template/licensing.md). Check its table before substituting anything into a license text.
 - **Adding a file to the body, or verifying a change** → [docs/project-template/authoring.md](docs/project-template/authoring.md) and [docs/conventions/testing.md](docs/conventions/testing.md).
-- **What a consumer does with the template, or `_skip_if_exists`** → [docs/project-template/rendering-and-updating.md](docs/project-template/rendering-and-updating.md).
+- **What a consumer does with the template, the files an update leaves alone, or the messages after copying and updating** → [docs/project-template/rendering-and-updating.md](docs/project-template/rendering-and-updating.md).
+- **What a project does by hand when it updates to a release** → [docs/project-template/migration-guide.md](docs/project-template/migration-guide.md).
 - **The template's own continuous integration, `.github/workflows/template.yml`** → [docs/conventions/testing.md](docs/conventions/testing.md#continuous-integration).
 - **Dependabot, at the root or in the body, or the Copier version the workflow pins** → [docs/conventions/dependency-management.md](docs/conventions/dependency-management.md).
 - **C# in the body, and placeholders in code** → [docs/conventions/csharp-style.md](docs/conventions/csharp-style.md).
@@ -55,7 +56,8 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 **This is important.** A change here is not done until the documentation reflects it:
 
 - A new or changed question, default, or validator updates the tables in [docs/project-template/questions.md](docs/project-template/questions.md), including its validation rule. A new SDK release raises the `dotnet_sdk_version` default and the bands in its help, and the SDK versions in the render matrix of `.github/workflows/template.yml`.
-- A new or changed `_skip_if_exists` entry updates the list in [docs/project-template/rendering-and-updating.md](docs/project-template/rendering-and-updating.md#files-the-template-only-creates).
+- A change that a generated project has to carry over by hand, such as a change to the read me, to the logo, or to another file the template only creates, adds a hint to `_message_after_update` in `copier.yml` and a step to the release's section of [docs/project-template/migration-guide.md](docs/project-template/migration-guide.md), as [writing the update message](docs/project-template/rendering-and-updating.md#writing-the-update-message) describes.
+- A new or changed `_exclude` pattern that only applies to an update updates the list in [docs/project-template/rendering-and-updating.md](docs/project-template/rendering-and-updating.md#files-the-template-only-creates).
 - A change to `.github/workflows/template.yml` or a Dependabot configuration updates [docs/conventions/testing.md](docs/conventions/testing.md) or [docs/conventions/dependency-management.md](docs/conventions/dependency-management.md). A new ecosystem in a Dependabot configuration gets its own `Dependabot:` label, in both the GitHub workflow article and the label script of the development setup, on the same side of the split.
 - A new license updates the table in [docs/project-template/licensing.md](docs/project-template/licensing.md) **and** `scripts/refresh-licenses.py`, and gets an entry in the render matrix of `.github/workflows/template.yml`.
 - A new article under `template/docs/` is listed in three places, all hand-maintained: the generated project's documentation index, its section index, and the `nav` in `template/properdocs.yml`.

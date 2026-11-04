@@ -41,6 +41,7 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 
 - **Repository layout, the solution, the projects** → [docs/developer-manual/architecture.md](docs/developer-manual/architecture.md).
 - **C# source code** → [docs/developer-manual/conventions/csharp-style.md](docs/developer-manual/conventions/csharp-style.md) and [comments and documentation comments](docs/developer-manual/conventions/comments-and-documentation.md).
+- **Setting up a freshly generated project, or replacing the placeholder library and logo** → [docs/developer-manual/first-steps.md](docs/developer-manual/first-steps.md).
 - **Installing the SDK, Node.js, or the editor** → [docs/developer-manual/development-setup/installing-the-tools.md](docs/developer-manual/development-setup/installing-the-tools.md) and [setting up Visual Studio Code](docs/developer-manual/development-setup/setting-up-visual-studio-code.md).
 - **The labels, the repository settings, or GitHub Pages, and the scripts that set them up** → [docs/developer-manual/development-setup/setting-up-github.md](docs/developer-manual/development-setup/setting-up-github.md).
 - **Linting, formatting, spell checking, editor setup** → [docs/developer-manual/tooling/](docs/developer-manual/tooling/README.md).

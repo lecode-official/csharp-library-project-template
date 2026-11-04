@@ -2,13 +2,14 @@
 
 This manual is for people working on the [[ product_name ]] codebase itself: where things live, how the code is styled, and how the project is built, linted, and formatted.
 
-1. [Architecture](architecture.md)
-2. [Logo Design](logo-design.md)
-3. [Development Setup](development-setup/README.md)
+1. [First Steps](first-steps.md)
+2. [Architecture](architecture.md)
+3. [Logo Design](logo-design.md)
+4. [Development Setup](development-setup/README.md)
    1. [Installing the Tools](development-setup/installing-the-tools.md)
    2. [Setting up GitHub](development-setup/setting-up-github.md)
    3. [Setting up Visual Studio Code](development-setup/setting-up-visual-studio-code.md)
-4. [Tooling](tooling/README.md)
+5. [Tooling](tooling/README.md)
    1. [Visual Studio Code Integration](tooling/editor-integration.md)
    2. [Code Formatting (dprint)](tooling/formatting-dprint.md)
    3. [Markdown Linting (MarkdownLint)](tooling/linting-markdownlint.md)
@@ -18,7 +19,7 @@ This manual is for people working on the [[ product_name ]] codebase itself: whe
    7. [Continuous Integration](tooling/continuous-integration.md)
    8. [Testing and Code Coverage](tooling/testing-and-code-coverage.md)
    9. [Documentation Website](tooling/documentation-website.md)
-5. [Conventions](conventions/README.md)
+6. [Conventions](conventions/README.md)
    1. [C# Style](conventions/csharp-style.md)
    2. [Comments and Documentation Comments](conventions/comments-and-documentation.md)
    3. [Markdown Style](conventions/markdown-style.md)
@@ -32,4 +33,4 @@ This manual is for people working on the [[ product_name ]] codebase itself: whe
    11. [Changelog](conventions/changelog-entries.md)
    12. [Dependency Management](conventions/dependency-management.md)
    13. [Testing](conventions/testing.md)
-6. [Contributing](contribution-guide.md)
+7. [Contributing](contribution-guide.md)
