@@ -66,6 +66,8 @@ The read me header writes that pair as two `<img>` elements rather than Markdown
 3. Change the colors in `docs/assets/styles/brand-colors.css` to the new palette.
 4. Rewrite the sections of this article above, so that the concept, the palette, and the geometry of the new logo are on record.
 
+An update from the template never touches the logo files, the brand colors, or this article, so a replaced logo stays replaced, even when its file names or formats change.
+
 ## Dos and Don'ts
 
 - **Do** keep the clear space around the mark that the master files already build in.

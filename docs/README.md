@@ -7,7 +7,8 @@ This is the documentation for the template itself: how it is laid out, what it a
    2. [Questions](project-template/questions.md) — every question, what it feeds, and how to add one.
    3. [Licensing](project-template/licensing.md) — how the `LICENSE` file is produced, and which licenses take a copyright substitution.
    4. [Rendering and Updating](project-template/rendering-and-updating.md) — generating a project, and keeping it in step with the template.
-   5. [Authoring](project-template/authoring.md) — the delimiters, adding a file, and verifying a change.
+   5. [Migration Guide](project-template/migration-guide.md) — what a project does by hand when it updates, release by release.
+   6. [Authoring](project-template/authoring.md) — the delimiters, adding a file, and verifying a change.
 2. [Development Setup](development-setup/README.md) — what to install and set up before working on the template.
    1. [Installing the Tools](development-setup/installing-the-tools.md) — Git, Node.js, Copier, what a render needs, and the optional GitHub CLI.
    2. [Setting up GitHub](development-setup/setting-up-github.md) — the labels and the repository settings, as scripts.

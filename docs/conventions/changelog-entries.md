@@ -41,7 +41,7 @@ The period is part of it. Without it, MarkdownLint reads a paragraph that consis
 
 The entries follow the [Markdown style](markdown-style.md): past tense, periods rather than semicolons, and backticks around file names, paths, identifiers and code.
 
-They are written for a consumer deciding whether to run `copier update`, so an entry says what changed in a generated project, and says explicitly when an existing project has to do something by hand. The usual case is a file the template only creates (see [rendering and updating](../project-template/rendering-and-updating.md#files-the-template-only-creates)): an update leaves it alone, so the entry tells the consumer what to copy into it.
+They are written for a consumer deciding whether to run `copier update`, so an entry says what changed in a generated project, and says explicitly when an existing project has to do something by hand. The usual case is a file the template only creates (see [rendering and updating](../project-template/rendering-and-updating.md#files-the-template-only-creates)): an update leaves it alone, so the entry tells the consumer what to copy into it. The same step also goes into the update message and into the release's section of the [migration guide](../project-template/migration-guide.md), in more detail.
 
 A change that only touches the root is recorded too, since it is part of the release, even though a generated project never notices it.
 
@@ -54,4 +54,5 @@ The message of a release tag repeats the release's list of changes, so the chang
 - [Versioning](versioning.md) — the version number the headings name, and the release tags.
 - [Commit messages](commit-messages.md) — the tag message that repeats a release's changes.
 - [Rendering and updating](../project-template/rendering-and-updating.md) — what a consumer does with a release.
+- [Migration guide](../project-template/migration-guide.md) — the steps by hand, release by release.
 - [Changelog](../../template/docs/developer-manual/conventions/changelog-entries.md) — the generated project's own changelog conventions.

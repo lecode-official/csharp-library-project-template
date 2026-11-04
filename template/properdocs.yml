@@ -97,6 +97,7 @@ nav:
       - Getting Started: user-manual/getting-started.md
   - Developer Manual:
       - Overview: developer-manual/README.md
+      - First Steps: developer-manual/first-steps.md
       - Architecture: developer-manual/architecture.md
       - Logo Design: developer-manual/logo-design.md
       - Development Setup:
