@@ -6,11 +6,11 @@ All participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). Secu
 
 ## Open an Issue First
 
-Before forking the repository and starting work, open an issue describing what you want to do. This aligns your idea with where the template is already headed, and it can save you from doing work that overlaps with something already planned. A change to the template body reaches every project generated from it, so a new tool, question, or convention is worth discussing before it is built.
+Before forking the repository and starting work, open an issue describing what you want to do (see [GitHub workflow](docs/conventions/github-workflow.md#issues)). This aligns your idea with where the template is already headed, and it can save you from doing work that overlaps with something already planned. A change to the template body reaches every project generated from it, so a new tool, question, or convention is worth discussing before it is built.
 
 ## Fork, Branch, and Pull Request
 
-Fork the repository and work on a feature branch. Pull requests are always welcome once the corresponding issue has been discussed. To help the pull request merge quickly:
+Fork the repository and work on a feature or fix branch (see [Git workflow](docs/conventions/git-workflow.md#branch-names)). Pull requests are always welcome once the corresponding issue has been discussed. To help the pull request merge quickly:
 
 - **Follow the conventions of the side you change.** Root files follow the [conventions](docs/conventions/README.md) of this repository. Files in the template body follow the generated project's own conventions, plus what the root conventions add about writing them as templates — see [authoring](docs/project-template/authoring.md).
 - **Keep the documentation in step.** A new question, file, or convention is not done until the articles that describe it are updated — see the list in [`AGENTS.md`](AGENTS.md#keep-the-documentation-up-to-date), which applies to human contributors just as much.
@@ -32,7 +32,7 @@ A pull request that is raw, unreviewed AI output — one the contributor cannot 
 A pull request that adds a contribution is expected to also update the records that track the template's history:
 
 - **[`CONTRIBUTORS.md`](CONTRIBUTORS.md)** — add yourself, in alphabetical order, if this is your first contribution. You may use your real name or a pseudonym, and you may link to your profile.
-- **[`CHANGELOG.md`](CHANGELOG.md)** — document what changed, under the version it will ship in, from the point of view of a consumer deciding whether to run `copier update` (see [versioning](docs/conventions/versioning.md)).
+- **[`CHANGELOG.md`](CHANGELOG.md)** — document what changed, under the version it will ship in, from the point of view of a consumer deciding whether to run `copier update` (see [changelog](docs/conventions/changelog-entries.md)).
 - **[`docs/`](docs/README.md)** — if your change affects how the template is used, rendered, or worked on, update or add the relevant article. A new article goes into the section it belongs to and is listed in the [documentation index](docs/README.md) and in its section's index.
 
 ## Licensing of Contributions

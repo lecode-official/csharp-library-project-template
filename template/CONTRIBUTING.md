@@ -6,11 +6,11 @@ All participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). Secu
 
 ## Open an Issue First
 
-Before forking the repository and starting work, open an issue describing what you want to do. This aligns your idea with where the project is already headed, and it can save you from doing work that overlaps with something already planned.
+Before forking the repository and starting work, open an issue describing what you want to do (see [GitHub workflow](docs/developer-manual/conventions/github-workflow.md#issues)). This aligns your idea with where the project is already headed, and it can save you from doing work that overlaps with something already planned.
 
 ## Fork, Branch, and Pull Request
 
-Fork the repository and work on a feature branch. Pull requests are always welcome once the corresponding issue has been discussed. To help the pull request merge quickly:
+Fork the repository and work on a feature or fix branch (see [Git workflow](docs/developer-manual/conventions/git-workflow.md#branch-names)). Pull requests are always welcome once the corresponding issue has been discussed. To help the pull request merge quickly:
 
 - **Match the project's conventions** — [C# style](docs/developer-manual/conventions/csharp-style.md) for code, [Markdown style](docs/developer-manual/conventions/markdown-style.md) for documentation, and [file and naming conventions](docs/developer-manual/conventions/file-and-naming-conventions.md) for anything new.
 - **Comment and document your code** — see [comments and documentation comments](docs/developer-manual/conventions/comments-and-documentation.md) for what a documentation comment and a plain comment are each expected to cover.
@@ -33,7 +33,7 @@ A pull request that is raw, unreviewed AI output — one the contributor cannot 
 A pull request that adds a contribution is expected to also update the records that track the project's history:
 
 - **[`CONTRIBUTORS.md`](CONTRIBUTORS.md)** — add yourself, in alphabetical order, if this is your first contribution. You may use your real name or a pseudonym. Please link to your profile.
-- **[`CHANGELOG.md`](CHANGELOG.md)** — document what changed, under the version it will ship in.
+- **[`CHANGELOG.md`](CHANGELOG.md)** — document what changed, under the version it will ship in (see [changelog](docs/developer-manual/conventions/changelog-entries.md)).
 - **[`docs/`](docs/README.md)** — if your change affects how the project is built, used, or contributed to, update or add the relevant article. A new article is listed in the index of its manual ([Developer Manual](docs/developer-manual/README.md) or [User Manual](docs/user-manual/README.md)), in its section's index where it has one, and in the `nav` of [`properdocs.yml`](properdocs.yml).
 
 ## Licensing of Contributions

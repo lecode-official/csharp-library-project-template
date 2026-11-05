@@ -14,7 +14,7 @@ The MarkdownLint hook runs `markdownlint-cli2` without `--fix`. It reports a fin
 
 ## The Hooks Need `jq`
 
-Claude Code hands a hook its input as JSON on standard input, and every `PostToolUse` hook reads the edited file's path out of it with [`jq`](https://jqlang.org/). **Without `jq` installed, every one of them silently does nothing.** The path comes out empty, and an empty path is one of the cases each hook skips. Install `jq` through the system's package manager (see [developer setup](developer-setup.md#jq-for-the-claude-code-hooks)).
+Claude Code hands a hook its input as JSON on standard input, and every `PostToolUse` hook reads the edited file's path out of it with [`jq`](https://jqlang.org/). **Without `jq` installed, every one of them silently does nothing.** The path comes out empty, and an empty path is one of the cases each hook skips. Install `jq` through the system's package manager (see [installing the tools](../development-setup/installing-the-tools.md#jq-for-the-claude-code-hooks)).
 
 ## Which Files Reach Which Hook
 
@@ -55,4 +55,4 @@ Claude Code reads [`AGENTS.md`](../../../AGENTS.md) as its project instructions 
 - [Tooling](README.md) — the formatting and linting tools these hooks run.
 - [`AGENTS.md`](../../../AGENTS.md) — the rules an assistant follows beyond what a hook can enforce.
 - [Architecture](../architecture.md) — why `build/` is excluded from every hook.
-- [Developer setup](developer-setup.md) — installing `jq` and the tools the hooks run.
+- [Installing the tools](../development-setup/installing-the-tools.md) — installing `jq` and the tools the hooks run.

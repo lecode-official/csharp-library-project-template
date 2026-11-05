@@ -2,12 +2,13 @@
 
 This section covers the tools used to work on the template: the formatter, the linters, the editor setup, and the Claude Code hooks. Each article covers the tool as this repository configures it for its own files, and how the same tool reaches the template body.
 
-1. [Developer Setup](developer-setup.md)
-2. [Visual Studio Code Integration](editor-integration.md)
-3. [Code Formatting (dprint)](formatting-dprint.md)
-4. [Markdown Linting (MarkdownLint)](linting-markdownlint.md)
-5. [Spell Checking (CSpell)](spell-checking-cspell.md)
-6. [Claude Code Hooks](claude-code-hooks.md)
+1. [Visual Studio Code Integration](editor-integration.md)
+2. [Code Formatting (dprint)](formatting-dprint.md)
+3. [Markdown Linting (MarkdownLint)](linting-markdownlint.md)
+4. [Spell Checking (CSpell)](spell-checking-cspell.md)
+5. [Claude Code Hooks](claude-code-hooks.md)
+
+Installing the tools is covered by the [development setup](../development-setup/README.md).
 
 ## Two Configurations for Every Tool
 

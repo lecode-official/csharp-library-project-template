@@ -1,6 +1,6 @@
 # Versioning
 
-This article covers the version number: what it means here, when it is raised, everywhere it has to be raised at once, and how a release is recorded.
+This article covers the version number: what it means here, when it is raised, everywhere it has to be raised at once, and how a release is tagged. The [changelog](changelog-entries.md) that records each release has an article of its own.
 
 ## One Number for the Whole Repository
 
@@ -37,7 +37,7 @@ The version lives in two manifests, and nowhere else by default:
 
 - **`source/[[ library_slug ]]/[[ product_name ]].csproj`** — the `<Version>` property, which is what NuGet publishes.
 - **`package.json`** — the `"version"` field. The npm manifest is private and only declares the tooling, so nothing publishes it, but it is a manifest of this repository all the same, and it carries the same number rather than one of its own.
-- **`CHANGELOG.md`** — the release's own heading and date line.
+- **`CHANGELOG.md`** — the release's own heading and date line (see [changelog](changelog-entries.md)).
 - **Any version literal in the source** — a version a running program reports about itself.
 
 The sample app and the unit test project deliberately carry **no** version: neither is published, both set `IsPackable` to `false`, so a version on them would be a number nobody reads and everybody forgets to bump.
@@ -46,26 +46,11 @@ A repository that later grows a second publishable library raises both together,
 
 A version literal in the source is kept in step by nothing but this list. It is the one version an outside party actually reads. Reading it from the assembly instead would be better than remembering it — `Assembly.GetExecutingAssembly().GetName().Version` — and is worth doing the moment a second place needs it.
 
-## The Changelog
-
-[`CHANGELOG.md`](../../../CHANGELOG.md) at the repository root lists every release, newest first. Each release is a level-two heading naming the version, followed by a single italic paragraph with the release date, followed by a flat list of changes:
-
-```markdown
-## Release v0.3.0
-
-*Released on August 12, 2026.*
-
-- Change 1
-- Change 2
-```
-
-An unreleased version's date paragraph reads `*Release date to be determined.*` until it ships. The entries follow the same prose rules as everything else here: past tense, periods rather than semicolons, and backticks around file names, paths, identifiers, and code.
-
 ## The Release Tags
 
-Every release has an **annotated** Git tag named exactly like the version, prefixed with `v` (`v0.1.0`, `v0.2.0`, and so on), pointing at the commit that bumped the version. Lightweight tags are not used, because the tag message is part of the release record. A release is not complete until its tag exists and is pushed.
+Every release has an annotated Git tag named exactly like the version, prefixed with `v` (`v0.1.0`, `v0.2.0`, and so on), pointing at the merge commit that brought the release into `[[ default_branch ]]`. The [Git workflow](git-workflow.md#tags) explains what a tag is and the rules every tag follows. A release is not complete until its tag exists and is pushed.
 
-The tag message repeats the release's changelog entry in plain text, and follows the rules in [tag messages](commit-messages.md#tag-messages). Write it into a file first and pass it with `-F`, so the wrapping is preserved exactly rather than being re-wrapped or mangled by a shell quoting mistake. Tags are pushed explicitly — pushing a branch does not carry its tags along:
+The tag message repeats the release's [changelog](changelog-entries.md) entry in plain text, and follows the rules in [tag messages](commit-messages.md#tag-messages). Write it into a file first and pass it with `-F`, so the wrapping is preserved exactly rather than being re-wrapped or mangled by a shell quoting mistake. Tags are pushed explicitly — pushing a branch does not carry its tags along:
 
 ```shell
 git tag -a v0.1.0 <commit> -F <message-file>
@@ -80,7 +65,15 @@ git tag -n99 v0.1.0    # one tag's message
 git show v0.1.0        # the message plus the commit it points at
 ```
 
+The GitHub Release is created after the tag is pushed, from that existing tag. Typing a new tag name into GitHub's release form makes GitHub create the tag itself, and a tag GitHub creates is always lightweight, so the release would lose its tag message. Pick the pushed tag in the form instead, or create the release from it with the GitHub CLI, which also takes the release notes from the tag message:
+
+```shell
+gh release create v0.1.0 --verify-tag --notes-from-tag --title "Release v0.1.0"
+```
+
 A tag that turns out to be wrong is deleted with `git tag -d v0.1.0` and recreated. Do that only while the tag is still local. Once it is pushed, other clones have it and it is treated as immutable — release a new version instead.
+
+After the release pull request is merged, `[[ integration_branch ]]` is fast-forwarded to `[[ default_branch ]]` (see [bringing the integration branch back in step](git-workflow.md#bringing-the-integration-branch-back-in-step)). Creating and pushing a tag, and the fast-forward, only happen when they were asked for (see [Git workflow](git-workflow.md#the-working-tree-belongs-to-the-author)).
 
 ## Package Validation
 
@@ -94,7 +87,8 @@ A package built on a GitHub Actions runner is deterministic. The root [`Director
 
 ## Related
 
-- [Git workflow](git-workflow.md) — who runs which Git commands, which includes creating and pushing a release tag.
+- [Git workflow](git-workflow.md) — what a tag is, bringing `[[ integration_branch ]]` back in step after a release, and who runs which Git commands.
 - [Commit messages](commit-messages.md) — how the bump is described, and the [tag message](commit-messages.md#tag-messages) rules.
-- [Markdown style](markdown-style.md) — the conventions the changelog is written to.
+- [Changelog](changelog-entries.md) — the release's entry, which the tag message repeats.
+- [GitHub workflow](github-workflow.md) — the release issue, the release pull request, and the milestone.
 - [Dependency management](dependency-management.md) — the lock files that move with the project files.

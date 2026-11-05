@@ -7,9 +7,9 @@
 # document the template in the template, and to lint the template's own files with different settings than the files it generates
 _subdirectory: template
 
-# The oldest Copier version the template supports; the template does not depend on a feature introduced in a specific release, so the floor is the
-# oldest version the template was tested with; the continuous integration renders with the exact version pinned in ".github/workflows/template.yml"
-_min_copier_version: "9.5.0"
+# The oldest Copier version the template supports, which is the first release that passes "_copier_operation" to the "_exclude" patterns below; the
+# continuous integration renders with the exact version pinned in ".github/workflows/template.yml"
+_min_copier_version: "9.6.0"
 
 # By default, files that should be processed by the Jinja templating engine, which add the ".jinja" extension to the file name (in addition to the
 # original extension); unfortunately, many tools that are used during the development of this template do not work with the ".jinja" file extension,
@@ -47,18 +47,70 @@ _exclude:
   - /node_modules
   - /.venv
 
-# Files that every project keeps, but fills with its own content: the template only provides a starting point for them, so Copier creates them when a
-# project is generated, but never touches them again in an update, and a template change to one of them can neither conflict with the project's own
-# content nor bring back a placeholder the project has long replaced (see docs/project-template/rendering-and-updating.md); only files a project
-# keeps belong here, because Copier also re-creates a listed file that a project has deleted, on every update, which is why the placeholder
-# "Greeter" class and its tests are deliberately absent: a project deletes them, and without an entry here, an update leaves the deletion alone
-_skip_if_exists:
-  - /README.md
-  - /CHANGELOG.md
-  - /CONTRIBUTORS.md
-  - /docs/user-manual/getting-started.md
-  - /source/*/README.md
-  - /source/sample-app/Program.cs
+  # The patterns that only apply to an update exclude the files that every project fills with its own content, and may also rename or delete: the
+  # read mes, the changelog, the list of contributors, the getting started article and the index of the User Manual, the sample app, and the logo with
+  # its files, its colors, and the article that describes it; Copier creates them when a project is generated, but an update neither changes them nor
+  # creates them again, so a template change can neither conflict with a project's own content nor bring back a placeholder the project has replaced
+  # or deleted, and it only reaches a project through the update message and the migration guide (see
+  # docs/project-template/rendering-and-updating.md); this replaces "_skip_if_exists", which re-creates a listed file that a project has deleted on
+  # every update; the placeholder "Greeter" class and its tests are deliberately not listed, so that a template change they have to follow, such as a
+  # new analyzer rule, still reaches a project that keeps them
+  - "[% if _copier_operation == 'update' %]/README.md[% endif %]"
+  - "[% if _copier_operation == 'update' %]/CHANGELOG.md[% endif %]"
+  - "[% if _copier_operation == 'update' %]/CONTRIBUTORS.md[% endif %]"
+  - "[% if _copier_operation == 'update' %]/design[% endif %]"
+  - "[% if _copier_operation == 'update' %]/docs/assets/favicon[% endif %]"
+  - "[% if _copier_operation == 'update' %]/docs/assets/images[% endif %]"
+  - "[% if _copier_operation == 'update' %]/docs/assets/styles/brand-colors.css[% endif %]"
+  - "[% if _copier_operation == 'update' %]/docs/developer-manual/logo-design.md[% endif %]"
+  - "[% if _copier_operation == 'update' %]/docs/user-manual/README.md[% endif %]"
+  - "[% if _copier_operation == 'update' %]/docs/user-manual/getting-started.md[% endif %]"
+  - "[% if _copier_operation == 'update' %]/source/*/README.md[% endif %]"
+  - "[% if _copier_operation == 'update' %]/source/sample-app/Program.cs[% endif %]"
+
+# The message shown after a project is generated; it only lists what has to happen before the first commit, because continuous integration fails
+# without the lock files, and points to the generated project's first steps article for everything else, so that the steps are written down in one
+# place, inside the project, where they stay readable after the terminal is closed (see docs/project-template/rendering-and-updating.md)
+_message_after_copy: |-
+  Generated [[ product_name ]]. Before the first commit, in the new project:
+
+    git init --initial-branch=[[ default_branch ]]
+    npm install
+    dotnet restore "source/[[ product_name ]].slnx"
+
+  npm install writes package-lock.json, and dotnet restore writes a packages.lock.json for every project. Commit all of them with the
+  first commit, since continuous integration fails without them.
+
+  Everything else, from setting up GitHub to replacing the placeholder logo, is described in docs/developer-manual/first-steps.md.
+
+# The message shown after a project is updated; a message cannot tell which version the project was updated from, because no variable holds it outside
+# of migrations, which would need "--trust", so the version-specific hints are worded for every project that updates from before a release, newest
+# first, and each release adds its own; the migration guide on GitHub covers every hint in detail (see docs/project-template/migration-guide.md)
+_message_after_update: |-
+  Updated [[ product_name ]] to the newest version of the C# library project template. After every update:
+
+  - Resolve the conflicts Copier left, as conflict markers in the files or as .rej files next to them.
+  - Run "npm install" if package.json changed, and "dotnet restore" if Directory.Packages.props changed, so that the lock files are
+    brought up to date, and commit them.
+  - Read the template's changelog for every release since the previous update:
+    https://github.com/lecode-official/csharp-library-project-template/blob/main/CHANGELOG.md
+
+  Copier never updates the files a project fills with its own content, such as README.md and the logo. When one of them changed in the
+  template, it is listed below, so that it can be updated by hand.
+
+  When updating from a version before v1.1.0:
+
+  - README.md: replace the title line, replace the "Developer Setup" section, and remove the "Visual Studio Code Integration" section.
+  - Logo: if the project still uses the placeholder logo, copy docs/assets/images/header-logo-*.svg from a fresh render, since the new
+    title line expects them cropped to 40 pixels high. From now on, an update leaves the logo files alone.
+  - .NET SDK: the version is an answer, so an update keeps it; raise it to 10.0.403 or 10.0.114 for the security fixes of .NET 10.0.14,
+    with "copier update --defaults --data dotnet_sdk_version=10.0.403".
+  - GitHub: create the new "Dependabot:" labels and the "Type: Release" label with the label script in
+    docs/developer-manual/development-setup/setting-up-github.md, delete the labels Dependabot created itself, and add the new labels to
+    the open Dependabot pull requests.
+
+  The migration guide describes every step in detail, for every release:
+  https://github.com/lecode-official/csharp-library-project-template/blob/main/docs/project-template/migration-guide.md
 
 # Questions that Copier will ask upon project creation; the answers will be recorded in the ".copier-answers.yml" file; if the answers file already
 # exists, the questions will be answered automatically, which is helpful when an existing project is updated to the latest version of the template;
@@ -205,14 +257,14 @@ target_framework:
 # bands named in the help, are raised whenever a new SDK is released (see docs/project-template/questions.md)
 dotnet_sdk_version:
   type: str
-  default: "[% if target_framework == 'net10.0' %]10.0.402[% endif %]"
+  default: "[% if target_framework == 'net10.0' %]10.0.403[% endif %]"
   help: >-
     The .NET SDK version pinned exactly in "global.json". The feature bands of .NET 10 that still receive servicing updates are 10.0.4xx (newest
-    tooling, currently 10.0.402) and 10.0.1xx (the original band, currently 10.0.113). Both carry the same runtime and the same security fixes. Any
+    tooling, currently 10.0.403) and 10.0.1xx (the original band, currently 10.0.114). Both carry the same runtime and the same security fixes. Any
     other released SDK version of the target framework's major version is accepted as well.
   validator: >-
     [% if not dotnet_sdk_version | regex_search('^[0-9]+\\.[0-9]+\\.[0-9]{3}$') %]The .NET SDK version must be a full release version, e.g.,
-    "10.0.402".[% elif not dotnet_sdk_version.startswith(target_framework[3:] ~ '.') %]The .NET SDK version must belong to the target framework, i.e.,
+    "10.0.403".[% elif not dotnet_sdk_version.startswith(target_framework[3:] ~ '.') %]The .NET SDK version must belong to the target framework, i.e.,
     start with "[[ target_framework[3:] ]].".[% endif %]
 
 license:

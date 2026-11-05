@@ -29,7 +29,8 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 - **Adding, changing, or removing a question or its validator, including the .NET SDK default and bands** → [docs/project-template/questions.md](docs/project-template/questions.md).
 - **Anything touching `LICENSE` or `licenses/`** → [docs/project-template/licensing.md](docs/project-template/licensing.md). Check its table before substituting anything into a license text.
 - **Adding a file to the body, or verifying a change** → [docs/project-template/authoring.md](docs/project-template/authoring.md) and [docs/conventions/testing.md](docs/conventions/testing.md).
-- **What a consumer does with the template, or `_skip_if_exists`** → [docs/project-template/rendering-and-updating.md](docs/project-template/rendering-and-updating.md).
+- **What a consumer does with the template, the files an update leaves alone, or the messages after copying and updating** → [docs/project-template/rendering-and-updating.md](docs/project-template/rendering-and-updating.md).
+- **What a project does by hand when it updates to a release** → [docs/project-template/migration-guide.md](docs/project-template/migration-guide.md).
 - **The template's own continuous integration, `.github/workflows/template.yml`** → [docs/conventions/testing.md](docs/conventions/testing.md#continuous-integration).
 - **Dependabot, at the root or in the body, or the Copier version the workflow pins** → [docs/conventions/dependency-management.md](docs/conventions/dependency-management.md).
 - **C# in the body, and placeholders in code** → [docs/conventions/csharp-style.md](docs/conventions/csharp-style.md).
@@ -38,10 +39,15 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 - **Line length, or a placeholder that changes a line's width** → [docs/conventions/line-length.md](docs/conventions/line-length.md).
 - **Naming a file or directory, or putting a placeholder in a path** → [docs/conventions/file-and-naming-conventions.md](docs/conventions/file-and-naming-conventions.md).
 - **Writing commit or tag messages** → [docs/conventions/commit-messages.md](docs/conventions/commit-messages.md).
-- **Committing, staging, tagging, or anything else touching Git** → [docs/conventions/git-workflow.md](docs/conventions/git-workflow.md).
-- **Releasing a template version, or the changelog** → [docs/conventions/versioning.md](docs/conventions/versioning.md).
+- **Branches, branch names, rebasing, committing, staging, tagging, or anything else touching Git** → [docs/conventions/git-workflow.md](docs/conventions/git-workflow.md).
+- **Issues, their titles, labels, milestones, pull requests, merging a pull request, or GitHub Releases** → [docs/conventions/github-workflow.md](docs/conventions/github-workflow.md).
+- **Preparing or making a release: the release issue, the release branch, and the release pull request** → [docs/conventions/github-workflow.md](docs/conventions/github-workflow.md#releases).
+- **Releasing a template version: the version number and the tag** → [docs/conventions/versioning.md](docs/conventions/versioning.md).
+- **Writing a changelog entry, or the date of an unreleased version** → [docs/conventions/changelog-entries.md](docs/conventions/changelog-entries.md).
 - **Adding or upgrading a dependency, at the root or in the body** → [docs/conventions/dependency-management.md](docs/conventions/dependency-management.md).
-- **Installing what working on the template needs** → [docs/tooling/developer-setup.md](docs/tooling/developer-setup.md).
+- **Installing what working on the template needs** → [docs/development-setup/installing-the-tools.md](docs/development-setup/installing-the-tools.md).
+- **The labels or the repository settings on GitHub, and the scripts that create them** → [docs/development-setup/setting-up-github.md](docs/development-setup/setting-up-github.md).
+- **Installing Visual Studio Code and its extensions** → [docs/development-setup/setting-up-visual-studio-code.md](docs/development-setup/setting-up-visual-studio-code.md).
 - **Formatting, linting, spell checking, or the editor setup** → [docs/tooling/](docs/tooling/README.md).
 - **The Claude Code hooks, at the root or in the body** → [docs/tooling/claude-code-hooks.md](docs/tooling/claude-code-hooks.md).
 - **The conventions the *generated* project follows** → [template/docs/developer-manual/](template/docs/developer-manual/README.md). Those are the rules for the code the template emits, and they are what a change to `template/` has to keep satisfying.
@@ -51,8 +57,9 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 **This is important.** A change here is not done until the documentation reflects it:
 
 - A new or changed question, default, or validator updates the tables in [docs/project-template/questions.md](docs/project-template/questions.md), including its validation rule. A new SDK release raises the `dotnet_sdk_version` default and the bands in its help, and the SDK versions in the render matrix of `.github/workflows/template.yml`.
-- A new or changed `_skip_if_exists` entry updates the list in [docs/project-template/rendering-and-updating.md](docs/project-template/rendering-and-updating.md#files-the-template-only-creates).
-- A change to `.github/workflows/template.yml` or a Dependabot configuration updates [docs/conventions/testing.md](docs/conventions/testing.md) or [docs/conventions/dependency-management.md](docs/conventions/dependency-management.md).
+- A change that a generated project has to carry over by hand, such as a change to the read me, to the logo, or to another file the template only creates, adds a hint to `_message_after_update` in `copier.yml` and a step to the release's section of [docs/project-template/migration-guide.md](docs/project-template/migration-guide.md), as [writing the update message](docs/project-template/rendering-and-updating.md#writing-the-update-message) describes.
+- A new or changed `_exclude` pattern that only applies to an update updates the list in [docs/project-template/rendering-and-updating.md](docs/project-template/rendering-and-updating.md#files-the-template-only-creates).
+- A change to `.github/workflows/template.yml` or a Dependabot configuration updates [docs/conventions/testing.md](docs/conventions/testing.md) or [docs/conventions/dependency-management.md](docs/conventions/dependency-management.md). A new ecosystem in a Dependabot configuration gets its own `Dependabot:` label, in both the GitHub workflow article and the label script of the development setup, on the same side of the split.
 - A new license updates the table in [docs/project-template/licensing.md](docs/project-template/licensing.md) **and** `scripts/refresh-licenses.py`, and gets an entry in the render matrix of `.github/workflows/template.yml`.
 - A new article under `template/docs/` is listed in three places, all hand-maintained: the generated project's documentation index, its section index, and the `nav` in `template/properdocs.yml`.
 - A new article at the root goes into the section directory under `docs/` it belongs to, and is listed in [docs/README.md](docs/README.md) and in that section's `README.md`. A new section, and a new article in the project template section, is also listed in [README.md](README.md).

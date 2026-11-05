@@ -66,9 +66,9 @@ Install scripts are blocked by default. The one package that genuinely needs one
 
 ## Dependabot
 
-Pinning everything means nothing is ever upgraded implicitly, so [`.github/dependabot.yml`](../../../.github/dependabot.yml) is what keeps the pins from going stale. Once a week, Dependabot checks the GitHub Actions actions (their commit SHAs and version comments), the NuGet packages in `Directory.Packages.props`, the .NET SDK in `global.json`, the npm packages, and the Python packages in `requirements.txt`, and opens a pull request for whatever has a newer release. All updates of an ecosystem are grouped into a single pull request, so each arrives as one reviewable change rather than a pull request per package.
+Pinning everything means nothing is ever upgraded implicitly, so [`.github/dependabot.yml`](../../../.github/dependabot.yml) is what keeps the pins from going stale. Once a week, Dependabot checks the GitHub Actions actions (their commit SHAs and version comments), the NuGet packages in `Directory.Packages.props`, the .NET SDK in `global.json`, the npm packages, and the Python packages in `requirements.txt`, and opens a pull request for whatever has a newer release. All updates of an ecosystem are grouped into a single pull request, so each arrives as one reviewable change rather than a pull request per package. Each pull request is labeled with the `Dependabot:` label of its ecosystem and opened against `[[ integration_branch ]]`, like every other pull request, except for a security update, which is pointed at the integration branch and labeled by hand (see [GitHub workflow](github-workflow.md#dependabot-pull-requests)).
 
-A Dependabot pull request is reviewed like any other, and two things need a hand:
+A Dependabot pull request is reviewed like any other (see [GitHub workflow](github-workflow.md#dependabot-pull-requests)), and two things need a hand:
 
 - **The `allowScripts` key of `dprint`** is not updated by Dependabot. When the pull request bumps `dprint`, update the key in `package.json` in the same pull request, or the install script silently stops being allowed.
 - **An analyzer upgrade** can bring new rules, and the Release build in continuous integration fails on their findings, so it may need the fixes or configuration described above before it can be merged.
@@ -79,11 +79,11 @@ The NuGet pull request has to bring the `packages.lock.json` files up to date as
 
 [`requirements.txt`](../../../requirements.txt) pins the exact versions of ProperDocs, its theme and its plugins. Unlike the NuGet and npm dependencies, there is **no lock file** recording transitive versions — only the direct dependencies are pinned.
 
-Install it inside a virtual environment, never against the system or user Python installation (see [developer setup](../tooling/developer-setup.md)). Without one, `pip` either installs the packages globally, where they are invisible to every other project, or refuses outright with an externally-managed-environment error.
+Install it inside a virtual environment, never against the system or user Python installation (see [installing the tools](../development-setup/installing-the-tools.md#python-and-the-documentation-website)). Without one, `pip` either installs the packages globally, where they are invisible to every other project, or refuses outright with an externally-managed-environment error.
 
 ## Related
 
-- [Developer setup](../tooling/developer-setup.md) — running these installs on a fresh machine.
+- [Installing the tools](../development-setup/installing-the-tools.md) — running these installs on a fresh machine.
 - [Continuous integration](../tooling/continuous-integration.md) — where `--locked-mode`, the lock-file verification, and `npm ci` act as drift detectors, and where Dependabot is configured.
 - [Architecture](../architecture.md) — where the project files that set these properties live.
 - [Versioning](versioning.md) — how the project's own version moves.

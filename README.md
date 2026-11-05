@@ -12,17 +12,7 @@ copier copy gh:lecode-official/csharp-library-project-template my-new-library
 
 Copier asks a handful of questions and writes the rendered project into `my-new-library`. Every answer is validated, so an answer that would break the generated project is rejected with a message that says what is allowed. **No `--trust` flag is needed** — this template deliberately uses no tasks, no migrations and no Jinja extensions, so nothing runs on your machine during generation.
 
-Afterwards, in the generated project:
-
-```shell
-cd my-new-library
-git init
-npm install
-dotnet restore "source/<Product Name>.slnx"
-dotnet test --solution "source/<Product Name>.slnx"
-```
-
-The template ships no lock files, so this first `npm install` resolves and writes `package-lock.json`, and `dotnet restore` writes a `packages.lock.json` per project. Commit them with the first commit. From then on, the project installs with `npm ci`, and its continuous integration fails without them. Enable GitHub Pages with "GitHub Actions" as its source as well, or the workflow that publishes the documentation website fails.
+Afterwards, Copier lists what to do before the first commit: create the Git repository, install the npm packages, and restore the NuGet packages. The template ships no lock files, so this first `npm install` writes `package-lock.json`, and `dotnet restore` writes a `packages.lock.json` per project. Commit them with the first commit, since the project's continuous integration fails without them. Everything else, from setting up GitHub to replacing the placeholder logo, is described in the generated project's own [first steps](template/docs/developer-manual/first-steps.md).
 
 The generated project builds, tests, formats and lints green out of the box. The library it ships is a placeholder class that exists so all of that is true on day one — replace it with the real thing.
 
@@ -36,7 +26,7 @@ A project generated from this template records its answers in `.copier-answers.y
 copier update
 ```
 
-Copier re-renders the old and the new version of the template and applies the difference to your working tree, leaving conflicts for you to resolve. Commit your work first — `copier update` requires a clean working tree. Files that every project fills with its own content, such as the read me and the changelog, are created once and never touched by an update (see [rendering and updating](docs/project-template/rendering-and-updating.md#files-the-template-only-creates)).
+Copier re-renders the old and the new version of the template and applies the difference to your working tree, leaving conflicts for you to resolve. Commit your work first — `copier update` requires a clean working tree. Afterwards, Copier lists what to do by hand, and the [migration guide](docs/project-template/migration-guide.md) covers it in detail, release by release. Files that every project fills with its own content, such as the read me and the changelog, are created once and never touched by an update (see [rendering and updating](docs/project-template/rendering-and-updating.md#files-the-template-only-creates)).
 
 ## How This Template Is Laid Out
 
@@ -59,24 +49,27 @@ Everything outside `template/` belongs to the template itself and is never copie
 
 ## Documentation
 
-The [documentation index](docs/README.md) lists every article. It is split into three sections:
+The [documentation index](docs/README.md) lists every article. It is split into four sections:
 
 - [Project template](docs/project-template/README.md) — the repository as a Copier template.
   - [Template structure](docs/project-template/template-structure.md) — the two-level layout, and the four problems it solves.
   - [Questions](docs/project-template/questions.md) — every question, what it feeds, and how to add one.
   - [Licensing](docs/project-template/licensing.md) — how the `LICENSE` file is produced, and which licenses take a copyright substitution.
   - [Rendering and updating](docs/project-template/rendering-and-updating.md) — generating a project, and keeping it in step with the template.
+  - [Migration guide](docs/project-template/migration-guide.md) — what a project does by hand when it updates, release by release.
   - [Authoring](docs/project-template/authoring.md) — the delimiters, adding a file, and verifying a change.
+- [Development setup](docs/development-setup/README.md) — what to install and set up before working on the template.
 - [Conventions](docs/conventions/README.md) — how the files on both sides of the split are written, styled, named, committed, and released.
 - [Tooling](docs/tooling/README.md) — the formatter, the linters, the editor setup, and the Claude Code hooks used to work on the template.
 
 ## Requirements
 
-- **Copier 9.5.0 or newer**, the floor `copier.yml` declares with `_min_copier_version`. The template's continuous integration renders it with Copier 9.19.1.
+- **Copier 9.6.0 or newer**, the floor `copier.yml` declares with `_min_copier_version`. The template's continuous integration renders it with Copier 9.19.1.
 - **The .NET SDK** pinned by the generated project's `global.json`, to build what comes out.
 - **Node.js and Python**, for the generated project's linters and its documentation website respectively.
+- **The GitHub CLI**, optionally, to run the scripts that set up a repository on GitHub.
 
-Working on the template's own files needs only Node.js, for the formatter and the linters that check them. Verifying a change to the template body also needs Copier and everything a render needs, the .NET SDK and Python (see [developer setup](docs/tooling/developer-setup.md)).
+Working on the template's own files needs only Git and Node.js, for the formatter and the linters that check them. Verifying a change to the template body also needs Copier and everything a render needs. The [development setup](docs/development-setup/README.md) covers installing all of it, setting up the repository on GitHub, and setting up Visual Studio Code.
 
 ## Continuous Integration
 

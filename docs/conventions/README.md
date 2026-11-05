@@ -9,9 +9,11 @@ This section covers the conventions for authoring the template: how the files in
 5. [File and Naming Conventions](file-and-naming-conventions.md)
 6. [Commit Messages](commit-messages.md)
 7. [Git Workflow](git-workflow.md)
-8. [Versioning](versioning.md)
-9. [Dependency Management](dependency-management.md)
-10. [Testing](testing.md)
+8. [GitHub Workflow](github-workflow.md)
+9. [Versioning](versioning.md)
+10. [Changelog](changelog-entries.md)
+11. [Dependency Management](dependency-management.md)
+12. [Testing](testing.md)
 
 ## Two Sets of Files, One Set of Rules
 

@@ -12,7 +12,7 @@ Three `PostToolUse` hooks run after `Edit`, `Write` and `NotebookEdit`, and chec
 
 A hook that finds a problem exits with the status code `2` and writes the tool's output to standard error, which is what makes the assistant read the finding and fix it rather than let it scroll past. Each hook is also guarded so that it does nothing when its tool is not installed in `node_modules`, so a fresh clone without `npm ci` stays quiet rather than failing confusingly.
 
-Every hook reads the edited file's path from the JSON that Claude Code passes on standard input, with [`jq`](https://jqlang.org/). **Without `jq` installed, every hook silently does nothing**, because the path comes out empty and an empty path is skipped. Install it alongside Node.js (see [developer setup](developer-setup.md)).
+Every hook reads the edited file's path from the JSON that Claude Code passes on standard input, with [`jq`](https://jqlang.org/). **Without `jq` installed, every hook silently does nothing**, because the path comes out empty and an empty path is skipped. Install it alongside Node.js (see [installing the tools](../development-setup/installing-the-tools.md#nodejs-and-npm)).
 
 The settings also allow the `Agent` tool, so delegating to a subagent needs no confirmation.
 

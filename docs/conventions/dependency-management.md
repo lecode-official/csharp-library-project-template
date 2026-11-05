@@ -20,14 +20,14 @@ The root needs very little, and all of it is pinned:
 
 ## Dependabot at the Root
 
-[`.github/dependabot.yml`](../../.github/dependabot.yml) checks two ecosystems at the root once a week, and groups each one's updates into a single pull request:
+[`.github/dependabot.yml`](../../.github/dependabot.yml) checks two ecosystems at the root once a week, groups each one's updates into a single pull request, labels it with the `Dependabot:` label of its ecosystem, and opens it against `development`, like every other pull request (see [GitHub workflow](github-workflow.md#dependabot-pull-requests)):
 
 - **`github-actions`**, for the actions of the root's own workflow. Its pull request updates both the commit SHA and the version in the comment.
 - **`npm`**, for the formatter and the linters in the root `package.json`.
 
 It does not reach into `template/`, whose dependencies are raised deliberately and verified by rendering. A root npm pull request is therefore never complete on its own. The root and the body run the same tool versions (see below), so mirror every version it raises in `template/package.json` in the same change, update the `allowScripts` key of `dprint` in both files when its version changes, and render before merging.
 
-The body ships a Dependabot configuration of its own, `template/.github/dependabot.yml`, which keeps a generated project's actions, NuGet packages, .NET SDK, npm and pip dependencies up to date once that project exists. It never runs in this repository, because Dependabot only reads the configuration at `.github/dependabot.yml`.
+The body ships a Dependabot configuration of its own, `template/.github/dependabot.yml`, which keeps a generated project's actions, NuGet packages, .NET SDK, npm and pip dependencies up to date once that project exists, with a `Dependabot:` label for each of them. It never runs in this repository, because Dependabot only reads the configuration at `.github/dependabot.yml`.
 
 ## The Body's Dependencies
 
@@ -70,5 +70,5 @@ The upgrade reaches existing generated projects through `copier update`, as an o
 - [Questions](../project-template/questions.md) — the SDK version and the target framework.
 - [Testing](testing.md) — the continuous integration that renders with the pinned Copier.
 - [Licensing](../project-template/licensing.md) — the vendored license texts and where they are pinned.
-- [Developer setup](../tooling/developer-setup.md) — installing the root's dependencies.
+- [Installing the tools](../development-setup/installing-the-tools.md) — installing the root's dependencies.
 - [Dependency management](../../template/docs/developer-manual/conventions/dependency-management.md) — the generated project's full rule set.

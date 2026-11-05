@@ -39,6 +39,10 @@ XML documentation comments are the one exception: they are XML, not Markdown, so
 
 Never use horizontal rules (`---`) to separate sections. Headings already provide the structure. A `---` at the top of a file is only ever front matter, never a divider.
 
+## No Comments
+
+Never write an HTML comment (`<!-- -->`) in a Markdown file. A Markdown file is meant to read well as plain text, without a renderer, and a comment is clutter in the source that is invisible once rendered. An explanation belongs in the prose, or in the article about the thing it explains. Inline HTML in general is limited to the few elements MarkdownLint allows (see [MarkdownLint](../tooling/linting-markdownlint.md)).
+
 ## Related
 
 - Markdown linting: [MarkdownLint](../tooling/linting-markdownlint.md).

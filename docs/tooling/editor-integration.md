@@ -1,6 +1,6 @@
 # Visual Studio Code Integration
 
-This article covers the Visual Studio Code setup under the root's [`.vscode/`](../../.vscode/), and how it differs from the editor configuration the template body ships.
+This article covers the Visual Studio Code setup under the root's [`.vscode/`](../../.vscode/), and how it differs from the editor configuration the template body ships. Installing the editor and its extensions is covered by [setting up Visual Studio Code](../development-setup/setting-up-visual-studio-code.md).
 
 ## Shared and Local Configuration
 
@@ -24,7 +24,7 @@ The rules are the generated project's rules:
 
 - **A 150-character ruler**, matching the root's `lineWidth` (see [line length](../conventions/line-length.md)).
 - **File associations** that map `.cspell.json`, `dprint.json`, `global.json`, `dotnet-tools.json` and `.vscode/*.json` to JSONC, so their comments are not reported as syntax errors.
-- **Exclusions and file nesting**, which nest the configuration files under `.editorconfig`, `copier.yml`, `package.json` and `README.md`.
+- **Exclusions and file nesting**, which nest the configuration files under `.editorconfig`, `copier.yml`, `package.json` and `README.md`. Nesting matches file names regardless of their case and in every directory, so a documentation article is never named like a nested file. That is why the changelog article is [`changelog-entries.md`](../conventions/changelog-entries.md) rather than `changelog.md`, which would be nested under the `README.md` next to it.
 - **Branch protection** on `main`, and the same Git behavior a generated project has: the merge editor on conflicts, force-push allowed, rebase on sync.
 - **CSpell and MarkdownLint** pointed at the root's own [`.cspell.json`](../../.cspell.json) and [`.markdownlint.yml`](../../.markdownlint.yml), not at the body's.
 - **dprint as the default formatter**, with format-on-save on.
@@ -47,6 +47,6 @@ If you open `template/` on its own in the editor, Workspace Config Plus generate
 
 ## Related
 
-- [Developer setup](developer-setup.md) — installing the editor and its extensions.
+- [Setting up Visual Studio Code](../development-setup/setting-up-visual-studio-code.md) — what the editor is, and installing it and its extensions.
 - [Formatting (dprint)](formatting-dprint.md), [MarkdownLint](linting-markdownlint.md), [CSpell](spell-checking-cspell.md) — the tools these settings configure.
 - [Editor integration](../../template/docs/developer-manual/tooling/editor-integration.md) — the generated project's editor setup.
