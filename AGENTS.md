@@ -41,7 +41,8 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 - **Writing commit or tag messages** → [docs/conventions/commit-messages.md](docs/conventions/commit-messages.md).
 - **Branches, branch names, rebasing, committing, staging, tagging, or anything else touching Git** → [docs/conventions/git-workflow.md](docs/conventions/git-workflow.md).
 - **Issues, their titles, labels, milestones, pull requests, merging a pull request, or GitHub Releases** → [docs/conventions/github-workflow.md](docs/conventions/github-workflow.md).
-- **Releasing a template version** → [docs/conventions/versioning.md](docs/conventions/versioning.md).
+- **Preparing or making a release: the release issue, the release branch, and the release pull request** → [docs/conventions/github-workflow.md](docs/conventions/github-workflow.md#releases).
+- **Releasing a template version: the version number and the tag** → [docs/conventions/versioning.md](docs/conventions/versioning.md).
 - **Writing a changelog entry, or the date of an unreleased version** → [docs/conventions/changelog-entries.md](docs/conventions/changelog-entries.md).
 - **Adding or upgrading a dependency, at the root or in the body** → [docs/conventions/dependency-management.md](docs/conventions/dependency-management.md).
 - **Installing what working on the template needs** → [docs/development-setup/installing-the-tools.md](docs/development-setup/installing-the-tools.md).

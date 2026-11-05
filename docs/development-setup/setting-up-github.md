@@ -19,6 +19,7 @@ Type: Design|#E99695|The issue or pull request concerns visual design.
 Type: Documentation|#3545AF|The issue or pull request concerns the updating or adding of content to the documentation.
 Type: Idea or Request|#1D76DB|The issue or pull request concerns an idea or the request for adding a new feature.
 Type: Implementation|#006B75|The issue or pull request concerns the implementation of a new feature.
+Type: Release|#F9D0C4|The issue or pull request concerns the preparation of a release.
 Type: Testing & Linting|#FF7518|The issue or pull request concerns unit tests, integration tests, linting, or formatting.
 Priority: Critical|#B60205|The issue or pull request has a critical priority.
 Priority: High|#E99695|The issue or pull request has a high priority.

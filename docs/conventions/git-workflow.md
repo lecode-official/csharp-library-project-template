@@ -8,7 +8,7 @@ The repository has two long-lived branches and any number of short-lived ones:
 
 - **`main`** holds the released state of the template. Nothing is committed to it directly. It only ever receives a release, which merges `development` into it with a merge commit and is marked with a [tag](#tags).
 - **`development`** collects the finished work between two releases. Every work branch starts from it and is merged back into it.
-- **Work branches** each carry one feature or one bug fix. A work branch starts from the latest `development`, and it is merged back into it with a merge commit, never squashed and never rebased onto it, so that every commit of the branch stays in the history and the merge commit marks where the work came in.
+- **Work branches** each carry one feature, one bug fix, or the preparation of one release. A work branch starts from the latest `development`, and it is merged back into it with a merge commit, never squashed and never rebased onto it, so that every commit of the branch stays in the history and the merge commit marks where the work came in.
 
 A work branch lives only as long as its work: once it is merged, it is [deleted](#merged-branches-are-deleted).
 
@@ -18,6 +18,7 @@ A work branch is named after the kind of change it carries, followed by a short 
 
 - **`feature/`** for a new capability or any other change that is not a bug fix, as in `feature/changelog-article`.
 - **`fix/`** for a bug fix, as in `fix/readme-logo-alignment`.
+- **`release/`** for the preparation of a release, followed by the version instead of a description, as in `release/v1.1.0` (see [GitHub workflow](github-workflow.md#releases)).
 
 The description names the change, not the person or the date, and it stays short, since it ends up in the subject of the merge commit.
 

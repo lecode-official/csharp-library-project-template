@@ -35,7 +35,9 @@ A version that has not shipped yet already has its heading and collects its entr
 *Release date to be determined.*
 ```
 
-The period is part of it. Without it, MarkdownLint reads a paragraph that consists of nothing but emphasis as a heading in disguise and reports it. The last commit before the release replaces the paragraph with the release date, so that the date in the changelog and the date of the tag never disagree.
+The period is part of it. Without it, MarkdownLint reads a paragraph that consists of nothing but emphasis as a heading in disguise and reports it. The commit of the [release branch](github-workflow.md#releases) replaces the paragraph with the release date, so that the date in the changelog and the date of the release never disagree.
+
+The same commit tidies up the release's entries. They are written one change at a time, in the same change as the work, so by the end of a release some of them describe the same work twice, or in the wrong order. Just before the release, entries that describe the same work are merged into one, and the entries a reader has to act on come first.
 
 ## Writing the Entries
 
