@@ -6,6 +6,7 @@ All notable changes to the C# library project template are documented here, newe
 
 *Release date to be determined.*
 
+- Raised the minimum Copier version from 9.6.0 to 9.10.3. Before 9.10.3, an update from v1.0.0 deleted every file the template only creates, such as the read me, the changelog, and the logo, instead of leaving them alone. The continuous integration now renders and updates once with the minimum version, which it reads from `copier.yml`.
 - Added a job to the continuous integration of the template repository that renders the last release, updates it to the current commit with `copier update`, and fails on conflicts, on changes to the files the template only creates, and on a project that no longer passes its linters, tests, and packaging. Split the `Template` workflow into a `Linters` and a `Tests` workflow, like the generated project's.
 
 ## Release v1.1.0

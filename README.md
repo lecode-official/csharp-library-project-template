@@ -64,7 +64,7 @@ The [documentation index](docs/README.md) lists every article. It is split into 
 
 ## Requirements
 
-- **Copier 9.6.0 or newer**, the floor `copier.yml` declares with `_min_copier_version`. The template's continuous integration renders it with Copier 9.19.1.
+- **Copier 9.10.3 or newer**, the floor `copier.yml` declares with `_min_copier_version`. The template's continuous integration renders and updates it with Copier 9.19.1, and with that floor.
 - **The .NET SDK** pinned by the generated project's `global.json`, to build what comes out.
 - **Node.js and Python**, for the generated project's linters and its documentation website respectively.
 - **The GitHub CLI**, optionally, to run the scripts that set up a repository on GitHub.
