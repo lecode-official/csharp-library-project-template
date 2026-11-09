@@ -15,14 +15,14 @@ The root needs very little, and all of it is pinned:
 - **The dprint plugins** in the root [`dprint.json`](../../dprint.json) are pinned to an exact release URL.
 - **The verbatim license texts** are pinned to a tagged release of the SPDX license list, through `SPDX_LICENSE_LIST_VERSION` in [`scripts/refresh-licenses.py`](../../scripts/refresh-licenses.py). The choosealicense.com texts have no release tags, so they are pinned to a commit of the repository's `gh-pages` branch through `CHOOSE_A_LICENSE_COMMIT` instead. Review the diff of every refresh before keeping it (see [licensing](../project-template/licensing.md#where-the-texts-come-from)).
 - **Copier itself** is not pinned for consumers, since it runs on their machines, but `_min_copier_version` in [`copier.yml`](../../copier.yml) declares the oldest release the template works with. Raise it in the same change that starts relying on a newer Copier feature.
-- **The Copier the continuous integration renders with** is pinned to an exact version in [`.github/workflows/template.yml`](../../.github/workflows/template.yml), currently `copier==9.19.1`. Dependabot does not see a version in a `pip install` command, so raise it by hand, and render with the new version before keeping it.
-- **The actions** in that workflow are pinned to the full commit SHA of a release, with the version in a comment next to it, because a tag can be moved and a commit SHA cannot.
+- **The Copier the continuous integration renders with** is pinned to an exact version in [`.github/workflows/tests.yml`](../../.github/workflows/tests.yml), currently `copier==9.19.1`, in both of its jobs. Dependabot does not see a version in a `pip install` command, so raise it by hand, and render with the new version before keeping it.
+- **The actions** in that workflow and in [`.github/workflows/linters.yml`](../../.github/workflows/linters.yml) are pinned to the full commit SHA of a release, with the version in a comment next to it, because a tag can be moved and a commit SHA cannot.
 
 ## Dependabot at the Root
 
 [`.github/dependabot.yml`](../../.github/dependabot.yml) checks two ecosystems at the root once a week, groups each one's updates into a single pull request, labels it with the `Dependabot:` label of its ecosystem, and opens it against `development`, like every other pull request (see [GitHub workflow](github-workflow.md#dependabot-pull-requests)):
 
-- **`github-actions`**, for the actions of the root's own workflow. Its pull request updates both the commit SHA and the version in the comment.
+- **`github-actions`**, for the actions of the root's own workflows. Its pull request updates both the commit SHA and the version in the comment.
 - **`npm`**, for the formatter and the linters in the root `package.json`.
 
 It does not reach into `template/`, whose dependencies are raised deliberately and verified by rendering. A root npm pull request is therefore never complete on its own. The root and the body run the same tool versions (see below), so mirror every version it raises in `template/package.json` in the same change, update the `allowScripts` key of `dprint` in both files when its version changes, and render before merging.

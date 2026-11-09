@@ -32,7 +32,7 @@ Each tool also has its own script, `lint:dprint`, `lint:markdownlint` and `lint:
 
 ## Continuous Integration
 
-The [`Template`](../../.github/workflows/template.yml) workflow runs `npm run lint` on every push and pull request, checks that no `[% if false %]` block crept into the body, and renders the body with several answer sets to run each generated project's own checks. [Testing](../conventions/testing.md#continuous-integration) covers it in full. It does not replace running `npm run lint` and rendering a change locally before pushing it, which is still where a change is verified first.
+The [`Linters`](../../.github/workflows/linters.yml) workflow runs `npm run lint` on every push and pull request, and checks that no `[% if false %]` block crept into the body. The [`Tests`](../../.github/workflows/tests.yml) workflow renders and updates the body to run each generated project's own checks. [Testing](../conventions/testing.md#continuous-integration) covers it in full. It does not replace running `npm run lint` and rendering a change locally before pushing it, which is still where a change is verified first.
 
 ## Related
 

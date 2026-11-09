@@ -2,6 +2,12 @@
 
 All notable changes to the C# library project template are documented here, newest release first. Each release corresponds to an annotated Git tag of the same name.
 
+## Release v1.2.0
+
+*Release date to be determined.*
+
+- Added a job to the continuous integration of the template repository that renders the last release, updates it to the current commit with `copier update`, and fails on conflicts, on changes to the files the template only creates, and on a project that no longer passes its linters, tests, and packaging. Split the `Template` workflow into a `Linters` and a `Tests` workflow, like the generated project's.
+
 ## Release v1.1.0
 
 *Released on November 5, 2026.*

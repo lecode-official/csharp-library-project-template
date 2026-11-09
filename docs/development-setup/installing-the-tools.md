@@ -27,7 +27,7 @@ The [Claude Code hooks](../tooling/claude-code-hooks.md) that run these tools re
 
 ## Copier
 
-Rendering the template needs [Copier](https://copier.readthedocs.io/en/stable/#installation), at least the version `_min_copier_version` in [`copier.yml`](../../copier.yml) names. Install it as an isolated command-line tool rather than into a project's Python environment, for example with `pipx install copier` or `uv tool install copier`. The template's continuous integration renders with the exact version pinned in [`.github/workflows/template.yml`](../../.github/workflows/template.yml), so a local render with that version matches it most closely.
+Rendering the template needs [Copier](https://copier.readthedocs.io/en/stable/#installation), at least the version `_min_copier_version` in [`copier.yml`](../../copier.yml) names. Install it as an isolated command-line tool rather than into a project's Python environment, for example with `pipx install copier` or `uv tool install copier`. The template's continuous integration renders with the exact version pinned in [`.github/workflows/tests.yml`](../../.github/workflows/tests.yml), so a local render with that version matches it most closely.
 
 ## What a Render Needs
 
