@@ -20,11 +20,17 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# The Copier version every job renders and updates with, unless its answer set asks for the minimum version; it is pinned to an exact version, like
+# every other dependency, and raised by hand, since Dependabot does not see it (see docs/conventions/dependency-management.md)
+env:
+  PINNED_COPIER_VERSION: "9.19.1"
+
 # Every action is pinned to the full commit SHA of a release, with the version in a comment, because a tag can be moved to point at different code,
 # while a commit SHA cannot; Dependabot keeps the pins up to date (see .github/dependabot.yml)
 jobs:
   # Renders the template body once per answer set and verifies the generated project; between them, the answer sets cover every license, both
-  # serviced SDK bands, and a product name with spaces and a dot, which is the answer most likely to break a file name or a quoted command
+  # serviced SDK bands, a product name with spaces and a dot, which is the answer most likely to break a file name or a quoted command, and the oldest
+  # Copier version the template supports
   render:
     name: Render (${{ matrix.name }})
     runs-on: ubuntu-latest
@@ -64,6 +70,11 @@ jobs:
             license: GPL-3.0-only
           - name: UNLICENSED
             license: UNLICENSED
+          # The default answers once more, rendered with the oldest Copier version that "_min_copier_version" in "copier.yml" declares, which is the
+          # only way to prove that the floor still holds
+          - name: Minimum Copier Version
+            license: LGPL-3.0-or-later
+            copier_version: minimum
 
     # The generated project is rendered into a directory of its own, next to the checkout, so that its tools never pick up the template repository's
     # configuration files
@@ -85,9 +96,22 @@ jobs:
         with:
           python-version: "3.13.17"
 
-      # Copier is pinned to an exact version, like every other dependency (see docs/conventions/dependency-management.md)
+      # Installs the pinned Copier version, or, for an answer set that asks for the minimum version, the version "_min_copier_version" in
+      # "copier.yml" declares, which is read from there, so that the tested floor cannot fall behind the declared one
       - name: Install Copier
-        run: python -m pip install copier==9.19.1
+        env:
+          COPIER_VERSION: ${{ matrix.copier_version }}
+        run: |
+          if [ "$COPIER_VERSION" = minimum ]; then
+            COPIER_VERSION=$(sed -n 's/^_min_copier_version: "\(.*\)"$/\1/p' copier.yml)
+            if [ -z "$COPIER_VERSION" ]; then
+              echo "::error::No \"_min_copier_version\" was found in copier.yml"
+              exit 1
+            fi
+          fi
+          COPIER_VERSION="${COPIER_VERSION:-$PINNED_COPIER_VERSION}"
+          echo "Installing Copier $COPIER_VERSION"
+          python -m pip install "copier==$COPIER_VERSION"
 
       # Renders the template without "--trust"; if Copier ever demands it, an unsafe feature has crept into the template, and the render fails here,
       # which is exactly what should happen (see AGENTS.md)
@@ -163,10 +187,20 @@ jobs:
   # consumer runs "copier update"; it fails if the update leaves a conflict behind, changes a file the template only creates, or produces a project
   # that no longer passes its own linters, tests, and packaging, none of which a fresh render can reveal
   update:
-    name: Update From the Last Release
+    name: Update From the Last Release (${{ matrix.name }})
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     timeout-minutes: 30
+
+    # The update runs once with the pinned Copier version, and once with the oldest version that "_min_copier_version" in "copier.yml" declares,
+    # since the files the template only creates depend on how Copier treats the "_exclude" patterns on an update
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Pinned Copier Version
+          - name: Minimum Copier Version
+            copier_version: minimum
 
     env:
       PRODUCT_NAME: Render Test
@@ -184,9 +218,22 @@ jobs:
         with:
           python-version: "3.13.17"
 
-      # Copier is pinned to an exact version, like every other dependency (see docs/conventions/dependency-management.md)
+      # Installs the pinned Copier version, or, for an answer set that asks for the minimum version, the version "_min_copier_version" in
+      # "copier.yml" declares, which is read from there, so that the tested floor cannot fall behind the declared one
       - name: Install Copier
-        run: python -m pip install copier==9.19.1
+        env:
+          COPIER_VERSION: ${{ matrix.copier_version }}
+        run: |
+          if [ "$COPIER_VERSION" = minimum ]; then
+            COPIER_VERSION=$(sed -n 's/^_min_copier_version: "\(.*\)"$/\1/p' copier.yml)
+            if [ -z "$COPIER_VERSION" ]; then
+              echo "::error::No \"_min_copier_version\" was found in copier.yml"
+              exit 1
+            fi
+          fi
+          COPIER_VERSION="${COPIER_VERSION:-$PINNED_COPIER_VERSION}"
+          echo "Installing Copier $COPIER_VERSION"
+          python -m pip install "copier==$COPIER_VERSION"
 
       # The last release is the newest release tag that the current commit contains, but that does not point at the current commit itself, so that the
       # push of a release tag, or of the commit it points at, updates from the release before it rather than from itself

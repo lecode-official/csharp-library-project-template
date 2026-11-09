@@ -13,6 +13,18 @@ Some steps apply to every update, whatever changed (see [rendering and updating]
 - **Read the changelog.** The [changelog](../../CHANGELOG.md) of every release in between lists what changed, from the point of view of a generated project.
 - **Update the files the project owns by hand.** Copier never updates the [files the template only creates](rendering-and-updating.md#files-the-template-only-creates), such as `README.md` and the logo. The sections below say when one of them changed, and how to carry the change over.
 
+## Migrate from v1.1.0 to v1.2.0
+
+### Copier 9.10.3
+
+The template now needs Copier 9.10.3 or newer, and Copier refuses to update to it with an older version. Upgrade Copier first, for example with `pipx upgrade copier` or `uv tool upgrade copier`.
+
+Before 9.10.3, an update from v1.0.0 deleted every [file the template only creates](rendering-and-updating.md#files-the-template-only-creates), such as `README.md`, `CHANGELOG.md`, and the logo, instead of leaving them alone. A project that was updated from v1.0.0 to v1.1.0 with an older Copier checks whether that update deleted any of them, and restores them from the commit before the update:
+
+```shell
+git restore --source <commit-before-the-update> -- README.md CHANGELOG.md
+```
+
 ## Migrate from v1.0.0 to v1.1.0
 
 ### The Lock Files

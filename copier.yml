@@ -7,9 +7,11 @@
 # document the template in the template, and to lint the template's own files with different settings than the files it generates
 _subdirectory: template
 
-# The oldest Copier version the template supports, which is the first release that passes "_copier_operation" to the "_exclude" patterns below; the
-# continuous integration renders with the exact version pinned in ".github/workflows/tests.yml"
-_min_copier_version: "9.6.0"
+# The oldest Copier version the template supports; Copier 9.6.0 is the first release that passes "_copier_operation" to the "_exclude" patterns
+# below, but before 9.10.3, an update from a release that did not exclude a file yet deletes that file instead of leaving it alone, which is what
+# happens to every file the template only creates when a project updates from v1.0.0; the continuous integration renders and updates once with this
+# version, which it reads from here, and otherwise with the exact version pinned in ".github/workflows/tests.yml"
+_min_copier_version: "9.10.3"
 
 # By default, files that should be processed by the Jinja templating engine, which add the ".jinja" extension to the file name (in addition to the
 # original extension); unfortunately, many tools that are used during the development of this template do not work with the ".jinja" file extension,
@@ -98,6 +100,11 @@ _message_after_update: |-
 
   Copier never updates the files a project fills with its own content, such as README.md and the logo. When one of them changed in the
   template, it is listed below, so that it can be updated by hand.
+
+  When updating from a version before v1.2.0:
+
+  - Copier: the template now needs Copier 9.10.3 or newer. An older Copier deleted the files a project fills with its own content, such
+    as README.md, CHANGELOG.md, and the logo, when it updated a project from v1.0.0; restore any that an earlier update deleted.
 
   When updating from a version before v1.1.0:
 
