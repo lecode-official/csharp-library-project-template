@@ -8,7 +8,7 @@
 _subdirectory: template
 
 # The oldest Copier version the template supports, which is the first release that passes "_copier_operation" to the "_exclude" patterns below; the
-# continuous integration renders with the exact version pinned in ".github/workflows/template.yml"
+# continuous integration renders with the exact version pinned in ".github/workflows/tests.yml"
 _min_copier_version: "9.6.0"
 
 # By default, files that should be processed by the Jinja templating engine, which add the ".jinja" extension to the file name (in addition to the
@@ -54,7 +54,8 @@ _exclude:
   # or deleted, and it only reaches a project through the update message and the migration guide (see
   # docs/project-template/rendering-and-updating.md); this replaces "_skip_if_exists", which re-creates a listed file that a project has deleted on
   # every update; the placeholder "Greeter" class and its tests are deliberately not listed, so that a template change they have to follow, such as a
-  # new analyzer rule, still reaches a project that keeps them
+  # new analyzer rule, still reaches a project that keeps them; the "Tests" workflow reads these patterns to check that an update leaves the files
+  # alone, so every one of them keeps exactly this form, on a line of its own, with the anchored path between "%]" and "[%"
   - "[% if _copier_operation == 'update' %]/README.md[% endif %]"
   - "[% if _copier_operation == 'update' %]/CHANGELOG.md[% endif %]"
   - "[% if _copier_operation == 'update' %]/CONTRIBUTORS.md[% endif %]"

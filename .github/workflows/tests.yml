@@ -1,0 +1,317 @@
+# The tests of the template body (see docs/conventions/testing.md); it renders the body with several answer sets, and updates a project rendered from
+# the last release to the current commit, and runs every generated project's own linters, build, tests, and packaging, exactly as a consumer would;
+# the template repository's own files are linted in "linters.yml"; neither workflow is part of the template body, which brings its own workflows in
+# "template/.github/workflows/"
+name: Tests
+
+# Runs on every push to any branch, and on every pull request, so that a pull request from a fork is checked as well (see the condition on each job,
+# which keeps a pull request from a branch of this repository from being checked twice)
+on:
+  push:
+  pull_request:
+
+# Grants the workflow's token nothing but read access to the repository contents; neither rendering nor updating needs anything else
+permissions:
+  contents: read
+
+# Cancels a run that is still in progress when a newer commit is pushed to the same branch or pull request, since only the result for the newest
+# commit matters
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Every action is pinned to the full commit SHA of a release, with the version in a comment, because a tag can be moved to point at different code,
+# while a commit SHA cannot; Dependabot keeps the pins up to date (see .github/dependabot.yml)
+jobs:
+  # Renders the template body once per answer set and verifies the generated project; between them, the answer sets cover every license, both
+  # serviced SDK bands, and a product name with spaces and a dot, which is the answer most likely to break a file name or a quoted command
+  render:
+    name: Render (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+    timeout-minutes: 30
+
+    strategy:
+      # Every answer set runs to the end, even when another one fails, so that a single run shows every answer set a change breaks
+      fail-fast: false
+      matrix:
+        include:
+          # The default answers, which is also the one answer set that builds the documentation website
+          - name: Default Answers
+            product_name: Render Test
+            root_namespace: RenderTest
+            license: LGPL-3.0-or-later
+            dotnet_sdk_version: 10.0.403
+            build_documentation: true
+          - name: Spaces and Dots
+            product_name: Render.Test Library
+            root_namespace: RenderTest.Library
+            license: MIT
+            dotnet_sdk_version: 10.0.114
+          - name: Apache-2.0
+            license: Apache-2.0
+          - name: BSD-2-Clause
+            license: BSD-2-Clause
+          - name: BSD-3-Clause
+            license: BSD-3-Clause
+          - name: MPL-2.0
+            license: MPL-2.0
+          - name: LGPL-3.0-only
+            license: LGPL-3.0-only
+          - name: GPL-3.0-or-later
+            license: GPL-3.0-or-later
+          - name: GPL-3.0-only
+            license: GPL-3.0-only
+          - name: UNLICENSED
+            license: UNLICENSED
+
+    # The generated project is rendered into a directory of its own, next to the checkout, so that its tools never pick up the template repository's
+    # configuration files
+    env:
+      PRODUCT_NAME: ${{ matrix.product_name || 'Render Test' }}
+      ROOT_NAMESPACE: ${{ matrix.root_namespace || 'RenderTest' }}
+      DOTNET_SDK_VERSION: ${{ matrix.dotnet_sdk_version || '10.0.403' }}
+      RENDER_DIRECTORY: ${{ github.workspace }}/../render
+
+    steps:
+      # The full history is fetched, because Copier reads the template from the Git repository, and "--vcs-ref HEAD" refers to the checked-out commit
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Set Up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.13.17"
+
+      # Copier is pinned to an exact version, like every other dependency (see docs/conventions/dependency-management.md)
+      - name: Install Copier
+        run: python -m pip install copier==9.19.1
+
+      # Renders the template without "--trust"; if Copier ever demands it, an unsafe feature has crept into the template, and the render fails here,
+      # which is exactly what should happen (see AGENTS.md)
+      - name: Render Template
+        run: >
+          copier copy --defaults --vcs-ref HEAD
+          --data product_name="$PRODUCT_NAME"
+          --data root_namespace="$ROOT_NAMESPACE"
+          --data product_description="A project rendered by the continuous integration of the template."
+          --data author="Continuous Integration"
+          --data repository_url=https://github.com/lecode-official/render-test
+          --data maintainer_url=https://github.com/lecode-official
+          --data license="${{ matrix.license }}"
+          --data dotnet_sdk_version="$DOTNET_SDK_VERSION"
+          . "$RENDER_DIRECTORY"
+
+      # The two placeholder checks from docs/project-template/authoring.md: no placeholder survived, and none was rendered as a Python list
+      - name: Check for Surviving Placeholders
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: |
+          status=0
+          if grep -rn '\[\[' .; then
+            echo "::error::A placeholder survived the render"
+            status=1
+          fi
+          if grep -rnE "\['[^']*'\]\(" .; then
+            echo "::error::A link label was rendered as a Python list (see docs/conventions/markdown-style.md)"
+            status=1
+          fi
+          exit $status
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: ${{ env.RENDER_DIRECTORY }}/.nvmrc
+
+      - name: Set Up .NET
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          global-json-file: ${{ env.RENDER_DIRECTORY }}/global.json
+
+      # A freshly generated project has no "package-lock.json" yet, so it is installed with "npm install", which is what a consumer does first, too
+      - name: Lint Generated Project
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: |
+          npm install
+          npm run lint
+
+      # The Release configuration is what the generated project's own continuous integration builds, and the only configuration in which an analyzer
+      # warning fails the build
+      - name: Test Generated Project
+        if: ${{ !cancelled() }}
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: dotnet test --solution "source/$PRODUCT_NAME.slnx" --configuration Release
+
+      # Packs every packable project of the solution, which is only the library, and runs its package validation
+      - name: Pack Generated Project
+        if: ${{ !cancelled() }}
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: dotnet pack "source/$PRODUCT_NAME.slnx" --configuration Release
+
+      # Builds the documentation website in strict mode, exactly as the generated project's own "Docs" workflow does, so that a broken link or a
+      # missing hook script fails here
+      - name: Build Documentation Website
+        if: ${{ !cancelled() && matrix.build_documentation }}
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: |
+          dotnet tool restore
+          python -m pip install --requirement requirements.txt
+          properdocs build --strict
+
+  # Renders the last release with the default answers, commits it in a Git repository of its own, and updates it to the current commit, exactly as a
+  # consumer runs "copier update"; it fails if the update leaves a conflict behind, changes a file the template only creates, or produces a project
+  # that no longer passes its own linters, tests, and packaging, none of which a fresh render can reveal
+  update:
+    name: Update From the Last Release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+    timeout-minutes: 30
+
+    env:
+      PRODUCT_NAME: Render Test
+      RENDER_DIRECTORY: ${{ github.workspace }}/../render
+
+    steps:
+      # The full history is fetched, because Copier reads both versions of the template from the Git repository, and the tags come with it
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Set Up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.13.17"
+
+      # Copier is pinned to an exact version, like every other dependency (see docs/conventions/dependency-management.md)
+      - name: Install Copier
+        run: python -m pip install copier==9.19.1
+
+      # The last release is the newest release tag that the current commit contains, but that does not point at the current commit itself, so that the
+      # push of a release tag, or of the commit it points at, updates from the release before it rather than from itself
+      - name: Find the Last Release
+        id: last-release
+        run: |
+          tag=$(git tag --list 'v*' --merged HEAD --no-contains HEAD --sort=-version:refname | head -n 1)
+          if [ -z "$tag" ]; then
+            echo "::error::No release tag precedes the current commit, so there is no release to update from"
+            exit 1
+          fi
+          echo "Updating from $tag"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      # The template is given by its absolute path, because Copier records it in the project's ".copier-answers.yml", and "copier update" reads it
+      # from there, inside the project's own directory; no --trust, for the same reason as in the render job
+      - name: Render Last Release
+        run: >
+          copier copy --defaults --vcs-ref "${{ steps.last-release.outputs.tag }}"
+          --data product_name="$PRODUCT_NAME"
+          --data root_namespace=RenderTest
+          --data product_description="A project rendered by the continuous integration of the template."
+          --data author="Continuous Integration"
+          --data repository_url=https://github.com/lecode-official/render-test
+          --data maintainer_url=https://github.com/lecode-official
+          "$GITHUB_WORKSPACE" "$RENDER_DIRECTORY"
+
+      # "copier update" refuses to run in a project that is not a Git repository, or that has uncommitted changes
+      - name: Commit Rendered Project
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: |
+          git init --quiet --initial-branch=main
+          git add --all
+          git -c user.name="Continuous Integration" -c user.email="ci@example.com" commit --quiet \
+            --message "Rendered ${{ steps.last-release.outputs.tag }}"
+
+      # Updates the project with the answers it recorded, and the default answer of any question the last release did not ask yet; "--conflict
+      # inline" writes a conflict into the file as conflict markers, which the next step looks for
+      - name: Update to Current Commit
+        id: update
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: copier update --defaults --vcs-ref HEAD --conflict inline
+
+      # Every check from here on runs as long as the update itself succeeded, even when an earlier check failed, so that a single run reports every
+      # problem; a conflict is looked for as conflict markers, which "--conflict inline" writes, and as ".rej" files, which "--conflict rej" writes
+      # instead, and either one would land in every consumer's project that updates
+      - name: Check for Conflicts
+        if: ${{ !cancelled() && steps.update.outcome == 'success' }}
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: |
+          status=0
+          if grep -rnE '^(<<<<<<<|>>>>>>>)( |$)' --exclude-dir=.git .; then
+            echo "::error::The update left conflict markers behind"
+            status=1
+          fi
+          rejected=$(find . -name '*.rej' -not -path './.git/*')
+          if [ -n "$rejected" ]; then
+            echo "$rejected"
+            echo "::error::The update left rejected changes behind"
+            status=1
+          fi
+          exit $status
+
+      # The files the template only creates are the paths that "_exclude" in "copier.yml" only excludes on an update; they are read from "copier.yml"
+      # itself, so that the check cannot fall behind the list (see docs/project-template/rendering-and-updating.md)
+      - name: Check Files the Template Only Creates
+        if: ${{ !cancelled() && steps.update.outcome == 'success' }}
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: |
+          pathspecs=()
+          while read -r path; do
+            pathspecs+=(":(top,glob)$path")
+          done < <(sed -n "s/.*_copier_operation == 'update' %\]\/\([^[]*\)\[% endif %\].*/\1/p" "$GITHUB_WORKSPACE/copier.yml")
+          if [ ${#pathspecs[@]} -eq 0 ]; then
+            echo "::error::No update-only pattern was found in the \"_exclude\" list of copier.yml"
+            exit 1
+          fi
+          changed=$(git status --porcelain -- "${pathspecs[@]}")
+          if [ -n "$changed" ]; then
+            echo "$changed"
+            echo "::error::The update changed files that the template only creates"
+            exit 1
+          fi
+
+      # The same placeholder checks as in the render job
+      - name: Check for Surviving Placeholders
+        if: ${{ !cancelled() && steps.update.outcome == 'success' }}
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: |
+          status=0
+          if grep -rn --exclude-dir=.git '\[\[' .; then
+            echo "::error::A placeholder survived the update"
+            status=1
+          fi
+          if grep -rnE --exclude-dir=.git "\['[^']*'\]\(" .; then
+            echo "::error::A link label was rendered as a Python list (see docs/conventions/markdown-style.md)"
+            status=1
+          fi
+          exit $status
+
+      - name: Set Up Node.js
+        if: ${{ !cancelled() && steps.update.outcome == 'success' }}
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: ${{ env.RENDER_DIRECTORY }}/.nvmrc
+
+      - name: Set Up .NET
+        if: ${{ !cancelled() && steps.update.outcome == 'success' }}
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          global-json-file: ${{ env.RENDER_DIRECTORY }}/global.json
+
+      - name: Lint Updated Project
+        if: ${{ !cancelled() && steps.update.outcome == 'success' }}
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: |
+          npm install
+          npm run lint
+
+      - name: Test Updated Project
+        if: ${{ !cancelled() && steps.update.outcome == 'success' }}
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: dotnet test --solution "source/$PRODUCT_NAME.slnx" --configuration Release
+
+      - name: Pack Updated Project
+        if: ${{ !cancelled() && steps.update.outcome == 'success' }}
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: dotnet pack "source/$PRODUCT_NAME.slnx" --configuration Release

@@ -1,0 +1,55 @@
+# The linting of the template repository's own files (see docs/conventions/testing.md); the template body is tested by rendering it, in "tests.yml";
+# neither workflow is part of the template body, which brings its own workflows in "template/.github/workflows/"
+name: Linters
+
+# Runs on every push to any branch, and on every pull request, so that a pull request from a fork is checked as well (see the condition on the job,
+# which keeps a pull request from a branch of this repository from being checked twice)
+on:
+  push:
+  pull_request:
+
+# Grants the workflow's token nothing but read access to the repository contents; linting needs nothing else
+permissions:
+  contents: read
+
+# Cancels a run that is still in progress when a newer commit is pushed to the same branch or pull request, since only the result for the newest
+# commit matters
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Every action is pinned to the full commit SHA of a release, with the version in a comment, because a tag can be moved to point at different code,
+# while a commit SHA cannot; Dependabot keeps the pins up to date (see .github/dependabot.yml)
+jobs:
+  # Lints the template repository's own files with the root configuration, and checks that no "if false" block crept back into the body (see
+  # AGENTS.md)
+  lint:
+    name: Lint Template Repository
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # The root has no ".nvmrc" of its own; the root and the body run the same tool versions (see docs/conventions/dependency-management.md), so the
+      # body's Node.js version is the root's as well
+      - name: Set Up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: template/.nvmrc
+
+      - name: Install Linters
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check for Conditional Blocks in the Body
+        if: ${{ !cancelled() }}
+        run: |
+          if grep -rn 'if false' template/; then
+            echo "::error::The template body contains an \"if false\" block (see docs/project-template/template-structure.md)"
+            exit 1
+          fi
