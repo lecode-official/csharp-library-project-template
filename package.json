@@ -12,7 +12,7 @@
         "lint": "run-s --continue-on-error lint:dprint lint:markdownlint lint:cspell"
     },
     "devDependencies": {
-        "cspell": "10.4.0",
+        "cspell": "10.4.1",
         "dprint": "0.64.3",
         "markdownlint-cli2": "0.24.0",
         "npm-run-all2": "9.0.4"
