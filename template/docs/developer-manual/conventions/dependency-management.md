@@ -13,7 +13,7 @@ Every dependency is pinned to an exact version — never a floating range, a min
 not `Version="2.*"` or `Version="[2.0.2,)"`. A project file references the package without a version, `<PackageReference Include="SauceControl.InheritDoc" PrivateAssets="all" />`, so two projects can never depend on different versions of the same package. A package that every project needs, such as an analyzer, is declared as a `GlobalPackageReference` in the same file instead, and no project file mentions it at all. The same rule applies outside NuGet:
 
 - The dprint plugins in [`dprint.json`](../../../dprint.json) are pinned to an exact release URL.
-- `dprint`, `cspell`, its `@cspell/dict-*` dictionary packages, `markdownlint-cli2`, and `npm-run-all2` are pinned exactly in [`package.json`](../../../package.json).
+- `dprint`, `cspell`, its `@cspell/dict-*` dictionary packages, `markdownlint-cli2`, its link rule `markdownlint-rule-relative-links`, and `npm-run-all2` are pinned exactly in [`package.json`](../../../package.json).
 - The Python packages that build the documentation website are pinned exactly in [`requirements.txt`](../../../requirements.txt).
 - [`global.json`](../../../global.json) pins the exact .NET SDK version.
 

@@ -31,7 +31,7 @@ The extension is effectively mandatory. Without it installed, no `settings.json`
 - **Branch protection** on `[[ default_branch ]]` and `[[ integration_branch ]]`, which stops a commit through the editor's own Git UI — not through the terminal (see [Git workflow](../conventions/git-workflow.md)).
 - **Git behavior**: always open the merge editor on a conflict, allow force-push (this project amends regularly), fetch all branches and prune on pull, and push tags and rebase rather than merge when syncing.
 - **CSpell**, importing [`.cspell.json`](../../../.cspell.json) and raising the diagnostic level from information to error, so a spelling mistake looks like the problem it is. `ignorePaths` and `useGitignore` are reset, because the extension's defaults would otherwise override the imported configuration.
-- **MarkdownLint**, pointed at [`.markdownlint.yml`](../../../.markdownlint.yml).
+- **MarkdownLint**, pointed at [`.markdownlint.yml`](../../../.markdownlint.yml). It also loads the [link rule](linting-markdownlint.md#link-checking) through [`.markdownlint-cli2.yaml`](../../../.markdownlint-cli2.yaml), but only in a trusted workspace, since the rule is JavaScript.
 - **The solution path**, pointed at `source/[[ product_name ]].slnx`, so that the C# extension does not have to guess. Without it, the solution's non-standard location — in `source/`, not the repository root — and its cross-directory reference to the test project under `tests/` can lead the extension to miss part of the solution and report a file as belonging to no project.
 - **dprint as the default formatter**, with format-on-save on and format-on-type off.
 
@@ -53,7 +53,7 @@ Every linter task carries a problem matcher, so findings land in the Problems pa
 
 Which engine an extension uses matters, because it decides whether the editor and the command line can disagree:
 
-- **MarkdownLint and CSpell bundle their engines.** They read the same configuration files, so the rules stay consistent, but their engine version can differ slightly from the pinned one that [continuous integration](continuous-integration.md) runs.
+- **MarkdownLint and CSpell bundle their engines.** They read the same configuration files, so the rules stay consistent, but their engine version can differ slightly from the pinned one that [continuous integration](continuous-integration.md) runs. MarkdownLint's link rule is not bundled: the extension loads it from `node_modules`, so it only runs once `npm install` has.
 - **dprint does not bundle an engine.** It runs a `dprint` executable, together with the plugins declared in [`dprint.json`](../../../dprint.json). This project pins `dprint` as a devDependency, so once `npm install` has run, the project-local executable is what the extension finds, which is what keeps the editor in step with continuous integration. Before that, it falls back to a globally installed `dprint`, and the version is then whatever that happens to be.
 
 ## Related

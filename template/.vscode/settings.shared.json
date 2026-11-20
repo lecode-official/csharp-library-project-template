@@ -67,7 +67,7 @@
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.expand": false,
     "explorer.fileNesting.patterns": {
-        ".editorconfig": ".copier-answers.yml, .cspell.json, .git-blame-ignore-revs, .gitattributes, .gitignore, .markdownlint.yml, Directory.Build.props, Directory.Packages.props, dprint.json, .globalconfig, global.json",
+        ".editorconfig": ".copier-answers.yml, .cspell.json, .git-blame-ignore-revs, .gitattributes, .gitignore, .markdownlint.yml, .markdownlint-cli2.yaml, Directory.Build.props, Directory.Packages.props, dprint.json, .globalconfig, global.json",
         "*.slnx": "*.Build.props",
         "launch.json": "launch.local.json, launch.shared.json",
         "package.json": ".nvmrc, package-lock.json, properdocs.yml, requirements.txt",

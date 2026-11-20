@@ -69,7 +69,7 @@ Every release is tracked with a milestone, which shows how much of it is done:
 - **The description** is a short summary of every change planned for the release.
 - **Every issue that goes into the release is assigned to it**, together with its pull request. That includes the bug fixes found along the way and the release's own issue.
 
-The milestone is created when the release is planned, before its first issue, and it is closed once the release is published.
+The milestone is created when the release is [planned](#planning-a-release), before the work on its first issue begins, and it is closed once the release is published.
 
 ## Pull Requests
 
@@ -105,11 +105,32 @@ Before it is merged, it is reviewed like any other change:
 
 It is then merged with a merge commit and a message written by hand, like every other pull request. Its body names the pull request alone, as in `Merged pull request #40.`, since there is no issue to resolve.
 
+## Planning a Release
+
+A release is planned at its start, not at its end. Before the work on its first issue begins, its [milestone](#milestones) is created, together with its issues and its [release issue](#releases), so that the plan the release issue keeps is there for every issue that follows.
+
+The release issue lists the order in which the release's other issues are implemented, under the heading `## Order`. The order is a numbered list, and each item names one issue or several:
+
+```markdown
+## Order
+
+1. #43.
+2. #44, #45, #46, and #47.
+3. #48.
+```
+
+- **The items are worked through from top to bottom.** An item is only started once every issue of the item above it is closed, so an issue that another one builds on goes into an earlier item.
+- **The issues of one item can be worked on at the same time**, by different people. They are listed in their suggested order.
+- **A short note may say why an issue comes where it does**, as in `#48 (adds to the workflow of #47)`. It explains the order, but the items alone decide it.
+- **An issue added to the milestone later**, such as a bug found along the way, is added to the order too.
+
+The next issue to work on is found by reading the order from top to bottom and from left to right. It is the first issue that is open and assigned to nobody else, within the first item that still has open issues. An issue that is assigned to someone else is their work, so it is skipped. When every open issue of that item is assigned, there is no next issue until one of them is closed. The release issue itself comes last, once every other issue of the milestone is closed.
+
 ## Releases
 
 A release is prepared and merged in a fixed order:
 
-1. **The release issue.** A release has an issue of its own, titled `Release vX.Y.Z`, labeled `Type: Release`, and assigned to the release's milestone. It is created when the release is planned, and it lists the order in which the release's other issues are implemented, when one builds on another.
+1. **The release issue.** A release has an issue of its own, titled `Release vX.Y.Z`, labeled `Type: Release`, and assigned to the release's milestone. It is created when the release is [planned](#planning-a-release), at the start of the release, and it lists the order in which the release's other issues are implemented.
 2. **The release branch.** Once every other issue of the milestone is closed, a work branch named `release/vX.Y.Z` is created from `development` and linked to the release issue. Its commit finishes the release:
    - It replaces the date paragraph of the release in the [changelog](changelog-entries.md#an-unreleased-version) with the release date, and tidies up the release's entries. They are written one change at a time, so just before the release, entries that describe the same work are merged, and the entries a generated project has to act on come first.
    - It checks that the version is the same in the changelog and in the root `package.json` (see [versioning](versioning.md#the-templates-version-is-not-the-bodys)), and that every change a generated project has to carry over by hand has its hint in the update message and its step in the [migration guide](../project-template/migration-guide.md).

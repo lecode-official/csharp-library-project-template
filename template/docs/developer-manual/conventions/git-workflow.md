@@ -81,6 +81,11 @@ Each instruction authorizes exactly itself:
 - **"Commit this"** authorizes the commit, not a push.
 - **"Rebase these changes into that commit"** authorizes that rebase, not the next one.
 
+Two instructions name a whole sequence instead, because the same steps begin and end the work on every issue:
+
+- **"Start the next issue"** authorizes everything that begins the work on an issue. The issue is the next one in the release issue's order, picked as [planning a release](github-workflow.md#planning-a-release) describes. Every issue skipped on the way is reported with its reason, as in "Checked #43, which is already assigned to someone else, starting with #44 instead." "Start the work on #42" names the issue instead. If that issue is assigned to someone else, or an item above it in the order still has open issues, the sequence stops there, says so, and asks for another issue. The issue is assigned to the user, `origin` is fetched, and a local `[[ integration_branch ]]` that is behind is fast-forwarded. The work branch is created from `[[ integration_branch ]]` with `gh issue develop`, which links it to the issue, and checked out. The issue is then implemented, and its commit message written. The sequence stops there, with the change uncommitted, for review.
+- **"Finish the issue"**, or "I reviewed everything, please finish the issue", authorizes everything that ends the work on an issue. What is staged is committed with the reviewed message, and the branch is pushed. The [pull request](github-workflow.md#pull-requests) is opened with the issue's labels and milestone, and merged with a hand-written merge message once its checks pass. The issue is then closed, and the branch [deleted](#merged-branches-are-deleted) locally and on `origin`. A failing check stops the sequence, and so do changes that are not staged, since the staging area records what was reviewed.
+
 An instruction to do one of these once does not carry over to later work in the same session.
 
 ## Staging Is the Review Mechanism

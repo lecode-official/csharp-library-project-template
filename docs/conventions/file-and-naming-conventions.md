@@ -13,7 +13,7 @@ Every section of the documentation is a directory under [`docs/`](../README.md) 
 Files with a conventional or tool-mandated name keep that name:
 
 - **Files everyone recognizes by their standard name**: `README.md`, `AGENTS.md`, `CHANGELOG.md`, `LICENSE`.
-- **Files whose name and place are dictated by the tool that reads them**: `copier.yml`, which Copier only ever looks for at the clone root, as well as `dprint.json`, `.cspell.json`, `.markdownlint.yml`, `.editorconfig`, `.gitignore` and `package.json`.
+- **Files whose name and place are dictated by the tool that reads them**: `copier.yml`, which Copier only ever looks for at the clone root, as well as `dprint.json`, `.cspell.json`, `.markdownlint.yml`, `.markdownlint-cli2.yaml`, `.editorconfig`, `.gitignore` and `package.json`.
 - **The vendored license texts**, which are named after their SPDX identifier exactly, as in `MIT.txt` and `LGPL-3.0-or-later.txt`. `template/LICENSE` builds the path from the answer with `"licenses/" ~ license ~ ".txt"`, so the file name *is* the identifier, casing included (see [licensing](../project-template/licensing.md)).
 
 ## The Body Uses the Generated Project's Names

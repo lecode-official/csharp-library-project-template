@@ -33,6 +33,17 @@ The `Linters` and `Tests` workflows no longer run on a push to a work branch, on
 
 Optionally, protect the default and the integration branch with the rulesets of the new branch protection script in `docs/developer-manual/development-setup/setting-up-github.md`. It needs a public repository, or a paid GitHub plan for a private one. Run it after the update is merged into both branches, so that the checks it requires already exist.
 
+### Link Checking
+
+MarkdownLint now also checks that every relative link points to a file that exists, and every link to a heading of another file to a heading that exists (see the generated project's `docs/developer-manual/tooling/linting-markdownlint.md`). The update brings the rule along, in `package.json`, `.markdownlint.yml`, and the new `.markdownlint-cli2.yaml`. Install it, and fix every broken link the linters then report, before the update is committed, since continuous integration fails on them:
+
+```shell
+npm install
+npm run lint:markdownlint
+```
+
+`README.md` is only created by the template, so its "Linting" section keeps describing MarkdownLint without the link check. Optionally, copy the MarkdownLint line of that section from a fresh render.
+
 ## Migrate from v1.0.0 to v1.1.0
 
 ### The Lock Files
