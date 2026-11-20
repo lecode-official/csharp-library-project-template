@@ -31,6 +31,7 @@ Every linter and formatter configuration lives at the repository root, where eac
 
 - [`.cspell.json`](../../../.cspell.json)
 - [`.markdownlint.yml`](../../../.markdownlint.yml)
+- [`.markdownlint-cli2.yaml`](../../../.markdownlint-cli2.yaml)
 - [`.globalconfig`](../../../.globalconfig)
 - [`dprint.json`](../../../dprint.json)
 

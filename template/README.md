@@ -82,7 +82,7 @@ npm run format
 
 The linter configuration lives at the repository root, where each tool discovers it on its own:
 
-- **MarkdownLint** ([`.markdownlint.yml`](.markdownlint.yml)) — lints the Markdown files across the repository, including this read me.
+- **MarkdownLint** ([`.markdownlint.yml`](.markdownlint.yml)) — lints the Markdown files across the repository, including this read me, and checks that their relative links point to files and headings that exist.
 - **CSpell** ([`.cspell.json`](.cspell.json)) — checks the spelling of code, comments, and documentation.
 - **The static code analyzers** ([`.globalconfig`](.globalconfig)) — check the C# code on every build.
 

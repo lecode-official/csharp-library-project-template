@@ -50,7 +50,7 @@ The cost is that a generated project's first install resolves transitive depende
 
 ## Keep Shared Tools in Step
 
-The root and the body run the same tools on their Markdown, `dprint`, `markdownlint-cli2` and `cspell`, with the same dprint plugins for Markdown, JSON, YAML and TOML. `markdownlint-cli2` brings its own copy of the `markdownlint` library, so neither side declares that one directly. They also run them the same way, through the `run-s` command of `npm-run-all2`, which `npm run lint` uses on both sides. Their versions are the same on both sides, and they are raised together, in the same change.
+The root and the body run the same tools on their Markdown, `dprint`, `markdownlint-cli2` with its link rule `markdownlint-rule-relative-links`, and `cspell`, with the same dprint plugins for Markdown, JSON, YAML and TOML. `markdownlint-cli2` brings its own copy of the `markdownlint` library, so neither side declares that one directly. They also run them the same way, through the `run-s` command of `npm-run-all2`, which `npm run lint` uses on both sides. Their versions are the same on both sides, and they are raised together, in the same change.
 
 The reason is that a root article and a body article are written to the same conventions, and a rule that behaves differently between two versions of a linter would let one side pass what the other rejects. Check both `package.json` files and both `dprint.json` files whenever you bump one of them.
 

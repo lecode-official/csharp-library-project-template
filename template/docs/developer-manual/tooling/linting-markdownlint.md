@@ -11,6 +11,15 @@ The configuration keeps the default rules and changes two things:
 - **Line length is off.** Prose is never hard-wrapped, so do not manually wrap a Markdown line (see [line length](../conventions/line-length.md) and [Markdown style](../conventions/markdown-style.md)).
 - **Three inline-HTML elements are allowed**: `kbd`, for keyboard shortcuts, `div`, which the `README.md` uses to center-align its badge row, and `img`, which it uses to align the logo with its title. Everything else is still reported, because inline HTML in Markdown should stay the exception.
 
+## Link Checking
+
+The configuration also turns on `relative-links`, a rule that MarkdownLint does not have built in. It comes from the npm package [`markdownlint-rule-relative-links`](https://github.com/theoludwig/markdownlint-rule-relative-links), which [`.markdownlint-cli2.yaml`](../../../.markdownlint-cli2.yaml) loads, and it reports:
+
+- **A relative link to a file that does not exist**, such as a link to an article that was renamed or moved, or to a missing image.
+- **A link to a heading of another file that does not exist**, as in `article.md#section`, which breaks when the heading is renamed. A link to a heading of the same file is checked by the built-in rule `MD051`.
+
+External links are not checked, so that the linting stays fast, deterministic, and independent of the network. Links written as HTML, such as the `<img>` in the title of the `README.md`, are not checked either. The build of the [documentation website](documentation-website.md) checks the links between its pages, too, but only under `docs/`, while the rule covers every Markdown file of the repository.
+
 ## Running It
 
 ```shell

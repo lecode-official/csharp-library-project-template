@@ -14,3 +14,8 @@ no-inline-html:
   allowed_elements:
     - kbd
     - div
+
+# Checks that every relative link points to a file that exists, and that a link to a heading of another file, as in "article.md#section", points
+# to a heading that exists; external links are not checked, so that the linting stays fast and independent of the network; the rule is not built
+# into MarkdownLint, but loaded from the npm package "markdownlint-rule-relative-links" by ".markdownlint-cli2.yaml"
+relative-links: true

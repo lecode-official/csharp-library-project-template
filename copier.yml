@@ -109,6 +109,8 @@ _message_after_update: |-
     draft pull request to have a work branch checked early.
   - GitHub: optionally protect both branches with the branch protection script in
     docs/developer-manual/development-setup/setting-up-github.md, which needs a public repository or a paid GitHub plan.
+  - Linting: "npm run lint" now also checks that relative links point to files and headings that exist; run it after "npm install" and
+    fix the broken links it reports. README.md mentions the link check in its "Linting" section, which can be copied from a fresh render.
 
   When updating from a version before v1.1.0:
 
