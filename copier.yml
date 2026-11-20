@@ -105,6 +105,10 @@ _message_after_update: |-
 
   - Copier: the template now needs Copier 9.10.3 or newer. An older Copier deleted the files a project fills with its own content, such
     as README.md, CHANGELOG.md, and the logo, when it updated a project from v1.0.0; restore any that an earlier update deleted.
+  - Continuous integration: the Linters and Tests workflows no longer run on a push to a work branch, only on its pull request; open a
+    draft pull request to have a work branch checked early.
+  - GitHub: optionally protect both branches with the branch protection script in
+    docs/developer-manual/development-setup/setting-up-github.md, which needs a public repository or a paid GitHub plan.
 
   When updating from a version before v1.1.0:
 

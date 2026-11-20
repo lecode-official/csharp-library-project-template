@@ -25,6 +25,14 @@ Before 9.10.3, an update from v1.0.0 deleted every [file the template only creat
 git restore --source <commit-before-the-update> -- README.md CHANGELOG.md
 ```
 
+### Continuous Integration
+
+The `Linters` and `Tests` workflows no longer run on a push to a work branch, only on pull requests and on pushes to the default and the integration branch. A work branch is checked once its pull request is open, so open a draft pull request to have it checked early. The update brings the changed workflows and the new `Pull Requests` workflow along by itself.
+
+### Branch Protection
+
+Optionally, protect the default and the integration branch with the rulesets of the new branch protection script in `docs/developer-manual/development-setup/setting-up-github.md`. It needs a public repository, or a paid GitHub plan for a private one. Run it after the update is merged into both branches, so that the checks it requires already exist.
+
 ## Migrate from v1.0.0 to v1.1.0
 
 ### The Lock Files

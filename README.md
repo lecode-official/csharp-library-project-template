@@ -73,7 +73,7 @@ Working on the template's own files needs only Git and Node.js, for the formatte
 
 ## Continuous Integration
 
-Two workflows run on every push and pull request. The [`Linters`](.github/workflows/linters.yml) workflow lints this repository's own files. The [`Tests`](.github/workflows/tests.yml) workflow renders the template body with several answer sets, which together cover every license, and updates a project rendered from the last release to the current commit, and runs each generated project's linters, tests and packaging, exactly as a consumer would. [Testing](docs/conventions/testing.md#continuous-integration) covers what it checks, and why it does not replace rendering a change locally before pushing it.
+Three workflows run on every pull request, and the first two also on every push to `main` and `development`. The [`Linters`](.github/workflows/linters.yml) workflow lints this repository's own files. The [`Tests`](.github/workflows/tests.yml) workflow renders the template body with several answer sets, which together cover every license, and updates a project rendered from the last release to the current commit, and runs each generated project's linters, tests and packaging, exactly as a consumer would. The [`Pull Requests`](.github/workflows/pull-requests.yml) workflow checks that a pull request into `main` comes from `development`. [Testing](docs/conventions/testing.md#continuous-integration) covers what it checks, and why it does not replace rendering a change locally before pushing it.
 
 ## Use of AI
 

@@ -1,11 +1,14 @@
 # The display name of the workflow, shown in the "Actions" tab of the GitHub repository and in the checks of a commit or pull request
 name: Tests
 
-# Defines the events that trigger this workflow; it runs on every push to any branch of the repository, and on every pull request, just like the
-# "Linters" workflow; it is a separate workflow file (rather than another job or step in "linters.yml") so that the two concerns show up as two
+# Defines the events that trigger this workflow; it runs on every pull request, and on every push to the default and the integration branch, just like
+# the "Linters" workflow; it is a separate workflow file (rather than another job or step in "linters.yml") so that the two concerns show up as two
 # independent checks on a commit or pull request and either one can be re-run or extended without touching the other
 on:
   push:
+    branches:
+      - "[[ default_branch ]]"
+      - "[[ integration_branch ]]"
   pull_request:
 
 # Grants the workflow's token nothing but read access to the repository contents, instead of whatever the repository's or organization's default is,
@@ -26,10 +29,6 @@ jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
-
-    # A pull request from a branch of this repository is already checked by the push to that branch, so the job only runs for a pull request when it
-    # comes from a fork
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
 
     # Stops a run that hangs instead of letting it use up the default limit of six hours
     timeout-minutes: 20

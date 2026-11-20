@@ -34,6 +34,8 @@ git push --set-upstream origin [[ integration_branch ]]
 
 Finally, enable [GitHub Pages](development-setup/setting-up-github.md#github-pages), or the workflow that publishes the documentation website fails on every push to `[[ default_branch ]]`.
 
+Optionally, once both branches exist, [protect them](development-setup/setting-up-github.md#branch-protection), so that a change only reaches them through a pull request whose checks passed. Branch protection needs a public repository, or a paid GitHub plan for a private one.
+
 ## Setting up Visual Studio Code
 
 Visual Studio Code is optional, but the repository ships a configuration for it. [Setting up Visual Studio Code](development-setup/setting-up-visual-studio-code.md) covers installing it and its extensions.

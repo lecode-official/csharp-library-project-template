@@ -4,10 +4,14 @@
 # "template/.github/workflows/"
 name: Tests
 
-# Runs on every push to any branch, and on every pull request, so that a pull request from a fork is checked as well (see the condition on each job,
-# which keeps a pull request from a branch of this repository from being checked twice)
+# Runs on every pull request, including one from a fork, and on every push to "main" and "development", which checks what the merge of a pull request
+# produced; a push to a work branch is checked by its pull request instead, so that no job has to be skipped to keep a pull request from being checked
+# twice, since a ruleset counts a skipped job as a passed check (see docs/development-setup/setting-up-github.md)
 on:
   push:
+    branches:
+      - main
+      - development
   pull_request:
 
 # Grants the workflow's token nothing but read access to the repository contents; neither rendering nor updating needs anything else
@@ -34,7 +38,6 @@ jobs:
   render:
     name: Render (${{ matrix.name }})
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     timeout-minutes: 30
 
     strategy:
@@ -189,7 +192,6 @@ jobs:
   update:
     name: Update From the Last Release (${{ matrix.name }})
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     timeout-minutes: 30
 
     # The update runs once with the pinned Copier version, and once with the oldest version that "_min_copier_version" in "copier.yml" declares,
@@ -235,8 +237,8 @@ jobs:
           echo "Installing Copier $COPIER_VERSION"
           python -m pip install "copier==$COPIER_VERSION"
 
-      # The last release is the newest release tag that the current commit contains, but that does not point at the current commit itself, so that the
-      # push of a release tag, or of the commit it points at, updates from the release before it rather than from itself
+      # The last release is the newest release tag that the current commit contains, but that does not point at the current commit itself, so that a
+      # run on the commit a release tag points at, such as a re-run after the tag was created, updates from the release before it, not from itself
       - name: Find the Last Release
         id: last-release
         run: |
@@ -362,3 +364,27 @@ jobs:
         if: ${{ !cancelled() && steps.update.outcome == 'success' }}
         working-directory: ${{ env.RENDER_DIRECTORY }}
         run: dotnet pack "source/$PRODUCT_NAME.slnx" --configuration Release
+
+  # Sums up every render and update job in a single check, so that a ruleset requires this one check rather than every job of the two matrices, which
+  # would have to be updated whenever an answer set is added (see docs/development-setup/setting-up-github.md); it runs even when a job it needs
+  # failed, since a skipped job would count as a passed check
+  result:
+    name: Tests Passed
+    runs-on: ubuntu-latest
+    needs:
+      - render
+      - update
+    if: ${{ always() }}
+    timeout-minutes: 5
+
+    steps:
+      - name: Check Results
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          for result in $RESULTS; do
+            if [ "$result" != success ]; then
+              echo "::error::Not every render and update job succeeded: $RESULTS"
+              exit 1
+            fi
+          done

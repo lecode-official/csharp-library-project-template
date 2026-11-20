@@ -2,10 +2,14 @@
 # neither workflow is part of the template body, which brings its own workflows in "template/.github/workflows/"
 name: Linters
 
-# Runs on every push to any branch, and on every pull request, so that a pull request from a fork is checked as well (see the condition on the job,
-# which keeps a pull request from a branch of this repository from being checked twice)
+# Runs on every pull request, including one from a fork, and on every push to "main" and "development", which checks what the merge of a pull request
+# produced; a push to a work branch is checked by its pull request instead, so that no job has to be skipped to keep a pull request from being checked
+# twice, since a ruleset counts a skipped job as a passed check (see docs/development-setup/setting-up-github.md)
 on:
   push:
+    branches:
+      - main
+      - development
   pull_request:
 
 # Grants the workflow's token nothing but read access to the repository contents; linting needs nothing else
@@ -26,7 +30,6 @@ jobs:
   lint:
     name: Lint Template Repository
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
     timeout-minutes: 10
 
     steps:
