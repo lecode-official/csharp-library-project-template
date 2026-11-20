@@ -43,7 +43,7 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 - **C# source code** → [docs/developer-manual/conventions/csharp-style.md](docs/developer-manual/conventions/csharp-style.md) and [comments and documentation comments](docs/developer-manual/conventions/comments-and-documentation.md).
 - **Setting up a freshly generated project, or replacing the placeholder library and logo** → [docs/developer-manual/first-steps.md](docs/developer-manual/first-steps.md).
 - **Installing the SDK, Node.js, or the editor** → [docs/developer-manual/development-setup/installing-the-tools.md](docs/developer-manual/development-setup/installing-the-tools.md) and [setting up Visual Studio Code](docs/developer-manual/development-setup/setting-up-visual-studio-code.md).
-- **The labels, the repository settings, or GitHub Pages, and the scripts that set them up** → [docs/developer-manual/development-setup/setting-up-github.md](docs/developer-manual/development-setup/setting-up-github.md).
+- **The labels, the repository settings, GitHub Pages, or the branch protection, and the scripts that set them up** → [docs/developer-manual/development-setup/setting-up-github.md](docs/developer-manual/development-setup/setting-up-github.md).
 - **Linting, formatting, spell checking, editor setup** → [docs/developer-manual/tooling/](docs/developer-manual/tooling/README.md).
 - **An analyzer finding, or changing a rule's severity** → [docs/developer-manual/tooling/static-code-analysis.md](docs/developer-manual/tooling/static-code-analysis.md).
 - **The GitHub Actions workflows, a failing check, or Dependabot** → [docs/developer-manual/tooling/continuous-integration.md](docs/developer-manual/tooling/continuous-integration.md).
@@ -80,5 +80,6 @@ Files use file-scoped namespaces and always group members into `#region` blocks 
 - If a change introduces a topic that does not fit an existing article, add a new small, single-topic article, link it from the relevant index, and reference it here if relevant.
 - If a change invalidates something a doc says, fix the doc — do not leave it stale.
 - A new ecosystem in [`.github/dependabot.yml`](.github/dependabot.yml) gets its own `Dependabot:` label, in the [GitHub workflow](docs/developer-manual/conventions/github-workflow.md#labels) and in the label script of [setting up GitHub](docs/developer-manual/development-setup/setting-up-github.md#labels).
+- A renamed job that a ruleset requires (`Run Linters`, `Run Tests`, or `Check Source Branch`) updates the branch protection script of [setting up GitHub](docs/developer-manual/development-setup/setting-up-github.md#branch-protection).
 
 Treat the docs as part of the code: a change is not done until the docs and this file reflect it.

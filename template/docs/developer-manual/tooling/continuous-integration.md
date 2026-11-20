@@ -1,23 +1,30 @@
 # Continuous Integration
 
-This article covers the GitHub Actions workflows in [`.github/workflows/`](../../../.github/workflows/): [`linters.yml`](../../../.github/workflows/linters.yml), [`tests.yml`](../../../.github/workflows/tests.yml), and [`docs.yml`](../../../.github/workflows/docs.yml), and the [Dependabot configuration](../../../.github/dependabot.yml) that keeps their pinned versions current. The workflows are independent of each other — any one can fail, be re-run, or be extended without touching the others, and a commit or pull request shows them as separate checks.
+This article covers the GitHub Actions workflows in [`.github/workflows/`](../../../.github/workflows/): [`linters.yml`](../../../.github/workflows/linters.yml), [`tests.yml`](../../../.github/workflows/tests.yml), [`pull-requests.yml`](../../../.github/workflows/pull-requests.yml), and [`docs.yml`](../../../.github/workflows/docs.yml), and the [Dependabot configuration](../../../.github/dependabot.yml) that keeps their pinned versions current. The workflows are independent of each other — any one can fail, be re-run, or be extended without touching the others, and a commit or pull request shows them as separate checks.
 
 A project hosted somewhere other than GitHub replaces these files with the equivalent for its own platform. What the workflows *do* is the part worth keeping: the same tools, the same pinned versions, the same never-stop-at-the-first-failure behavior.
 
 ## What Every Workflow Shares
 
-- **Least-privilege permissions.** Each workflow declares `permissions` explicitly instead of inheriting the repository's or organization's default, which may be write access to everything. The linters and tests workflows get `contents: read` and nothing else. The docs workflow additionally gets `pages: write` and `id-token: write`, which the GitHub Pages deployment needs.
+- **Least-privilege permissions.** Each workflow declares `permissions` explicitly instead of inheriting the repository's or organization's default, which may be write access to everything. The linters and tests workflows get `contents: read` and nothing else, and the pull requests workflow gets no permission at all. The docs workflow additionally gets `pages: write` and `id-token: write`, which the GitHub Pages deployment needs.
 - **A timeout on every job.** `timeout-minutes` stops a run that hangs instead of letting it use up GitHub's default limit of six hours.
 - **Actions pinned to a commit SHA.** Every action is referenced by the full commit SHA of a release, with the version in a comment next to it, because a tag can be moved to point at different code, while a commit SHA cannot. [Dependabot](#dependabot) keeps the pins up to date.
 - **Versions read from the repository.** The Node.js version is read from [`.nvmrc`](../../../.nvmrc) and the .NET SDK version from [`global.json`](../../../global.json), rather than being written into a workflow. A version duplicated in two places is a version that eventually disagrees with itself.
 
 ## When the Linters and Tests Workflows Run
 
-Both run on every `push`, to any branch, and on every `pull_request`. A pull request from a fork has to be checked by the `pull_request` event, because its pushes happen in another repository. A pull request from a branch of this repository, however, is already checked by the push to that branch, so each job carries a condition that skips it for such a pull request instead of running the same checks twice:
+Both run on every `pull_request`, and on every `push` to `[[ default_branch ]]` and `[[ integration_branch ]]`:
 
 ```yaml
-if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+on:
+  push:
+    branches:
+      - "[[ default_branch ]]"
+      - "[[ integration_branch ]]"
+  pull_request:
 ```
+
+A pull request is checked by the `pull_request` event, whether it comes from a branch of this repository or from a fork, whose pushes happen in another repository. A push to a work branch runs nothing on its own, since its pull request checks it, and the pushes to the two protected branches check what the merge of a pull request produced. So every check runs once, and no job has to be skipped to avoid checking a pull request twice. That matters once the branches are [protected](../development-setup/setting-up-github.md#branch-protection): GitHub counts a job that was skipped by its condition as a passed check, so a skipped job with the same name as a required check would let a pull request through, whatever the other run found. Open a draft pull request early to have a work branch checked before it is ready.
 
 A `concurrency` group per workflow and ref cancels a run that is still in progress when a newer commit arrives on the same branch or pull request, since only the result for the newest commit matters.
 
@@ -41,6 +48,12 @@ A separate workflow rather than a step in the linters one, so that "the tests fa
 4. **Reports the coverage.** A ReportGenerator summary is written into the run's own summary page, and the full HTML report is uploaded as an artifact (see [testing and code coverage](testing-and-code-coverage.md)).
 
 There is no enforced minimum coverage percentage that fails the build. See [testing](../conventions/testing.md) for what is expected of a change instead of a numeric threshold.
+
+## Pull Requests Workflow
+
+A single job, `Check Source Branch`, which fails a pull request into `[[ default_branch ]]` unless it comes from the `[[ integration_branch ]]` branch of this repository, as the [GitHub workflow](../conventions/github-workflow.md#pull-requests) requires. A pull request into any other branch passes it. It runs when a pull request is opened, reopened, or pushed to, and when it is edited, since changing a pull request's base branch is an edit, so a pull request that is moved onto `[[ default_branch ]]` is checked again. It needs neither a checkout nor any permission, because it only reads the branch names from the event.
+
+The check only stops anything once a ruleset requires it (see [branch protection](../development-setup/setting-up-github.md#branch-protection)). Then a pull request opened against `[[ default_branch ]]` by mistake, such as a Dependabot security update, cannot be merged there until its base branch is changed to `[[ integration_branch ]]`.
 
 ## Docs Workflow
 

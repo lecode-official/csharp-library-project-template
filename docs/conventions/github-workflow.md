@@ -75,6 +75,8 @@ The milestone is created when the release is planned, before its first issue, an
 
 Every pull request resolves one issue, and it goes from the work branch into `development`. Its title follows the [title rules](#titles), it carries the issue's `Type:` labels and milestone, and its description says what changed and why, in prose, followed by the disclosure of any AI involvement (see [commit messages](commit-messages.md)) and the line `Resolves #42.` that names the issue.
 
+The only pull request into `main` is the [release pull request](#releases) from `development`. The `Check Source Branch` check of the `Pull Requests` workflow fails any other pull request into `main`, and once the branches are [protected](../development-setup/setting-up-github.md#branch-protection), such a pull request cannot be merged until its base branch is changed to `development`.
+
 A pull request is merged with a merge commit, never squashed or rebased (see [the branches](git-workflow.md#the-branches)), and with a message written by hand. GitHub's default merge message does not follow the [commit message](commit-messages.md) rules, so the message is written like any other commit message, including the AI disclosure, and passed explicitly. Its subject names the branch, as in `` Merged `feature/changelog-article` ``, and its body names the pull request and the issue it resolves, as in `Merged pull request #49, which resolves #42.`:
 
 ```shell
@@ -93,7 +95,7 @@ A security update is the exception. Dependabot applies its configuration only to
 gh pr edit 14 --base development --add-label "Dependabot: npm Update"
 ```
 
-A pull request that is merged into `main` by mistake is brought back into `development` by merging `main` into `development` through a pull request, never by rewriting either branch.
+Until then, its `Check Source Branch` check fails, which is what keeps it out of `main` on a protected repository. A pull request that is merged into `main` by mistake is brought back into `development` by merging `main` into `development` through a pull request, never by rewriting either branch.
 
 Before it is merged, it is reviewed like any other change:
 

@@ -1,9 +1,9 @@
 # The display name of the workflow, shown in the "Actions" tab of the GitHub repository and in the checks of a commit or pull request
 name: Docs
 
-# Defines the events that trigger this workflow; unlike "Linters" and "Tests", which run on every push to any branch, this workflow only runs on
-# pushes to the default branch, because it deploys the documentation website to GitHub Pages, so it only ever needs to run against what is actually
-# published
+# Defines the events that trigger this workflow; unlike "Linters" and "Tests", which run on every pull request and on every push to the default and
+# the integration branch, this workflow only runs on pushes to the default branch, because it deploys the documentation website to GitHub Pages, so it
+# only ever needs to run against what is actually published
 on:
   push:
     branches:

@@ -53,7 +53,7 @@ Open `coverage-report/index.html` to browse coverage by assembly, class, and lin
 
 ## In Continuous Integration
 
-[`tests.yml`](../../../.github/workflows/tests.yml) runs on every push and on every pull request from a fork, as its own workflow separate from the linters one. It restores in `--locked-mode`, verifies that every `packages.lock.json` is committed, and then builds and tests the solution in the Release configuration, with coverage collection enabled the same way as above. It additionally renders the ReportGenerator summary into the workflow run's own summary page, through `MarkdownSummaryGithub` and `$GITHUB_STEP_SUMMARY`, so the coverage percentages are visible without downloading anything, and uploads the full HTML report as a workflow artifact.
+[`tests.yml`](../../../.github/workflows/tests.yml) runs on every pull request and on every push to `[[ default_branch ]]` and `[[ integration_branch ]]`, as its own workflow separate from the linters one. It restores in `--locked-mode`, verifies that every `packages.lock.json` is committed, and then builds and tests the solution in the Release configuration, with coverage collection enabled the same way as above. It additionally renders the ReportGenerator summary into the workflow run's own summary page, through `MarkdownSummaryGithub` and `$GITHUB_STEP_SUMMARY`, so the coverage percentages are visible without downloading anything, and uploads the full HTML report as a workflow artifact.
 
 There is no enforced minimum coverage percentage that fails the build. The expectation is stated as a rule instead of a number: a new feature arrives with tests, and a bug fix arrives with a test that would have caught it (see [testing](../conventions/testing.md)).
 

@@ -11,7 +11,7 @@ This is the documentation for the template itself: how it is laid out, what it a
    6. [Authoring](project-template/authoring.md) — the delimiters, adding a file, and verifying a change.
 2. [Development Setup](development-setup/README.md) — what to install and set up before working on the template.
    1. [Installing the Tools](development-setup/installing-the-tools.md) — Git, Node.js, Copier, what a render needs, and the optional GitHub CLI.
-   2. [Setting up GitHub](development-setup/setting-up-github.md) — the labels and the repository settings, as scripts.
+   2. [Setting up GitHub](development-setup/setting-up-github.md) — the labels, the repository settings, and the optional branch protection, as scripts.
    3. [Setting up Visual Studio Code](development-setup/setting-up-visual-studio-code.md) — installing the editor and its extensions.
 3. [Conventions](conventions/README.md) — how the files on both sides of the split are written.
    1. [C# Style](conventions/csharp-style.md) — styling the C# in the template body, and placeholders in code.
