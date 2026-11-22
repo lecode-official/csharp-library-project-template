@@ -1,4 +1,5 @@
-# The display name of the workflow, shown in the "Actions" tab of the GitHub repository and in the checks of a commit or pull request
+# The build and the tests of the solution, with code coverage (see Continuous Integration); the name is the display name of the workflow, shown in the
+# "Actions" tab of the GitHub repository and in the checks of a commit or pull request
 name: Tests
 
 # Defines the events that trigger this workflow; it runs on every pull request, and on every push to the default and the integration branch, just like

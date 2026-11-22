@@ -1,4 +1,5 @@
-# The display name of the workflow, shown in the "Actions" tab of the GitHub repository and in the checks of a commit or pull request
+# The formatting check, the Markdown linting, and the spell checking of the project's files (see Continuous Integration); the name is the display name
+# of the workflow, shown in the "Actions" tab of the GitHub repository and in the checks of a commit or pull request
 name: Linters
 
 # Defines the events that trigger this workflow; it runs on every pull request, including one from a fork, whose pushes happen in another repository,

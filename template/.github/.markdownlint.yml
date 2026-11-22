@@ -1,0 +1,4 @@
+# The Markdown linting configuration for ".github/", which extends the one at the root of the repository; the pull request template is the text a pull
+# request description starts with, and a description is prose without a heading (see GitHub Workflow), so the first line is not required to be one
+extends: ../.markdownlint.yml
+first-line-heading: false

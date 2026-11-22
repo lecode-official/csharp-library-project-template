@@ -11,6 +11,10 @@ The configuration keeps the default rules and changes two things:
 - **Line length is off.** Prose is never hard-wrapped, so do not manually wrap a Markdown line (see [line length](../conventions/line-length.md) and [Markdown style](../conventions/markdown-style.md)).
 - **Three inline-HTML elements are allowed**: `kbd`, for keyboard shortcuts, `div`, which the `README.md` uses to center-align its badge row, and `img`, which it uses to align the logo with its title. Everything else is still reported, because inline HTML in Markdown should stay the exception.
 
+## The Pull Request Template
+
+A pull request description is prose without a heading, and so is the [pull request template](../../../.github/pull_request_template.md) it starts from. [`.github/.markdownlint.yml`](../../../.github/.markdownlint.yml) extends the configuration at the root and turns `first-line-heading` off for that directory. Every other rule still applies there.
+
 ## Link Checking
 
 The configuration also turns on `relative-links`, a rule that MarkdownLint does not have built in. It comes from the npm package [`markdownlint-rule-relative-links`](https://github.com/theoludwig/markdownlint-rule-relative-links), which [`.markdownlint-cli2.yaml`](../../../.markdownlint-cli2.yaml) loads, and it reports:

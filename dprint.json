@@ -72,8 +72,8 @@
         // The vendored license texts are verbatim copies of upstream documents and must never be reformatted
         "licenses/",
 
-        // Generated files: the npm and NuGet lock files, and the Copier answers file, whose contents and quoting style are written by the tool that
-        // owns them rather than by hand; note that "*-lock.json" does not match "packages.lock.json", so both patterns are needed
+        // Generated files: the npm and NuGet lock files, whose contents and quoting style are written by the tool that owns them rather than by hand;
+        // note that "*-lock.json" does not match "packages.lock.json", so both patterns are needed
         "**/*-lock.json",
         "**/packages.lock.json",
     ],

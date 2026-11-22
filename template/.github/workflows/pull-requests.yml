@@ -1,4 +1,5 @@
-# The display name of the workflow, shown in the "Actions" tab of the GitHub repository and in the checks of a commit or pull request
+# The check that every pull request into the default branch comes from the integration branch (see GitHub Workflow); the name is the display name of
+# the workflow, shown in the "Actions" tab of the GitHub repository and in the checks of a commit or pull request
 name: Pull Requests
 
 # Defines the events that trigger this workflow; it runs on every pull request, and again whenever one is edited, since changing a pull request's base
@@ -23,9 +24,9 @@ concurrency:
 
 # Defines the jobs that make up the workflow
 jobs:
-  # Fails a pull request into the default branch unless it comes from the integration branch of this repository, so that a pull request opened
-  # against the default branch by mistake, such as a Dependabot security update, cannot be merged there once a ruleset requires the check (see
-  # GitHub Workflow); a branch of a fork that happens to have the same name does not count
+  # Fails a pull request into the default branch unless it comes from the integration branch of this repository, so that a pull request opened against
+  # the default branch by mistake, such as a Dependabot security update, cannot be merged there once a ruleset requires the check (see GitHub
+  # Workflow); a branch of a fork that happens to have the same name does not count
   source-branch:
     name: Check Source Branch
     runs-on: ubuntu-latest
@@ -34,8 +35,8 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      # The branch names are passed through environment variables rather than written into the script, so that a branch name can never be run as
-      # shell code
+      # The branch names are passed through environment variables rather than written into the script, so that a branch name can never be run as shell
+      # code
       - name: Check Source Branch
         env:
           BASE_BRANCH: ${{ github.event.pull_request.base.ref }}

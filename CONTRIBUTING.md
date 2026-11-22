@@ -6,11 +6,11 @@ All participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). Secu
 
 ## Open an Issue First
 
-Before forking the repository and starting work, open an issue describing what you want to do (see [GitHub workflow](docs/conventions/github-workflow.md#issues)). This aligns your idea with where the template is already headed, and it can save you from doing work that overlaps with something already planned. A change to the template body reaches every project generated from it, so a new tool, question, or convention is worth discussing before it is built.
+Before forking the repository and starting work, open an issue describing what you want to do, with the bug report or the feature request form that GitHub offers (see [GitHub workflow](docs/conventions/github-workflow.md#issues)). This aligns your idea with where the template is already headed, and it can save you from doing work that overlaps with something already planned. A change to the template body reaches every project generated from it, so a new tool, question, or convention is worth discussing before it is built.
 
 ## Fork, Branch, and Pull Request
 
-Fork the repository and work on a feature or fix branch (see [Git workflow](docs/conventions/git-workflow.md#branch-names)). Pull requests are always welcome once the corresponding issue has been discussed. To help the pull request merge quickly:
+Fork the repository and work on a feature or fix branch (see [Git workflow](docs/conventions/git-workflow.md#branch-names)). Pull requests are always welcome once the corresponding issue has been discussed. Its description starts from the pull request template, which asks for what changed and why, the disclosure of any AI involvement, and the issue it resolves. To help the pull request merge quickly:
 
 - **Follow the conventions of the side you change.** Root files follow the [conventions](docs/conventions/README.md) of this repository. Files in the template body follow the generated project's own conventions, plus what the root conventions add about writing them as templates — see [authoring](docs/project-template/authoring.md).
 - **Keep the documentation in step.** A new question, file, or convention is not done until the articles that describe it are updated — see the list in [`AGENTS.md`](AGENTS.md#keep-the-documentation-up-to-date), which applies to human contributors just as much.

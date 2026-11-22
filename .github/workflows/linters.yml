@@ -1,10 +1,12 @@
 # The linting of the template repository's own files (see docs/conventions/testing.md); the template body is tested by rendering it, in "tests.yml";
-# neither workflow is part of the template body, which brings its own workflows in "template/.github/workflows/"
+# neither workflow is part of the template body, which brings its own workflows in "template/.github/workflows/"; the name is the display name of the
+# workflow, shown in the "Actions" tab of the GitHub repository and in the checks of a commit or pull request
 name: Linters
 
-# Runs on every pull request, including one from a fork, and on every push to "main" and "development", which checks what the merge of a pull request
-# produced; a push to a work branch is checked by its pull request instead, so that no job has to be skipped to keep a pull request from being checked
-# twice, since a ruleset counts a skipped job as a passed check (see docs/development-setup/setting-up-github.md)
+# Defines the events that trigger this workflow; it runs on every pull request, including one from a fork, whose pushes happen in another repository,
+# and on every push to "main" and "development", which checks what the merge of a pull request produced; a push to a work branch is checked by its
+# pull request instead, so that no job has to be skipped to keep a pull request from being checked twice, since a ruleset counts a skipped job as a
+# passed check (see docs/development-setup/setting-up-github.md)
 on:
   push:
     branches:
@@ -12,7 +14,8 @@ on:
       - development
   pull_request:
 
-# Grants the workflow's token nothing but read access to the repository contents; linting needs nothing else
+# Grants the workflow's token nothing but read access to the repository contents, instead of whatever the repository's or organization's default is,
+# which may be write access to everything; linting needs nothing else
 permissions:
   contents: read
 
@@ -22,17 +25,20 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-# Every action is pinned to the full commit SHA of a release, with the version in a comment, because a tag can be moved to point at different code,
-# while a commit SHA cannot; Dependabot keeps the pins up to date (see .github/dependabot.yml)
+# Defines the jobs that make up the workflow; every action is pinned to the full commit SHA of a release, with the version in a comment, because a tag
+# can be moved to point at different code, while a commit SHA cannot; Dependabot keeps the pins up to date (see .github/dependabot.yml)
 jobs:
   # Lints the template repository's own files with the root configuration, and checks that no "if false" block crept back into the body (see
-  # AGENTS.md)
+  # AGENTS.md); runs on the latest Ubuntu image, which is the fastest and cheapest of the available runners
   lint:
     name: Lint Template Repository
     runs-on: ubuntu-latest
+
+    # Stops a run that hangs instead of letting it use up the default limit of six hours; linting takes about a minute
     timeout-minutes: 10
 
     steps:
+      # Checks out the repository into the runner's working directory, so that the linters have access to the files and their configuration files
       - name: Checkout Repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -43,12 +49,18 @@ jobs:
         with:
           node-version-file: template/.nvmrc
 
+      # Installs the exact versions of the linters and the code formatter declared in "package.json" and locked in "package-lock.json"; "ci" (rather
+      # than "install") fails instead of silently updating the lock file if it would no longer match "package.json" (see
+      # docs/conventions/dependency-management.md)
       - name: Install Linters
         run: npm ci
 
+      # Runs every check through the npm script that is run locally, so that the continuous integration and a local run can never check different
+      # things; the script runs every check even when an earlier one fails, so that every finding is reported in a single run
       - name: Lint
         run: npm run lint
 
+      # Runs even when linting failed, for the same reason
       - name: Check for Conditional Blocks in the Body
         if: ${{ !cancelled() }}
         run: |

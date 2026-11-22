@@ -27,6 +27,21 @@
             },
         },
 
+        // Runs the dprint code formatter in check mode on the entire codebase, which reports every file that is not formatted, without changing
+        // anything
+        {
+            "label": "Check Formatting",
+            "type": "npm",
+            "script": "lint:dprint",
+            "dependsOn": ["Install Dependencies"],
+            "problemMatcher": [],
+            "group": "test",
+            "icon": {
+                "id": "shield",
+                "color": "terminal.ansiCyan",
+            },
+        },
+
         // Runs MarkdownLint on the entire codebase
         {
             "label": "Lint Markdown",

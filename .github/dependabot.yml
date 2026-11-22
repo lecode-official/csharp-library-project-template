@@ -1,10 +1,13 @@
 # The Dependabot configuration of the template repository itself, which keeps the actions of its own workflows and its own linters up to date; it does
 # not reach into "template/", whose dependencies are raised deliberately and verified by rendering (see docs/conventions/dependency-management.md),
-# and Copier, which ".github/workflows/tests.yml" installs at an exact version, is raised by hand as well; every pull request is labeled with the
-# "Dependabot:" label of its ecosystem instead of Dependabot's own labels, which Dependabot silently drops if the label does not exist, so the labels
-# are created first (see docs/development-setup/setting-up-github.md); every pull request targets "development", like every other pull request, since
-# Dependabot would otherwise open it against "main"; this and every other setting here only applies to version updates, so a security update is still
-# opened against "main", and without a label, and is pointed at "development" and labeled by hand (see docs/conventions/github-workflow.md)
+# and Copier, which ".github/workflows/tests.yml" installs at an exact version, is raised by hand as well; every dependency is pinned to an exact
+# version, and every GitHub Actions action to a commit SHA, so nothing is ever upgraded implicitly, and these pull requests are what keeps the pins
+# from going stale; every ecosystem is checked once a week, and all of its updates are grouped into a single pull request, so that the upgrades arrive
+# as one reviewable change per ecosystem instead of a pull request per package; every pull request is labeled with the "Dependabot:" label of its
+# ecosystem instead of Dependabot's own labels, which Dependabot silently drops if the label does not exist, so the labels are created first (see
+# docs/development-setup/setting-up-github.md); every pull request targets "development", like every other pull request, since Dependabot would
+# otherwise open it against "main"; this and every other setting here only applies to version updates, so a security update is still opened against
+# "main", and without a label, and is pointed at "development" and labeled by hand (see docs/conventions/github-workflow.md)
 version: 2
 
 updates:

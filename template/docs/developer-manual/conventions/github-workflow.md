@@ -8,6 +8,8 @@ Every change starts with an issue, and every issue describes one change: one fea
 
 An issue says what is wrong or missing and why it matters, before it says how to fix it. A bug report adds what was done, what was expected, and what happened instead, so that anyone can reproduce it. Details that the work needs, such as decisions already made or the files involved, go into a "Details" section below the description, so that the issue is enough to start the work from.
 
+A new issue on GitHub starts from one of the issue forms in [`.github/ISSUE_TEMPLATE/`](../../../.github/ISSUE_TEMPLATE/), which ask for these sections. The bug report asks for what was done, what was expected, and what happened instead, and the feature request for the description alone; both offer the "Details" section. They preset the `Type: Bug` or the `Type: Idea or Request` [label](#labels), and leave every other label, the milestone, and the assignee to whoever maintains the project. A blank issue stays available for an issue that fits neither form, such as the [release issue](#releases), and it is written in the same format. A security vulnerability is never reported in an issue, and the issue forms point to the [security policy](../../../SECURITY.md) for it.
+
 The work branch is created from its issue, which links the two on GitHub:
 
 ```shell
@@ -76,7 +78,7 @@ The milestone is created when the release is [planned](#planning-a-release), bef
 
 ## Pull Requests
 
-Every pull request resolves one issue, and it goes from the work branch into `[[ integration_branch ]]`. Its title follows the [title rules](#titles), it carries the issue's `Type:` labels and milestone, and its description says what changed and why, in prose, followed by the disclosure of any AI involvement (see [commit messages](commit-messages.md)) and the line `Resolves #12.` that names the issue.
+Every pull request resolves one issue, and it goes from the work branch into `[[ integration_branch ]]`. Its title follows the [title rules](#titles), it carries the issue's `Type:` labels and milestone, and its description says what changed and why, in prose, followed by the disclosure of any AI involvement (see [commit messages](commit-messages.md)) and the line `Resolves #12.` that names the issue. A new pull request on GitHub starts from the [pull request template](../../../.github/pull_request_template.md), which holds these three parts as text to replace.
 
 The only pull request into `[[ default_branch ]]` is the [release pull request](#releases) from `[[ integration_branch ]]`. The `Check Source Branch` check of the `Pull Requests` workflow fails any other pull request into `[[ default_branch ]]`, and once the branches are [protected](../development-setup/setting-up-github.md#branch-protection), such a pull request cannot be merged until its base branch is changed to `[[ integration_branch ]]`.
 

@@ -37,6 +37,8 @@ Every linter and formatter configuration lives at the repository root, where eac
 
 Several of them have no choice anyway: the compiler only discovers `.globalconfig` in the directory of a source file or one of its parents, and dprint rejects its own `incremental` setting inside an extended configuration. In the explorer of Visual Studio Code, they are nested under `.editorconfig` (see [editor integration](editor-integration.md)).
 
+The one exception is [`.github/.markdownlint.yml`](../../../.github/.markdownlint.yml), which extends `.markdownlint.yml` for the pull request template, since a pull request description does not start with a heading (see [MarkdownLint](linting-markdownlint.md#the-pull-request-template)).
+
 ## How to Run
 
 ```shell

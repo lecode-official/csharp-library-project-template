@@ -1,0 +1,60 @@
+# The issue form for a bug report, which GitHub offers when a new issue is opened; it asks for the sections a bug report has (see GitHub Workflow),
+# and presets the "Type: Bug" label, which GitHub only applies when the label exists (see Setting up GitHub); every other label, the milestone, and
+# the assignee are left to whoever maintains the project, since a contributor cannot set them
+name: Bug Report
+description: Report something in [[ product_name ]] that does not work as described.
+labels:
+  - "Type: Bug"
+
+# The fields of the form, in the order in which they are shown; each field becomes a section of the issue, headed by its label
+body:
+  # The guidance for the title, which the form cannot check, and the pointer to the security policy
+  - type: markdown
+    attributes:
+      value: >-
+        Give the issue a title in title case that says what is to be done, as in "Fix the Greeting for an Empty Name". Report a security
+        vulnerability through the security policy instead, never in a public issue.
+
+  # What is wrong, and why it matters, before how to fix it
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What is wrong, and why it matters.
+    validations:
+      required: true
+
+  # The steps that reproduce the bug
+  - type: textarea
+    id: what-was-done
+    attributes:
+      label: What Was Done
+      description: >-
+        The steps that lead to the bug, such as the code that uses [[ product_name ]], and the version of [[ product_name ]] and of .NET, so that
+        anyone can reproduce it.
+    validations:
+      required: true
+
+  # What should have happened
+  - type: textarea
+    id: what-was-expected
+    attributes:
+      label: What Was Expected
+    validations:
+      required: true
+
+  # What happened instead
+  - type: textarea
+    id: what-happened-instead
+    attributes:
+      label: What Happened Instead
+      description: Include any error message or exception as it was printed.
+    validations:
+      required: true
+
+  # The details the fix needs, which are optional
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Anything the fix needs beyond the description, such as a suspected cause or the files involved.
