@@ -1,4 +1,5 @@
-# The display name of the workflow, shown in the "Actions" tab of the GitHub repository and in the checks of a commit or pull request
+# The build of the documentation website and its deployment to GitHub Pages (see Documentation Website); the name is the display name of the workflow,
+# shown in the "Actions" tab of the GitHub repository and in the checks of a commit or pull request
 name: Docs
 
 # Defines the events that trigger this workflow; unlike "Linters" and "Tests", which run on every pull request and on every push to the default and

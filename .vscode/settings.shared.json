@@ -56,8 +56,8 @@
     },
 
     // Configures the nesting of files that belong together in the explorer (the nested files are not expanded by default); this configuration nests
-    // all Node.js-related configuration files under the "package.json" file, and all linter and code formatter configuration files under the
-    // ".editorconfig" file
+    // all Node.js-related configuration files, and "package.json" itself, under the "copier.yml" file, which is what the template repository is
+    // about, and all linter and code formatter configuration files under the ".editorconfig" file
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.expand": false,
     "explorer.fileNesting.patterns": {

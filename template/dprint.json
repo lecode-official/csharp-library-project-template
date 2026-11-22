@@ -1,4 +1,6 @@
 {
+    // The code formatting configuration of the project (see Code Formatting (dprint))
+
     // By default, dprint only formats files that have changed since the last time it was run; setting "incremental" to false forces dprint to always
     // format all eligible files; unlike most settings, "incremental" is a global setting that cannot be inherited through "extends" (dprint reports
     // it as an unknown property when it appears in an extended configuration), so it always has to be declared in the top-level configuration

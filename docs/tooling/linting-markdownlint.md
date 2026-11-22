@@ -29,6 +29,10 @@ npx markdownlint-cli2 "**/*.md" "!**/node_modules/**" "!template/**" "!licenses/
 
 The sharpest difference between the two is the table rule. A placeholder inside a Markdown table in the body produces a table that the generated project reports with `MD060`, so never put one there (see [Markdown style](../conventions/markdown-style.md#placeholders-in-body-markdown)).
 
+## The Pull Request Template
+
+A pull request description is prose without a heading, and so is the [pull request template](../../.github/pull_request_template.md) it starts from. [`.github/.markdownlint.yml`](../../.github/.markdownlint.yml) extends the root's configuration and turns `first-line-heading` off for that directory, and the body's `.github/` has the same file. Every other rule still applies there.
+
 ## Link Checking
 
 Both configurations also turn on `relative-links`, a rule that MarkdownLint does not have built in. It comes from the npm package [`markdownlint-rule-relative-links`](https://github.com/theoludwig/markdownlint-rule-relative-links), which [`.markdownlint-cli2.yaml`](../../.markdownlint-cli2.yaml) and its copy in the body load, and it reports:

@@ -1,0 +1,10 @@
+# The configuration of the issue templates in this directory, which GitHub offers when a new issue is opened
+
+# Keeps a blank issue available, for an issue that fits neither form, such as a release issue (see docs/conventions/github-workflow.md#releases)
+blank_issues_enabled: true
+
+# Points a security vulnerability at the private reporting the security policy describes, instead of a public issue
+contact_links:
+  - name: Security Vulnerability
+    url: https://github.com/lecode-official/csharp-library-project-template/security/policy
+    about: Report a security vulnerability privately, as the security policy describes, never in a public issue.

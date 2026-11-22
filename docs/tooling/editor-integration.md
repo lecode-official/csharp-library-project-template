@@ -33,7 +33,7 @@ Because the editor uses the root's configuration everywhere, it reports nothing 
 
 ## Tasks
 
-[`tasks.shared.json`](../../.vscode/tasks.shared.json) mirrors the root's npm scripts: Install Dependencies, Format, Lint Markdown, Lint Spelling, and the combined Lint, which is the default task of the `test` group. Every npm task depends on Install Dependencies, and the lint tasks carry problem matchers, so findings land in the Problems panel. There is no build or test task, because the root has nothing to build.
+[`tasks.shared.json`](../../.vscode/tasks.shared.json) mirrors the root's npm scripts: Install Dependencies, Format, Check Formatting, Lint Markdown, Lint Spelling, and the combined Lint, which is the default task of the `test` group. Every npm task depends on Install Dependencies, and the lint tasks carry problem matchers, so findings land in the Problems panel. There is no build or test task, because the root has nothing to build.
 
 ## The Body's Editor Configuration
 

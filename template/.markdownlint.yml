@@ -1,3 +1,5 @@
+# The Markdown linting configuration of the project, which ".github/.markdownlint.yml" extends (see Markdown Linting (MarkdownLint))
+
 # Use the default configuration for all rules
 default: true
 

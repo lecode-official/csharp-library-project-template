@@ -3,7 +3,7 @@
 .DS_Store
 Thumbs.db
 
-# IDEs and code editors
+# IDEs and code editors (Visual Studio Code settings, tasks, and extensions are excluded)
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.shared.json

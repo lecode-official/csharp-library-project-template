@@ -1,5 +1,6 @@
-# The Markdown linting configuration for the template repository's own articles; the generated project brings its own configuration, at
-# "template/.markdownlint.yml", which is what checks the articles the template emits (see docs/project-template/template-structure.md)
+# The Markdown linting configuration for the template repository's own articles, which ".github/.markdownlint.yml" extends (see
+# docs/tooling/linting-markdownlint.md); the generated project brings its own configuration, at "template/.markdownlint.yml", which is what checks the
+# articles the template emits (see docs/project-template/template-structure.md)
 
 # Use the default configuration for all rules
 default: true

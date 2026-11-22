@@ -1,12 +1,14 @@
 # The tests of the template body (see docs/conventions/testing.md); it renders the body with several answer sets, and updates a project rendered from
 # the last release to the current commit, and runs every generated project's own linters, build, tests, and packaging, exactly as a consumer would;
 # the template repository's own files are linted in "linters.yml"; neither workflow is part of the template body, which brings its own workflows in
-# "template/.github/workflows/"
+# "template/.github/workflows/"; the name is the display name of the workflow, shown in the "Actions" tab of the GitHub repository and in the checks
+# of a commit or pull request
 name: Tests
 
-# Runs on every pull request, including one from a fork, and on every push to "main" and "development", which checks what the merge of a pull request
-# produced; a push to a work branch is checked by its pull request instead, so that no job has to be skipped to keep a pull request from being checked
-# twice, since a ruleset counts a skipped job as a passed check (see docs/development-setup/setting-up-github.md)
+# Defines the events that trigger this workflow; it runs on every pull request, including one from a fork, whose pushes happen in another repository,
+# and on every push to "main" and "development", which checks what the merge of a pull request produced; a push to a work branch is checked by its
+# pull request instead, so that no job has to be skipped to keep a pull request from being checked twice, since a ruleset counts a skipped job as a
+# passed check (see docs/development-setup/setting-up-github.md)
 on:
   push:
     branches:
@@ -14,7 +16,8 @@ on:
       - development
   pull_request:
 
-# Grants the workflow's token nothing but read access to the repository contents; neither rendering nor updating needs anything else
+# Grants the workflow's token nothing but read access to the repository contents, instead of whatever the repository's or organization's default is,
+# which may be write access to everything; neither rendering nor updating needs anything else
 permissions:
   contents: read
 
@@ -29,15 +32,17 @@ concurrency:
 env:
   PINNED_COPIER_VERSION: "9.19.1"
 
-# Every action is pinned to the full commit SHA of a release, with the version in a comment, because a tag can be moved to point at different code,
-# while a commit SHA cannot; Dependabot keeps the pins up to date (see .github/dependabot.yml)
+# Defines the jobs that make up the workflow; every action is pinned to the full commit SHA of a release, with the version in a comment, because a tag
+# can be moved to point at different code, while a commit SHA cannot; Dependabot keeps the pins up to date (see .github/dependabot.yml)
 jobs:
-  # Renders the template body once per answer set and verifies the generated project; between them, the answer sets cover every license, both
-  # serviced SDK bands, a product name with spaces and a dot, which is the answer most likely to break a file name or a quoted command, and the oldest
-  # Copier version the template supports
+  # Renders the template body once per answer set and verifies the generated project; between them, the answer sets cover every license, both serviced
+  # SDK bands, a product name with spaces and a dot, which is the answer most likely to break a file name or a quoted command, and the oldest Copier
+  # version the template supports
   render:
     name: Render (${{ matrix.name }})
     runs-on: ubuntu-latest
+
+    # Stops a run that hangs instead of letting it use up the default limit of six hours; a render with its build and tests takes a few minutes
     timeout-minutes: 30
 
     strategy:
@@ -94,13 +99,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Installs Python, which Copier runs on, in an exact version, like every other dependency
       - name: Set Up Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.13.17"
 
-      # Installs the pinned Copier version, or, for an answer set that asks for the minimum version, the version "_min_copier_version" in
-      # "copier.yml" declares, which is read from there, so that the tested floor cannot fall behind the declared one
+      # Installs the pinned Copier version, or, for an answer set that asks for the minimum version, the version "_min_copier_version" in "copier.yml"
+      # declares, which is read from there, so that the tested floor cannot fall behind the declared one
       - name: Install Copier
         env:
           COPIER_VERSION: ${{ matrix.copier_version }}
@@ -146,6 +152,8 @@ jobs:
           fi
           exit $status
 
+      # Installs Node.js and the .NET SDK in the versions the generated project pins in its ".nvmrc" and "global.json", which is what its own
+      # continuous integration installs, too; the SDK differs between the answer sets
       - name: Set Up Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -192,10 +200,12 @@ jobs:
   update:
     name: Update From the Last Release (${{ matrix.name }})
     runs-on: ubuntu-latest
+
+    # Stops a run that hangs instead of letting it use up the default limit of six hours; an update with its build and tests takes a few minutes
     timeout-minutes: 30
 
-    # The update runs once with the pinned Copier version, and once with the oldest version that "_min_copier_version" in "copier.yml" declares,
-    # since the files the template only creates depend on how Copier treats the "_exclude" patterns on an update
+    # The update runs once with the pinned Copier version, and once with the oldest version that "_min_copier_version" in "copier.yml" declares, since
+    # the files the template only creates depend on how Copier treats the "_exclude" patterns on an update
     strategy:
       fail-fast: false
       matrix:
@@ -204,6 +214,7 @@ jobs:
           - name: Minimum Copier Version
             copier_version: minimum
 
+    # The project is rendered with the default answers, into a directory of its own, as in the render job
     env:
       PRODUCT_NAME: Render Test
       RENDER_DIRECTORY: ${{ github.workspace }}/../render
@@ -215,13 +226,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Installs Python, which Copier runs on, as in the render job
       - name: Set Up Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.13.17"
 
-      # Installs the pinned Copier version, or, for an answer set that asks for the minimum version, the version "_min_copier_version" in
-      # "copier.yml" declares, which is read from there, so that the tested floor cannot fall behind the declared one
+      # Installs the pinned Copier version, or, for an answer set that asks for the minimum version, the version "_min_copier_version" in "copier.yml"
+      # declares, which is read from there, so that the tested floor cannot fall behind the declared one
       - name: Install Copier
         env:
           COPIER_VERSION: ${{ matrix.copier_version }}
@@ -272,8 +284,8 @@ jobs:
           git -c user.name="Continuous Integration" -c user.email="ci@example.com" commit --quiet \
             --message "Rendered ${{ steps.last-release.outputs.tag }}"
 
-      # Updates the project with the answers it recorded, and the default answer of any question the last release did not ask yet; "--conflict
-      # inline" writes a conflict into the file as conflict markers, which the next step looks for
+      # Updates the project with the answers it recorded, and the default answer of any question the last release did not ask yet; "--conflict inline"
+      # writes a conflict into the file as conflict markers, which the next step looks for
       - name: Update to Current Commit
         id: update
         working-directory: ${{ env.RENDER_DIRECTORY }}
@@ -336,6 +348,7 @@ jobs:
           fi
           exit $status
 
+      # Installs Node.js and the .NET SDK in the versions the updated project pins, as in the render job
       - name: Set Up Node.js
         if: ${{ !cancelled() && steps.update.outcome == 'success' }}
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -348,6 +361,7 @@ jobs:
         with:
           global-json-file: ${{ env.RENDER_DIRECTORY }}/global.json
 
+      # Lints, tests, and packs the updated project, as the render job does a freshly rendered one
       - name: Lint Updated Project
         if: ${{ !cancelled() && steps.update.outcome == 'success' }}
         working-directory: ${{ env.RENDER_DIRECTORY }}
@@ -375,9 +389,12 @@ jobs:
       - render
       - update
     if: ${{ always() }}
+
+    # Stops a run that hangs instead of letting it use up the default limit of six hours; the check takes seconds
     timeout-minutes: 5
 
     steps:
+      # Fails unless every job it needs succeeded, so that a failed, a cancelled, and a skipped job all fail the check
       - name: Check Results
         env:
           RESULTS: ${{ join(needs.*.result, ' ') }}
