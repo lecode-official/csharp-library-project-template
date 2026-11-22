@@ -152,6 +152,7 @@
         "renderable",
         "reportgenerator",
         "reporttypes",
+        "retarget",
         "roslyn",
         "roslynator",
         "rsvg",

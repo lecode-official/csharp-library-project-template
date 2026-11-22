@@ -78,7 +78,7 @@ The milestone is created when the release is [planned](#planning-a-release), bef
 
 ## Pull Requests
 
-Every pull request resolves one issue, and it goes from the work branch into `[[ integration_branch ]]`. Its title follows the [title rules](#titles), it carries the issue's `Type:` labels and milestone, and its description says what changed and why, in prose, followed by the disclosure of any AI involvement (see [commit messages](commit-messages.md)) and the line `Resolves #12.` that names the issue. A new pull request on GitHub starts from the [pull request template](../../../.github/pull_request_template.md), which holds these three parts as text to replace.
+Every pull request resolves one issue, and it goes from the work branch into `[[ integration_branch ]]`. Its title follows the [title rules](#titles), it carries the issue's `Type:` labels and milestone, and its description says what changed and why, in prose, followed by the disclosure of any AI involvement (see [commit messages](commit-messages.md)) and the line `Resolves #12.` that names the issue. A new pull request on GitHub starts from the [pull request template](../../../.github/pull_request_template.md), which holds these three parts as text to replace. A pull request is assigned to whoever is responsible for it. One that is only opened may stay unassigned, so that someone else can take it up for a review, but one that is opened and merged on a single instruction, such as ["finish the issue"](git-workflow.md#ask-for-the-thing-you-want), is assigned to the user who gave it.
 
 The only pull request into `[[ default_branch ]]` is the [release pull request](#releases) from `[[ integration_branch ]]`. The `Check Source Branch` check of the `Pull Requests` workflow fails any other pull request into `[[ default_branch ]]`, and once the branches are [protected](../development-setup/setting-up-github.md#branch-protection), such a pull request cannot be merged until its base branch is changed to `[[ integration_branch ]]`.
 
@@ -94,13 +94,15 @@ GitHub only closes an issue through `Resolves #12.` when the pull request goes i
 
 Dependabot opens a pull request whenever a newer version of a dependency is released (see [dependency management](dependency-management.md)). Such a pull request has no issue, so it carries the `Dependabot:` label of its ecosystem instead of a `Type:` label, and it is assigned to the milestone of the next release like every other pull request. Dependabot opens it against `[[ integration_branch ]]`, like every other pull request, because its configuration sets `target-branch`.
 
-A security update is the exception. Dependabot applies its configuration only to version updates, so it opens a security update against the default branch, `[[ default_branch ]]`, and without a label. Before anything else, point it at `[[ integration_branch ]]` and give it its label:
+A security update is the exception. Dependabot applies its configuration only to version updates, so it opens a security update against the default branch, `[[ default_branch ]]`, and without a label. As soon as it is opened, the [`Dependabot Security Updates`](../../../.github/workflows/dependabot-security-updates.yml) workflow points it at `[[ integration_branch ]]` and gives it the label of its ecosystem (see [continuous integration](../tooling/continuous-integration.md#dependabot-security-updates-workflow)). Dependabot computed the update against `[[ default_branch ]]`, which `[[ integration_branch ]]` always contains, so the diff stays the same.
+
+The workflow runs as it is on `[[ default_branch ]]`, so it only takes effect once it has reached `[[ default_branch ]]`. Should it not have run, or have failed for an ecosystem that has no label, point the pull request at `[[ integration_branch ]]` and label it by hand:
 
 ```shell
 gh pr edit 14 --base [[ integration_branch ]] --add-label "Dependabot: npm Update"
 ```
 
-Until then, its `Check Source Branch` check fails, which is what keeps it out of `[[ default_branch ]]` on a protected repository. A pull request that is merged into `[[ default_branch ]]` by mistake is brought back into `[[ integration_branch ]]` by merging `[[ default_branch ]]` into `[[ integration_branch ]]` through a pull request, never by rewriting either branch.
+Until it is pointed at `[[ integration_branch ]]`, its `Check Source Branch` check fails, which is what keeps it out of `[[ default_branch ]]` on a protected repository. A pull request that is merged into `[[ default_branch ]]` by mistake is brought back into `[[ integration_branch ]]` by merging `[[ default_branch ]]` into `[[ integration_branch ]]` through a pull request, never by rewriting either branch.
 
 Before it is merged, it is reviewed like any other change:
 
