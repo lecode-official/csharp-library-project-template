@@ -80,7 +80,7 @@ Files use file-scoped namespaces and always group members into `#region` blocks 
 - A change to the public API updates the User Manual (how consumers use it), not only the Developer Manual (how the codebase itself is built) — the two serve different audiences, and the same change often needs a separate edit to each.
 - If a change introduces a topic that does not fit an existing article, add a new small, single-topic article, link it from the relevant index, and reference it here if relevant.
 - If a change invalidates something a doc says, fix the doc — do not leave it stale.
-- A new ecosystem in [`.github/dependabot.yml`](.github/dependabot.yml) gets its own `Dependabot:` label, in the [GitHub workflow](docs/developer-manual/conventions/github-workflow.md#labels) and in the label script of [setting up GitHub](docs/developer-manual/development-setup/setting-up-github.md#labels).
+- A new ecosystem in [`.github/dependabot.yml`](.github/dependabot.yml) gets its own `Dependabot:` label, in the [GitHub workflow](docs/developer-manual/conventions/github-workflow.md#labels) in the label script of [setting up GitHub](docs/developer-manual/development-setup/setting-up-github.md#labels), and in the `case` statement of [`.github/workflows/dependabot-security-updates.yml`](.github/workflows/dependabot-security-updates.yml).
 - A renamed job that a ruleset requires (`Run Linters`, `Run Tests`, or `Check Source Branch`) updates the branch protection script of [setting up GitHub](docs/developer-manual/development-setup/setting-up-github.md#branch-protection).
 
 Treat the docs as part of the code: a change is not done until the docs and this file reflect it.

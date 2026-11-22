@@ -5,8 +5,8 @@
 # labeled with the "Dependabot:" label of its ecosystem instead of Dependabot's own labels, which Dependabot silently drops if the label does not
 # exist, so the labels are created first (see Setting up GitHub); every pull request targets the integration branch, like every other pull request,
 # since Dependabot would otherwise open it against the default branch; this and every other setting here only applies to version updates, so a
-# security update is still opened against the default branch, and without a label, and is pointed at the integration branch and labeled by hand (see
-# GitHub Workflow)
+# security update is still opened against the default branch, and without a label, and is pointed at the integration branch and labeled by the
+# "Dependabot Security Updates" workflow instead (see GitHub Workflow); a new ecosystem gets its label in that workflow, too
 version: 2
 
 updates:

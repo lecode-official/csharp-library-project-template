@@ -91,13 +91,15 @@ GitHub only closes an issue through `Resolves #42.` when the pull request goes i
 
 Dependabot opens a pull request whenever a newer version of a dependency is released (see [dependency management](dependency-management.md)). Such a pull request has no issue, so it carries the `Dependabot:` label of its ecosystem instead of a `Type:` label, and it is assigned to the milestone of the next release like every other pull request. Dependabot opens it against `development`, like every other pull request, because its configuration sets `target-branch`.
 
-A security update is the exception. Dependabot applies its configuration only to version updates, so it opens a security update against the default branch, `main`, and without a label. Before anything else, point it at `development` and give it its label:
+A security update is the exception. Dependabot applies its configuration only to version updates, so it opens a security update against the default branch, `main`, and without a label. As soon as it is opened, the [`Dependabot Security Updates`](../../.github/workflows/dependabot-security-updates.yml) workflow points it at `development` and gives it the label of its ecosystem (see [testing](testing.md#continuous-integration)). Dependabot computed the update against `main`, which `development` always contains, so the diff stays the same.
+
+The workflow runs as it is on `main`, so it only takes effect once a release has brought it there. Should it not have run, or have failed for an ecosystem that has no label, point the pull request at `development` and label it by hand:
 
 ```shell
 gh pr edit 14 --base development --add-label "Dependabot: npm Update"
 ```
 
-Until then, its `Check Source Branch` check fails, which is what keeps it out of `main` on a protected repository. A pull request that is merged into `main` by mistake is brought back into `development` by merging `main` into `development` through a pull request, never by rewriting either branch.
+Until it is pointed at `development`, its `Check Source Branch` check fails, which is what keeps it out of `main` on a protected repository. A pull request that is merged into `main` by mistake is brought back into `development` by merging `main` into `development` through a pull request, never by rewriting either branch.
 
 Before it is merged, it is reviewed like any other change:
 

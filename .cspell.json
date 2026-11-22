@@ -104,6 +104,7 @@
         "publiccode",
         "renderable",
         "reportgenerator",
+        "retarget",
         "Roslynator",
         "slnx",
         "SPDX",
