@@ -37,7 +37,7 @@ env:
 jobs:
   # Renders the template body once per answer set and verifies the generated project; between them, the answer sets cover every license, both serviced
   # SDK bands, a product name and a sample app name with spaces and a dot, the derived defaults of the namespaces as well as answers of their own, a
-  # sample app slug other than the default, and the oldest Copier version the template supports
+  # sample app slug other than the default, both answers of "publish_to_nuget", and the oldest Copier version the template supports
   render:
     name: Render (${{ matrix.name }})
     runs-on: ubuntu-latest
@@ -59,9 +59,11 @@ jobs:
 
           # A product name and a sample app name with spaces and a dot, which are the answers most likely to break a file name or a quoted command,
           # a sample app slug other than the default, and namespaces of their own; it builds the documentation website as well, since the API
-          # reference is generated from the sample app's build output
+          # reference is generated from the sample app's build output, and does not publish to NuGet, so that the documentation is built with both
+          # answers of "publish_to_nuget"
           - name: Spaces and Dots
             product_name: Render.Test Library
+            publish_to_nuget: false
             root_namespace: RenderTest.Library
             sample_app_name: Render.Test Playground
             sample_app_slug: playground-app
@@ -85,6 +87,7 @@ jobs:
             license: GPL-3.0-or-later
           - name: GPL-3.0-only
             license: GPL-3.0-only
+          # nuget.org rejects an "UNLICENSED" package, so the default of "publish_to_nuget" follows the license, which this answer set tests
           - name: UNLICENSED
             license: UNLICENSED
           # The default answers once more, rendered with the oldest Copier version that "_min_copier_version" in "copier.yml" declares, which is the
@@ -101,6 +104,7 @@ jobs:
       SAMPLE_APP_NAME: ${{ matrix.sample_app_name }}
       SAMPLE_APP_SLUG: ${{ matrix.sample_app_slug }}
       SAMPLE_APP_NAMESPACE: ${{ matrix.sample_app_namespace }}
+      PUBLISH_TO_NUGET: ${{ matrix.publish_to_nuget }}
       DOTNET_SDK_VERSION: ${{ matrix.dotnet_sdk_version || '10.0.403' }}
       RENDER_DIRECTORY: ${{ github.workspace }}/../render
 
@@ -145,6 +149,7 @@ jobs:
           [ -n "$SAMPLE_APP_NAME" ] && answers+=(--data sample_app_name="$SAMPLE_APP_NAME")
           [ -n "$SAMPLE_APP_SLUG" ] && answers+=(--data sample_app_slug="$SAMPLE_APP_SLUG")
           [ -n "$SAMPLE_APP_NAMESPACE" ] && answers+=(--data sample_app_namespace="$SAMPLE_APP_NAMESPACE")
+          [ -n "$PUBLISH_TO_NUGET" ] && answers+=(--data publish_to_nuget="$PUBLISH_TO_NUGET")
           copier copy --defaults --vcs-ref HEAD \
             --data product_name="$PRODUCT_NAME" \
             --data product_description="A project rendered by the continuous integration of the template." \

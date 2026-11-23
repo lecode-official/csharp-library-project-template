@@ -2,11 +2,11 @@
 
 This article covers every question the template asks, what each answer feeds, how each answer is validated, and how to add a question.
 
-Copier asks questions **in declaration order**, and a question may only reference the answers above it — which is why `dotnet_sdk_version` is declared after `target_framework`, `root_namespace` after `library_slug`, `package_id` after `root_namespace`, and the sample app's questions after the library's. It is also why the check that the sample app's slug differs from the library's sits in the validator of `sample_app_slug`, not of `library_slug`.
+Copier asks questions **in declaration order**, and a question may only reference the answers above it — which is why `dotnet_sdk_version` is declared after `target_framework`, `root_namespace` after `library_slug`, `package_id` after `root_namespace`, `publish_to_nuget` after `license`, and the sample app's questions after the library's. It is also why the check that the sample app's slug differs from the library's sits in the validator of `sample_app_slug`, not of `library_slug`, and why the check that a published library is not `UNLICENSED` sits in the validator of `publish_to_nuget`, not of `license`.
 
 ## Types and Validation
 
-Every question is declared with `type: str`. Only `target_framework` and `license` restrict the answer to a list of `choices`. Every other question accepts free text, and its `validator` rejects an answer that would break the generated project, with a message that says what is allowed.
+Every question but `publish_to_nuget`, a `bool`, is declared with `type: str`. Only `target_framework` and `license` restrict the answer to a list of `choices`. Every other question accepts free text, and its `validator` rejects an answer that would break the generated project, with a message that says what is allowed.
 
 An answer ends up in file names, C# code, XML, JSON, YAML, Markdown and Python strings. Rather than escaping every answer for every format it lands in, the validators only allow characters that are safe in all of them. Each validator uses the `regex_search` filter of the `jinja2_ansible_filters` extension, which Copier always loads, so none of them costs a `--trust`.
 
@@ -21,7 +21,7 @@ A validator runs on every answer Copier collects, including a default the person
 | `product_description` | —                           | Not empty, and none of `"`, `\`, `<`, `>` and `&`.                                                                                                                                | The NuGet `Description`, the website's `site_description`, and the read me.                                                                                      |
 | `library_slug`        | `product_slug`              | The same pattern as `product_slug`, and neither `unit-tests` nor `documentation-website`, which name other directories under `build/`.                                            | The library's directory under `source/`, which is also its build output directory under `build/`.                                                                |
 | `root_namespace`      | derived from `library_slug` | One or more PascalCase identifiers separated by dots, each starting with an uppercase letter and containing only letters and digits, such as `CliNetCore` or `LeCode.CliNetCore`. | `RootNamespace`, and the `namespace` in every `.cs` file. The unit test project derives its own namespace from it, and `sample_app_namespace` defaults to it.    |
-| `package_id`          | `root_namespace`            | Letters, digits and underscores in groups separated by single dots or hyphens, and at most 100 characters, which are NuGet's own rules for a package identifier.                  | The NuGet `PackageId`.                                                                                                                                           |
+| `package_id`          | `root_namespace`            | Letters, digits and underscores in groups separated by single dots or hyphens, and at most 100 characters, which are NuGet's own rules for a package identifier.                  | The NuGet `PackageId`, whether or not the package is published to nuget.org.                                                                                     |
 
 ## The Sample App
 
@@ -65,11 +65,12 @@ The branch names are limited to the characters Git allows in a branch name that 
 
 ## Toolchain and License
 
-| Question             | Default                  | Validation                                                                                                         | Feeds                                                                                    |
-| -------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
-| `target_framework`   | `net10.0`                | One of the `choices`, of which `net10.0` is the only one.                                                          | The `TargetFramework` of all three projects, and the build output paths that contain it. |
-| `dotnet_sdk_version` | `10.0.403` for `net10.0` | A full release version of the form `X.Y.ZZZ`, starting with the target framework's version, `10.0.` for `net10.0`. | The SDK version pinned exactly in `global.json`.                                         |
-| `license`            | `LGPL-3.0-or-later`      | One of the `choices`.                                                                                              | The `LICENSE` file, and the library's `PackageLicenseExpression`.                        |
+| Question             | Default                                    | Validation                                                                                                         | Feeds                                                                                                                                                                             |
+| -------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `target_framework`   | `net10.0`                                  | One of the `choices`, of which `net10.0` is the only one.                                                          | The `TargetFramework` of all three projects, and the build output paths that contain it.                                                                                          |
+| `dotnet_sdk_version` | `10.0.403` for `net10.0`                   | A full release version of the form `X.Y.ZZZ`, starting with the target framework's version, `10.0.` for `net10.0`. | The SDK version pinned exactly in `global.json`.                                                                                                                                  |
+| `license`            | `LGPL-3.0-or-later`                        | One of the `choices`.                                                                                              | The `LICENSE` file, and the library's `PackageLicenseExpression`.                                                                                                                 |
+| `publish_to_nuget`   | `false` for `UNLICENSED`, otherwise `true` | A yes or a no, and not yes for `UNLICENSED`, since nuget.org rejects a package with that license expression.       | Whether the release workflow has a job that publishes to nuget.org, and whether the documentation covers setting up trusted publishing and installing the package from nuget.org. |
 
 ### `target_framework`
 
@@ -94,6 +95,14 @@ The default is rendered from `target_framework`, as `[% if target_framework == '
 ### `license`
 
 An SPDX identifier, which becomes both the `LICENSE` file's content and the library's `PackageLicenseExpression`. See [licensing](licensing.md) — in particular for why only some of these take a copyright substitution.
+
+### `publish_to_nuget`
+
+A library that is not published still packs its package, and the release workflow attaches it to every GitHub Release, together with its symbol package, under its `package_id`. That is why `package_id` is asked either way. A `when` that skipped it would have done more than hide the question: Copier does not record an answer to a skipped question, so an update that skipped it would have replaced a project's own `package_id` with the default.
+
+The check that an `UNLICENSED` library is not published sits in this question's validator, and its default follows the license, so that an `UNLICENSED` project does not publish unless it is told to. The check must not sit in the validator of `license`: when `copier update --defaults` replays a recorded answer that its validator rejects, Copier replaces it with the question's default, and an update would silently relicense an `UNLICENSED` project under `LGPL-3.0-or-later`.
+
+The read me, the user manual's index, and its getting started article describe installing the package from nuget.org, or from a GitHub Release, but the template only creates them, so a project that changes its answer on an update adjusts both by hand (see [migration guide](migration-guide.md#nuget-publishing)).
 
 ## Adding a Question
 

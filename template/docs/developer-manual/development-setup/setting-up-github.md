@@ -1,6 +1,6 @@
 # Setting up GitHub
 
-This article covers what to set up on GitHub for the project, once its repository exists there: its labels, its repository settings, GitHub Pages for the documentation website, and, optionally, its branch protection. All of it is done with the [GitHub CLI](installing-the-tools.md#the-github-cli), as scripts to run from a clone of the repository, so that the repository gets them exactly as documented. Running a script again is safe, since every command sets a value rather than adding one.
+This article covers what to set up on GitHub for the project, once its repository exists there: its labels, its repository settings, GitHub Pages for the documentation website, [% if publish_to_nuget %]the trusted publishing to NuGet, [% endif %]and, optionally, its branch protection. All of it is done with the [GitHub CLI](installing-the-tools.md#the-github-cli), as scripts to run from a clone of the repository, so that the repository gets them exactly as documented. Running a script again is safe, since every command sets a value rather than adding one.
 
 The scripts are written for a POSIX shell, such as Bash or Zsh. On Windows, run them in Git Bash or in the Windows Subsystem for Linux.
 
@@ -76,6 +76,35 @@ gh api --method POST 'repos/{owner}/{repo}/pages' -f build_type=workflow
 ```
 
 The same is done by hand in the repository settings on GitHub, under **Settings** and **Pages**, by choosing "GitHub Actions" as the source. GitHub Pages needs a public repository, or a paid plan for a private one.
+
+[%- if publish_to_nuget %]
+
+## NuGet Trusted Publishing
+
+The release workflow publishes every release to nuget.org through NuGet's [trusted publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing) (see [continuous integration](../tooling/continuous-integration.md#release-workflow)). No API key is stored in the repository. Instead, the workflow's publish job exchanges a token that GitHub issues for the run for a temporary API key, which nuget.org only hands out to a workflow that a trusted publishing policy names, and which is valid for an hour.
+
+First, check that the package ID, `[[ package_id ]]`, is still free: nuget.org reports that `https://www.nuget.org/packages/[[ package_id ]]` does not exist. Then sign in to nuget.org, choose **Trusted Publishing** from the menu under the user name, and add a policy:
+
+- **Policy owner:** the user, or the nuget.org organization that will own the package. A policy owned by an organization stops working when the user who created it leaves the organization.
+- **Scopes:** allow publishing new packages, so that the first release can create the package, and new versions of existing packages, limited to the package ID `[[ package_id ]]`.
+- **Repository owner** and **repository:** the user or organization and the name of the repository at <[[ repository_url ]]>.
+- **Workflow file:** `release.yml`, the file name only, without `.github/workflows/`. Renaming the workflow file breaks the policy.
+- **Environment:** `nuget`, the GitHub environment the publish job runs in, so that no other job of the repository can publish.
+
+For a private repository, nuget.org may activate the policy only temporarily, for seven days, until a publish confirms the repository. If no release happens in that time, the policy becomes inactive, and its seven days are restarted on nuget.org.
+
+The workflow logs in with the nuget.org profile name of the user who created the policy, never an email address, which it reads from the `NUGET_USER` secret of the `nuget` environment. Create the environment and the secret, from a clone of the repository:
+
+```shell
+gh api --method PUT 'repos/{owner}/{repo}/environments/nuget'
+gh secret set NUGET_USER --env nuget --body '<nuget.org profile name>'
+```
+
+Optionally, require a reviewer for the environment, under **Settings**, **Environments**, and **nuget**, so that every release waits for someone to approve its publishing before it reaches nuget.org. That needs a public repository, or a paid plan for a private one.
+
+The first release creates the package on nuget.org. If nuget.org refuses it nonetheless, upload that first version by hand at <https://www.nuget.org/packages/manage/upload>, from the GitHub Release, and let the workflow publish every later one.
+
+[%- endif %]
 
 ## Branch Protection
 

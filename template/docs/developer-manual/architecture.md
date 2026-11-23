@@ -17,7 +17,7 @@ Top-level files round out the repository. [`README.md`](../../README.md) is the 
 
 [`source/[[ product_name ]].slnx`](../../source/) is the solution file, in the newer XML-based `.slnx` format rather than the classic `.sln` format. It sits in `source/` rather than at the repository root, and reaches back out with a relative path to pull in the test project. It groups three projects:
 
-- **`[[ library_slug ]]`** — the library itself, packed and published as the `[[ package_id ]]` NuGet package.
+- **`[[ library_slug ]]`** — the library itself, packed [% if publish_to_nuget %]and published [% endif %]as the `[[ package_id ]]` NuGet package.
 - **`[[ sample_app_slug ]]`** — a runnable sample application that references the library through a project reference and demonstrates how it is used.
 - **`unit-tests`** — the xUnit test project, living under [`tests/`](../../tests/) rather than `source/` (see [testing and code coverage](tooling/testing-and-code-coverage.md)).
 

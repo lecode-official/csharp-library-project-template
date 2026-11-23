@@ -119,6 +119,7 @@
         "cobertura",
         "codemod",
         "codezombiech",
+        "configfile",
         "Containerfile",
         "copier",
         "coreclr",
