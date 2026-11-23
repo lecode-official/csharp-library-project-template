@@ -75,6 +75,19 @@ A Dependabot pull request is reviewed like any other (see [GitHub workflow](gith
 
 The NuGet pull request has to bring the `packages.lock.json` files up to date as well, which the lock-file verification in continuous integration checks (see [continuous integration](../tooling/continuous-integration.md#dependabot)).
 
+## Raising Every Dependency Before a Release
+
+Dependabot only opens its pull requests once a week, and it does not see everything that is pinned, such as the Node.js version or the Python version of the docs workflow. So every release has an issue that raises every dependency to its newest release, as the last item of its order (see [planning a release](github-workflow.md#planning-a-release)). It works through this list:
+
+- **The open Dependabot pull requests**, which are completed as described [above](#dependabot), assigned to the release's milestone and to the user who approves them, and merged (see [GitHub workflow](github-workflow.md#dependabot-pull-requests)).
+- **The NuGet packages and analyzers** in `Directory.Packages.props`, and the local .NET tools in `.config/dotnet-tools.json`, with the lock files restored again.
+- **The .NET SDK** in `global.json`, to the newest patch of its feature band, which also carries the newest security fixes of the runtime.
+- **The npm packages** in `package.json`, including `packageManager`, the Node.js version in `.nvmrc` and the `engines` that go with it, and the dprint plugins in `dprint.json`, whose new versions can format differently, so every file is checked with them.
+- **The actions** of the workflows, each pinned to the commit SHA of its newest release, and the Python version of the docs workflow.
+- **The Python packages** in `requirements.txt`.
+
+Each new version's release notes are read for anything that breaks, and a major release that needs more than a version bump gets an issue of its own instead.
+
 ## Python Dependencies
 
 [`requirements.txt`](../../../requirements.txt) pins the exact versions of ProperDocs, its theme and its plugins. Unlike the NuGet and npm dependencies, there is **no lock file** recording transitive versions — only the direct dependencies are pinned.

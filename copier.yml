@@ -104,6 +104,10 @@ _message_after_update: |-
 
   When updating from a version before v1.2.0:
 
+  - .NET SDK: the version is an answer, so an update keeps it; raise it to 10.0.404 or 10.0.115 for the security fixes of .NET 10.0.15,
+    with "copier update --defaults --data dotnet_sdk_version=10.0.404".
+  - Node.js: the tooling now runs on Node.js 26, the version in .nvmrc, which "engines" in package.json requires; install it, for example
+    with "nvm install", and run "npm install".
   - Copier: the template now needs Copier 9.10.3 or newer. An older Copier deleted the files a project fills with its own content, such
     as README.md, CHANGELOG.md, and the logo, when it updated a project from v1.0.0; restore any that an earlier update deleted.
   - Continuous integration: the Linters and Tests workflows no longer run on a push to a work branch, only on its pull request; open a
@@ -330,14 +334,14 @@ target_framework:
 # bands named in the help, are raised whenever a new SDK is released (see docs/project-template/questions.md)
 dotnet_sdk_version:
   type: str
-  default: "[% if target_framework == 'net10.0' %]10.0.403[% endif %]"
+  default: "[% if target_framework == 'net10.0' %]10.0.404[% endif %]"
   help: >-
     The .NET SDK version pinned exactly in "global.json". The feature bands of .NET 10 that still receive servicing updates are 10.0.4xx (newest
-    tooling, currently 10.0.403) and 10.0.1xx (the original band, currently 10.0.114). Both carry the same runtime and the same security fixes. Any
+    tooling, currently 10.0.404) and 10.0.1xx (the original band, currently 10.0.115). Both carry the same runtime and the same security fixes. Any
     other released SDK version of the target framework's major version is accepted as well.
   validator: >-
     [% if not dotnet_sdk_version | regex_search('^[0-9]+\\.[0-9]+\\.[0-9]{3}$') %]The .NET SDK version must be a full release version, e.g.,
-    "10.0.403".[% elif not dotnet_sdk_version.startswith(target_framework[3:] ~ '.') %]The .NET SDK version must belong to the target framework, i.e.,
+    "10.0.404".[% elif not dotnet_sdk_version.startswith(target_framework[3:] ~ '.') %]The .NET SDK version must belong to the target framework, i.e.,
     start with "[[ target_framework[3:] ]].".[% endif %]
 
 license:

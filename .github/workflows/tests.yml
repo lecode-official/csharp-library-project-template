@@ -54,7 +54,7 @@ jobs:
           - name: Default Answers
             product_name: Render Test
             license: LGPL-3.0-or-later
-            dotnet_sdk_version: 10.0.403
+            dotnet_sdk_version: 10.0.404
             build_documentation: true
 
           # A product name and a sample app name with spaces and a dot, which are the answers most likely to break a file name or a quoted command,
@@ -69,7 +69,7 @@ jobs:
             sample_app_slug: playground-app
             sample_app_namespace: RenderTest.Playground
             license: MIT
-            dotnet_sdk_version: 10.0.114
+            dotnet_sdk_version: 10.0.115
             build_documentation: true
 
           # One answer set per remaining license, with the default answers otherwise
@@ -105,7 +105,7 @@ jobs:
       SAMPLE_APP_SLUG: ${{ matrix.sample_app_slug }}
       SAMPLE_APP_NAMESPACE: ${{ matrix.sample_app_namespace }}
       PUBLISH_TO_NUGET: ${{ matrix.publish_to_nuget }}
-      DOTNET_SDK_VERSION: ${{ matrix.dotnet_sdk_version || '10.0.403' }}
+      DOTNET_SDK_VERSION: ${{ matrix.dotnet_sdk_version || '10.0.404' }}
       RENDER_DIRECTORY: ${{ github.workspace }}/../render
 
     steps:
@@ -119,7 +119,7 @@ jobs:
       - name: Set Up Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
-          python-version: "3.13.17"
+          python-version: "3.13.18"
 
       # Installs the pinned Copier version, or, for an answer set that asks for the minimum version, the version "_min_copier_version" in "copier.yml"
       # declares, which is read from there, so that the tested floor cannot fall behind the declared one
@@ -261,7 +261,7 @@ jobs:
       - name: Set Up Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
-          python-version: "3.13.17"
+          python-version: "3.13.18"
 
       # Installs the pinned Copier version, or, for an answer set that asks for the minimum version, the version "_min_copier_version" in "copier.yml"
       # declares, which is read from there, so that the tested floor cannot fall behind the declared one
