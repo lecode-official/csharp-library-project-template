@@ -14,8 +14,8 @@ Installing the tools is covered by the [development setup](../development-setup/
 
 Every tool here exists twice, once for each side of the [split](../project-template/template-structure.md):
 
-- **The root's configuration** checks the template's own files, though not every tool checks all of them. dprint formats and checks every Markdown, JSON, YAML and TOML file, the configuration files themselves included. MarkdownLint checks the Markdown: the articles under `docs/`, `README.md`, `AGENTS.md` and `CHANGELOG.md`. CSpell checks only the Markdown, `copier.yml` and the scripts. The configuration lives at the root: [`dprint.json`](../../dprint.json), [`.markdownlint.yml`](../../.markdownlint.yml) and [`.cspell.json`](../../.cspell.json).
-- **The body's configuration** is a template file like any other. It checks the generated project, and only ever runs in a render. It lives where the generated project expects it, at the root of the body: `template/dprint.json`, `template/.cspell.json`, `template/.markdownlint.yml`, and `template/.globalconfig`.
+- **The root's configuration** checks the template's own files, though not every tool checks all of them. dprint formats and checks every Markdown, JSON, YAML and TOML file, the configuration files themselves included. MarkdownLint checks the Markdown: the articles under `docs/`, `README.md`, `AGENTS.md` and `CHANGELOG.md`. CSpell checks only the Markdown, `copier.yml` and the scripts. The configuration lives at the root: [`dprint.json`](../../dprint.json), [`.markdownlint.yml`](../../.markdownlint.yml), [`.markdownlint-cli2.yaml`](../../.markdownlint-cli2.yaml) and [`.cspell.json`](../../.cspell.json), except for [`.github/.markdownlint.yml`](../../.github/.markdownlint.yml), which extends the root's MarkdownLint configuration for the pull request template (see [MarkdownLint](linting-markdownlint.md#the-pull-request-template)).
+- **The body's configuration** is a template file like any other. It checks the generated project, and only ever runs in a render. It lives where the generated project expects it, at the root of the body: `template/dprint.json`, `template/.cspell.json`, `template/.markdownlint.yml`, `template/.markdownlint-cli2.yaml`, `template/.github/.markdownlint.yml`, and `template/.globalconfig`.
 
 Every root configuration excludes `template/`, because the files in it are Jinja templates rather than valid documents of their own type, and `licenses/`, because those texts are verbatim copies that must never be touched. So no tool in this repository checks the body. A render does (see [testing](../conventions/testing.md)).
 
@@ -32,7 +32,7 @@ Each tool also has its own script, `lint:dprint`, `lint:markdownlint` and `lint:
 
 ## Continuous Integration
 
-The [`Template`](../../.github/workflows/template.yml) workflow runs `npm run lint` on every push and pull request, checks that no `[% if false %]` block crept into the body, and renders the body with several answer sets to run each generated project's own checks. [Testing](../conventions/testing.md#continuous-integration) covers it in full. It does not replace running `npm run lint` and rendering a change locally before pushing it, which is still where a change is verified first.
+The [`Linters`](../../.github/workflows/linters.yml) workflow runs `npm run lint` on every pull request and on every push to `main` and `development`, and checks that no `[% if false %]` block crept into the body. The [`Tests`](../../.github/workflows/tests.yml) workflow renders and updates the body to run each generated project's own checks. [Testing](../conventions/testing.md#continuous-integration) covers it in full. It does not replace running `npm run lint` and rendering a change locally before pushing it, which is still where a change is verified first.
 
 ## Related
 

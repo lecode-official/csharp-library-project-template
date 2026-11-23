@@ -1,6 +1,6 @@
 # Setting up GitHub
 
-This article covers what to set up on GitHub for the project, once its repository exists there: its labels, its repository settings, and GitHub Pages for the documentation website. All of it is done with the [GitHub CLI](installing-the-tools.md#the-github-cli), as scripts to run from a clone of the repository, so that the repository gets them exactly as documented. Running a script again is safe, since every command sets a value rather than adding one.
+This article covers what to set up on GitHub for the project, once its repository exists there: its labels, its repository settings, GitHub Pages for the documentation website, [% if publish_to_nuget %]the trusted publishing to NuGet, [% endif %]and, optionally, its branch protection. All of it is done with the [GitHub CLI](installing-the-tools.md#the-github-cli), as scripts to run from a clone of the repository, so that the repository gets them exactly as documented. Running a script again is safe, since every command sets a value rather than adding one.
 
 The scripts are written for a POSIX shell, such as Bash or Zsh. On Windows, run them in Git Bash or in the Windows Subsystem for Linux.
 
@@ -76,6 +76,106 @@ gh api --method POST 'repos/{owner}/{repo}/pages' -f build_type=workflow
 ```
 
 The same is done by hand in the repository settings on GitHub, under **Settings** and **Pages**, by choosing "GitHub Actions" as the source. GitHub Pages needs a public repository, or a paid plan for a private one.
+
+[%- if publish_to_nuget %]
+
+## NuGet Trusted Publishing
+
+The release workflow publishes every release to nuget.org through NuGet's [trusted publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing) (see [continuous integration](../tooling/continuous-integration.md#release-workflow)). No API key is stored in the repository. Instead, the workflow's publish job exchanges a token that GitHub issues for the run for a temporary API key, which nuget.org only hands out to a workflow that a trusted publishing policy names, and which is valid for an hour.
+
+First, check that the package ID, `[[ package_id ]]`, is still free: nuget.org reports that `https://www.nuget.org/packages/[[ package_id ]]` does not exist. Then sign in to nuget.org, choose **Trusted Publishing** from the menu under the user name, and add a policy:
+
+- **Policy owner:** the user, or the nuget.org organization that will own the package. A policy owned by an organization stops working when the user who created it leaves the organization.
+- **Scopes:** allow publishing new packages, so that the first release can create the package, and new versions of existing packages, limited to the package ID `[[ package_id ]]`.
+- **Repository owner** and **repository:** the user or organization and the name of the repository at <[[ repository_url ]]>.
+- **Workflow file:** `release.yml`, the file name only, without `.github/workflows/`. Renaming the workflow file breaks the policy.
+- **Environment:** `nuget`, the GitHub environment the publish job runs in, so that no other job of the repository can publish.
+
+For a private repository, nuget.org may activate the policy only temporarily, for seven days, until a publish confirms the repository. If no release happens in that time, the policy becomes inactive, and its seven days are restarted on nuget.org.
+
+The workflow logs in with the nuget.org profile name of the user who created the policy, never an email address, which it reads from the `NUGET_USER` secret of the `nuget` environment. Create the environment and the secret, from a clone of the repository:
+
+```shell
+gh api --method PUT 'repos/{owner}/{repo}/environments/nuget'
+gh secret set NUGET_USER --env nuget --body '<nuget.org profile name>'
+```
+
+Optionally, require a reviewer for the environment, under **Settings**, **Environments**, and **nuget**, so that every release waits for someone to approve its publishing before it reaches nuget.org. That needs a public repository, or a paid plan for a private one.
+
+The first release creates the package on nuget.org. If nuget.org refuses it nonetheless, upload that first version by hand at <https://www.nuget.org/packages/manage/upload>, from the GitHub Release, and let the workflow publish every later one.
+
+[%- endif %]
+
+## Branch Protection
+
+Branch protection is optional, and it is only available for a **public repository**, or for a private repository on a **paid GitHub plan**, such as GitHub Pro or GitHub Team. On a free plan, GitHub rejects the script below for a private repository, and nothing is protected. Without it, the rules of the [Git workflow](../conventions/git-workflow.md) and the [GitHub workflow](../conventions/github-workflow.md) still apply, they are just not enforced.
+
+The script protects `[[ default_branch ]]` and `[[ integration_branch ]]` with two rulesets:
+
+- **Protected Branches** forbids force pushes to either branch and deleting it, for everyone.
+- **Pull Requests** only lets a change into either branch through a pull request, which is only merged with a merge commit, and only once the required checks have passed: `Run Linters` from the `Linters` workflow, `Run Tests` from the `Tests` workflow, and `Check Source Branch` from the `Pull Requests` workflow (see [continuous integration](../tooling/continuous-integration.md)). The last one fails a pull request into `[[ default_branch ]]` that does not come from `[[ integration_branch ]]`, which is what stops a pull request that was opened against `[[ default_branch ]]` by mistake, such as a Dependabot security update, from being merged there. Repository administrators may bypass this ruleset, because `[[ integration_branch ]]` is [brought back in step](../conventions/git-workflow.md#bringing-the-integration-branch-back-in-step) with `[[ default_branch ]]` by a direct push after every release.
+
+A ruleset is identified by its name, so the script updates a ruleset that already exists instead of creating a second one:
+
+```shell
+apply_ruleset() {
+    id=$(gh api 'repos/{owner}/{repo}/rulesets' --jq ".[] | select(.name == \"$1\") | .id")
+    if [ -n "$id" ]; then
+        gh api --method PUT "repos/{owner}/{repo}/rulesets/$id" --input - > /dev/null
+    else
+        gh api --method POST 'repos/{owner}/{repo}/rulesets' --input - > /dev/null
+    fi
+}
+
+apply_ruleset 'Protected Branches' <<'EOF'
+{
+    "name": "Protected Branches",
+    "target": "branch",
+    "enforcement": "active",
+    "conditions": { "ref_name": { "include": ["~DEFAULT_BRANCH", "refs/heads/[[ integration_branch ]]"], "exclude": [] } },
+    "rules": [{ "type": "deletion" }, { "type": "non_fast_forward" }]
+}
+EOF
+
+apply_ruleset 'Pull Requests' <<'EOF'
+{
+    "name": "Pull Requests",
+    "target": "branch",
+    "enforcement": "active",
+    "bypass_actors": [{ "actor_type": "RepositoryRole", "actor_id": 5, "bypass_mode": "always" }],
+    "conditions": { "ref_name": { "include": ["~DEFAULT_BRANCH", "refs/heads/[[ integration_branch ]]"], "exclude": [] } },
+    "rules": [
+        {
+            "type": "pull_request",
+            "parameters": {
+                "required_approving_review_count": 0,
+                "dismiss_stale_reviews_on_push": false,
+                "require_code_owner_review": false,
+                "require_last_push_approval": false,
+                "required_review_thread_resolution": false,
+                "allowed_merge_methods": ["merge"]
+            }
+        },
+        {
+            "type": "required_status_checks",
+            "parameters": {
+                "strict_required_status_checks_policy": false,
+                "do_not_enforce_on_create": false,
+                "required_status_checks": [
+                    { "context": "Run Linters" },
+                    { "context": "Run Tests" },
+                    { "context": "Check Source Branch" }
+                ]
+            }
+        }
+    ]
+}
+EOF
+```
+
+The actor `5` in `bypass_actors` is GitHub's built-in repository role "Admin", and `~DEFAULT_BRANCH` stands for the default branch, whatever its name.
+
+A required check is named after a job, not after its workflow, so renaming one of these jobs means changing the script and running it again, or every pull request waits for a check that never comes. The workflows never skip a job either, since GitHub counts a skipped job as a passed check. That is why the `Linters` and `Tests` workflows run on pull requests and on pushes to the two protected branches only, rather than on every push (see [continuous integration](../tooling/continuous-integration.md#when-the-linters-and-tests-workflows-run)).
 
 ## Related
 

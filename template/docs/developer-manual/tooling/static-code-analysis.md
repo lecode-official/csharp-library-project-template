@@ -13,7 +13,7 @@ Four sets of analyzers run in every project — the library, the sample app, and
 
 The library also sets `<IsAotCompatible>true</IsAotCompatible>`, which adds the trim, AOT, and single-file analyzers (`IL2*`, `IL3*`). Code that a consumer could not trim or compile ahead of time is reported in the library, instead of in the consumer's application.
 
-The analyzer packages are declared once, as `GlobalPackageReference` items in [`Directory.Packages.props`](../../../Directory.Packages.props), which adds them to every project as build-time-only dependencies, so they never become a dependency of the published package. They are pinned like every other dependency (see [dependency management](../conventions/dependency-management.md)). StyleCop Analyzers has only ever published modern C# support in prerelease versions, so it is the one dependency pinned to a `-beta` version.
+The analyzer packages are declared once, as `GlobalPackageReference` items in [`Directory.Packages.props`](../../../Directory.Packages.props), which adds them to every project as build-time-only dependencies, so they never become a dependency of the published package. They are pinned like every other dependency (see [dependency management](../conventions/dependency-management.md)).
 
 The build settings themselves live in [`Directory.Build.props`](../../../Directory.Build.props) at the repository root, which every project imports. Besides the analysis settings above, it treats warnings as errors in Release builds, turns on the compiler's `strict` mode, and audits the transitive dependencies for known vulnerabilities as well (`NuGetAuditMode`). A Debug build shows the findings without stopping, and [continuous integration](continuous-integration.md), which builds in Release, fails on any of them.
 
@@ -30,7 +30,7 @@ A `.globalconfig` is a *global analyzer configuration file*, not an EditorConfig
 Two projects need settings of their own. Each has a `.globalconfig` in its own directory with `global_level = 101`, which outranks the root file's `global_level = 100`. Without different levels, two files setting the same key would cancel each other out, and the key would fall back to its default.
 
 - **[`tests/unit-tests/.globalconfig`](../../../tests/unit-tests/.globalconfig)** reverses the Roslynator rule `RCS1090`, so that it reports `ConfigureAwait` calls instead of asking for them, because xUnit's own analyzer (`xUnit1030`) forbids `ConfigureAwait(false)` in test methods. It also exempts asynchronous test methods from the `Async` suffix, because a test method's name follows the [testing](../conventions/testing.md) naming scheme.
-- **[`source/sample-app/.globalconfig`](../../../source/sample-app/.globalconfig)** reverses `RCS1090` as well, because an application owns its synchronization context.
+- **[`source/[[ sample_app_slug ]]/.globalconfig`](../../../source/[[ sample_app_slug ]]/.globalconfig)** reverses `RCS1090` as well, because an application owns its synchronization context.
 
 ## The Rule Set Follows the Conventions
 
@@ -43,6 +43,8 @@ The configuration encodes the [conventions](../conventions/README.md), so a rule
 - **`this.` qualification.** `SA1101` enforces it in the build. The `dotnet_style_qualification_*` options keep the editor from suggesting the opposite.
 - **Primary constructors.** They are not used, because their parameters cannot carry XML documentation comments of their own.
 - **Private members are documented.** StyleCop checks private members and private fields too, not just the public surface.
+
+One rule that is off by default is turned on: `SX1412` reports a C# file that starts with a UTF-8 byte order mark. `.editorconfig` already asks every editor to save files as UTF-8 without one, so the rule is a safety net for a file copied from elsewhere, or written by an editor that ignores `.editorconfig`.
 
 ## One Problem, One Warning
 

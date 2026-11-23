@@ -14,15 +14,15 @@ The root needs very little, and all of it is pinned:
 - **`dprint`'s install script** is the one that is allowed to run, through the `allowScripts` map, keyed by exact name and version. A version bump means updating that key too, or the script silently stops being allowed.
 - **The dprint plugins** in the root [`dprint.json`](../../dprint.json) are pinned to an exact release URL.
 - **The verbatim license texts** are pinned to a tagged release of the SPDX license list, through `SPDX_LICENSE_LIST_VERSION` in [`scripts/refresh-licenses.py`](../../scripts/refresh-licenses.py). The choosealicense.com texts have no release tags, so they are pinned to a commit of the repository's `gh-pages` branch through `CHOOSE_A_LICENSE_COMMIT` instead. Review the diff of every refresh before keeping it (see [licensing](../project-template/licensing.md#where-the-texts-come-from)).
-- **Copier itself** is not pinned for consumers, since it runs on their machines, but `_min_copier_version` in [`copier.yml`](../../copier.yml) declares the oldest release the template works with. Raise it in the same change that starts relying on a newer Copier feature.
-- **The Copier the continuous integration renders with** is pinned to an exact version in [`.github/workflows/template.yml`](../../.github/workflows/template.yml), currently `copier==9.19.1`. Dependabot does not see a version in a `pip install` command, so raise it by hand, and render with the new version before keeping it.
-- **The actions** in that workflow are pinned to the full commit SHA of a release, with the version in a comment next to it, because a tag can be moved and a commit SHA cannot.
+- **Copier itself** is not pinned for consumers, since it runs on their machines, but `_min_copier_version` in [`copier.yml`](../../copier.yml) declares the oldest release the template works with. Raise it in the same change that starts relying on a newer Copier feature, or that finds an older release to misbehave. The continuous integration renders and updates once with that version, which it reads from `copier.yml`, so the floor it tests is always the declared one (see [testing](testing.md#continuous-integration)).
+- **The Copier the continuous integration renders with** is pinned to an exact version in [`.github/workflows/tests.yml`](../../.github/workflows/tests.yml), currently `9.19.1`, through `PINNED_COPIER_VERSION`, which both of its jobs use. Dependabot does not see a version in a `pip install` command, so raise it by hand, and render with the new version before keeping it.
+- **The actions** in that workflow and in [`.github/workflows/linters.yml`](../../.github/workflows/linters.yml) are pinned to the full commit SHA of a release, with the version in a comment next to it, because a tag can be moved and a commit SHA cannot.
 
 ## Dependabot at the Root
 
 [`.github/dependabot.yml`](../../.github/dependabot.yml) checks two ecosystems at the root once a week, groups each one's updates into a single pull request, labels it with the `Dependabot:` label of its ecosystem, and opens it against `development`, like every other pull request (see [GitHub workflow](github-workflow.md#dependabot-pull-requests)):
 
-- **`github-actions`**, for the actions of the root's own workflow. Its pull request updates both the commit SHA and the version in the comment.
+- **`github-actions`**, for the actions of the root's own workflows. Its pull request updates both the commit SHA and the version in the comment.
 - **`npm`**, for the formatter and the linters in the root `package.json`.
 
 It does not reach into `template/`, whose dependencies are raised deliberately and verified by rendering. A root npm pull request is therefore never complete on its own. The root and the body run the same tool versions (see below), so mirror every version it raises in `template/package.json` in the same change, update the `allowScripts` key of `dprint` in both files when its version changes, and render before merging.
@@ -50,7 +50,7 @@ The cost is that a generated project's first install resolves transitive depende
 
 ## Keep Shared Tools in Step
 
-The root and the body run the same tools on their Markdown, `dprint`, `markdownlint-cli2` and `cspell`, with the same dprint plugins for Markdown, JSON, YAML and TOML. `markdownlint-cli2` brings its own copy of the `markdownlint` library, so neither side declares that one directly. They also run them the same way, through the `run-s` command of `npm-run-all2`, which `npm run lint` uses on both sides. Their versions are the same on both sides, and they are raised together, in the same change.
+The root and the body run the same tools on their Markdown, `dprint`, `markdownlint-cli2` with its link rule `markdownlint-rule-relative-links`, and `cspell`, with the same dprint plugins for Markdown, JSON, YAML and TOML. `markdownlint-cli2` brings its own copy of the `markdownlint` library, so neither side declares that one directly. They also run them the same way, through the `run-s` command of `npm-run-all2`, which `npm run lint` uses on both sides. Their versions are the same on both sides, and they are raised together, in the same change.
 
 The reason is that a root article and a body article are written to the same conventions, and a rule that behaves differently between two versions of a linter would let one side pass what the other rejects. Check both `package.json` files and both `dprint.json` files whenever you bump one of them.
 
@@ -64,6 +64,19 @@ The reason is that a root article and a body article are written to the same con
 An analyzer package (StyleCop Analyzers, Roslynator) needs more than a passing render. A new version usually brings new rules, so read its release notes, and decide for every new rule whether `template/.globalconfig` enables, configures, or turns it off, with a comment that says why. The body's own C# has to stay free of findings, because a Release build in every generated project fails on any of them.
 
 The upgrade reaches existing generated projects through `copier update`, as an ordinary change to their version strings.
+
+## Raising Every Dependency Before a Release
+
+Dependabot only covers the root's own actions and npm packages, and Dependabot pull requests only arrive once a week. So every release has an issue that raises every dependency of both sides to its newest release, as the last item of its order (see [planning a release](github-workflow.md#planning-a-release)). It works through this list:
+
+- **The open Dependabot pull requests**, which are completed as described [above](#dependabot-at-the-root), assigned to the release's milestone and to the user who approves them, and merged (see [GitHub workflow](github-workflow.md#dependabot-pull-requests)).
+- **The npm packages** of the root `package.json` and of `template/package.json`, including `packageManager`, raised together.
+- **The dprint plugins** in the root's and the body's `dprint.json`, whose new versions can format differently, so both sides are formatted and checked with them.
+- **The actions** of the root's and the body's workflows, each pinned to the commit SHA of its newest release.
+- **The Copier version** that `PINNED_COPIER_VERSION` in `.github/workflows/tests.yml` names, and **the Python version** of the root's and the body's workflows.
+- **The body's own dependencies:** its NuGet packages and analyzers, its .NET tools, its Python packages, the Node.js version in `template/.nvmrc` and the `engines` of both `package.json` files, and the default and the serviced bands of `dotnet_sdk_version` (see [questions](../project-template/questions.md#dotnet_sdk_version)).
+
+Each new version is raised as described in [upgrading a body dependency](#upgrading-a-body-dependency), its release notes read for anything that breaks, and the template rendered with it. A major release that needs more than a version bump gets an issue of its own instead. A new SDK is an answer, so a generated project only gets it when it updates with the new version, which the update message and the [migration guide](../project-template/migration-guide.md) tell it to do.
 
 ## Related
 

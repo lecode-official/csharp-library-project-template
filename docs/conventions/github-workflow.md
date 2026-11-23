@@ -8,6 +8,8 @@ Every change starts with an issue, and every issue describes one change: one fea
 
 An issue says what is wrong or missing and why it matters, before it says how to fix it. A bug report adds what was done, what was expected, and what happened instead, so that anyone can reproduce it. Details that the work needs, such as decisions already made or the files involved, go into a "Details" section below the description, so that the issue is enough to start the work from. An issue also says which side of the [split](../project-template/template-structure.md) it changes, since a change to the template body reaches every generated project, and a change at the root does not.
 
+A new issue on GitHub starts from one of the issue forms in [`.github/ISSUE_TEMPLATE/`](../../.github/ISSUE_TEMPLATE/), which ask for these sections. The bug report asks for what was done, what was expected, and what happened instead, and the feature request for the description alone; both ask for the side of the split and offer the "Details" section. They preset the `Type: Bug` or the `Type: Idea or Request` [label](#labels), and leave every other label, the milestone, and the assignee to whoever maintains the template. A blank issue stays available for an issue that fits neither form, such as the [release issue](#releases), and it is written in the same format. A security vulnerability is never reported in an issue, and the issue forms point to the [security policy](../../SECURITY.md) for it.
+
 The work branch is created from its issue, which links the two on GitHub:
 
 ```shell
@@ -69,11 +71,13 @@ Every release is tracked with a milestone, which shows how much of it is done:
 - **The description** is a short summary of every change planned for the release.
 - **Every issue that goes into the release is assigned to it**, together with its pull request. That includes the bug fixes found along the way and the release's own issue.
 
-The milestone is created when the release is planned, before its first issue, and it is closed once the release is published.
+The milestone is created when the release is [planned](#planning-a-release), before the work on its first issue begins, and it is closed once the release is published.
 
 ## Pull Requests
 
-Every pull request resolves one issue, and it goes from the work branch into `development`. Its title follows the [title rules](#titles), it carries the issue's `Type:` labels and milestone, and its description says what changed and why, in prose, followed by the disclosure of any AI involvement (see [commit messages](commit-messages.md)) and the line `Resolves #42.` that names the issue.
+Every pull request resolves one issue, and it goes from the work branch into `development`. Its title follows the [title rules](#titles), it carries the issue's `Type:` labels and milestone, and its description says what changed and why, in prose, followed by the disclosure of any AI involvement (see [commit messages](commit-messages.md)) and the line `Resolves #42.` that names the issue. A new pull request on GitHub starts from the [pull request template](../../.github/pull_request_template.md), which holds these three parts as text to replace. A pull request is assigned to whoever is responsible for it. One that is only opened may stay unassigned, so that someone else can take it up for a review, but one that is opened and merged on a single instruction, such as ["finish the issue"](git-workflow.md#ask-for-the-thing-you-want), is assigned to the user who gave it.
+
+The only pull request into `main` is the [release pull request](#releases) from `development`. The `Check Source Branch` check of the `Pull Requests` workflow fails any other pull request into `main`, and once the branches are [protected](../development-setup/setting-up-github.md#branch-protection), such a pull request cannot be merged until its base branch is changed to `development`.
 
 A pull request is merged with a merge commit, never squashed or rebased (see [the branches](git-workflow.md#the-branches)), and with a message written by hand. GitHub's default merge message does not follow the [commit message](commit-messages.md) rules, so the message is written like any other commit message, including the AI disclosure, and passed explicitly. Its subject names the branch, as in `` Merged `feature/changelog-article` ``, and its body names the pull request and the issue it resolves, as in `Merged pull request #49, which resolves #42.`:
 
@@ -85,15 +89,17 @@ GitHub only closes an issue through `Resolves #42.` when the pull request goes i
 
 ## Dependabot Pull Requests
 
-Dependabot opens a pull request whenever a newer version of a dependency is released (see [dependency management](dependency-management.md)). Such a pull request has no issue, so it carries the `Dependabot:` label of its ecosystem instead of a `Type:` label, and it is assigned to the milestone of the next release like every other pull request. Dependabot opens it against `development`, like every other pull request, because its configuration sets `target-branch`.
+Dependabot opens a pull request whenever a newer version of a dependency is released (see [dependency management](dependency-management.md)). Such a pull request has no issue, so it carries the `Dependabot:` label of its ecosystem instead of a `Type:` label. Dependabot sets neither a milestone nor an assignee, so whoever approves its merge assigns it to the milestone of the release it is merged into, and to themselves, since they are responsible for it. Dependabot opens it against `development`, like every other pull request, because its configuration sets `target-branch`.
 
-A security update is the exception. Dependabot applies its configuration only to version updates, so it opens a security update against the default branch, `main`, and without a label. Before anything else, point it at `development` and give it its label:
+A security update is the exception. Dependabot applies its configuration only to version updates, so it opens a security update against the default branch, `main`, and without a label. As soon as it is opened, the [`Dependabot Security Updates`](../../.github/workflows/dependabot-security-updates.yml) workflow points it at `development` and gives it the label of its ecosystem (see [testing](testing.md#continuous-integration)). Dependabot computed the update against `main`, which `development` always contains, so the diff stays the same.
+
+The workflow runs as it is on `main`, so it only takes effect once a release has brought it there. Should it not have run, or have failed for an ecosystem that has no label, point the pull request at `development` and label it by hand:
 
 ```shell
 gh pr edit 14 --base development --add-label "Dependabot: npm Update"
 ```
 
-A pull request that is merged into `main` by mistake is brought back into `development` by merging `main` into `development` through a pull request, never by rewriting either branch.
+Until it is pointed at `development`, its `Check Source Branch` check fails, which is what keeps it out of `main` on a protected repository. A pull request that is merged into `main` by mistake is brought back into `development` by merging `main` into `development` through a pull request, never by rewriting either branch.
 
 Before it is merged, it is reviewed like any other change:
 
@@ -103,19 +109,44 @@ Before it is merged, it is reviewed like any other change:
 
 It is then merged with a merge commit and a message written by hand, like every other pull request. Its body names the pull request alone, as in `Merged pull request #40.`, since there is no issue to resolve.
 
+A Dependabot pull request is always merged into the release it was opened in, together with the release's [dependency issue](#planning-a-release), unless there is a really good reason not to, such as a version conflict, or a major update that needs changes to more than the version. Such an update gets an issue of its own, in the milestone of the release that will do the work, and the pull request is closed with a comment that names that issue.
+
+## Planning a Release
+
+A release is planned at its start, not at its end. Before the work on its first issue begins, its [milestone](#milestones) is created, together with its issues and its [release issue](#releases), so that the plan the release issue keeps is there for every issue that follows.
+
+The release issue lists the order in which the release's other issues are implemented, under the heading `## Order`. The order is a numbered list, and each item names one issue or several:
+
+```markdown
+## Order
+
+1. #43.
+2. #44, #45, #46, and #47.
+3. #48.
+4. #49.
+```
+
+- **The items are worked through from top to bottom.** An item is only started once every issue of the item above it is closed, so an issue that another one builds on goes into an earlier item.
+- **The issues of one item can be worked on at the same time**, by different people. They are listed in their suggested order.
+- **A short note may say why an issue comes where it does**, as in `#48 (adds to the workflow of #47)`. It explains the order, but the items alone decide it.
+- **An issue added to the milestone later**, such as a bug found along the way, is added to the order too.
+- **The dependency issue comes last.** Every milestone has an issue titled `Update the Dependencies for Release vX.Y.Z`, labeled `Type: Implementation`, which raises every dependency of both sides to its newest release, as [dependency management](dependency-management.md) describes, and merges the open [Dependabot pull requests](#dependabot-pull-requests). It is the last item of the order, so that the versions are as new as possible when the release is made, even when the work on the release takes longer than planned.
+
+The next issue to work on is found by reading the order from top to bottom and from left to right. It is the first issue that is open and assigned to nobody else, within the first item that still has open issues. An issue that is assigned to someone else is their work, so it is skipped. When every open issue of that item is assigned, there is no next issue until one of them is closed. The release issue itself comes last, once every other issue of the milestone is closed.
+
 ## Releases
 
 A release is prepared and merged in a fixed order:
 
-1. **The release issue.** A release has an issue of its own, titled `Release vX.Y.Z`, labeled `Type: Release`, and assigned to the release's milestone. It is created when the release is planned, and it lists the order in which the release's other issues are implemented, when one builds on another.
-2. **The release branch.** Once every other issue of the milestone is closed, a work branch named `release/vX.Y.Z` is created from `development` and linked to the release issue. Its commit finishes the release:
+1. **The release issue.** A release has an issue of its own, titled `Release vX.Y.Z`, labeled `Type: Release`, and assigned to the release's milestone. It is created when the release is [planned](#planning-a-release), at the start of the release, and it lists the order in which the release's other issues are implemented.
+2. **The release branch.** Once every other issue of the milestone is closed, and no pull request into `development` is still open, a work branch named `release/vX.Y.Z` is created from `development` and linked to the release issue. A Dependabot pull request that was opened after the dependency issue was closed is merged first, as [Dependabot pull requests](#dependabot-pull-requests) describes. Any other open pull request may stay open when it is meant for a later release, and is then assigned to that release's milestone. The branch's commit finishes the release:
    - It replaces the date paragraph of the release in the [changelog](changelog-entries.md#an-unreleased-version) with the release date, and tidies up the release's entries. They are written one change at a time, so just before the release, entries that describe the same work are merged, and the entries a generated project has to act on come first.
    - It checks that the version is the same in the changelog and in the root `package.json` (see [versioning](versioning.md#the-templates-version-is-not-the-bodys)), and that every change a generated project has to carry over by hand has its hint in the update message and its step in the [migration guide](../project-template/migration-guide.md).
 3. **The pull request into `development`.** The release branch is merged into `development` like any other work branch, through a pull request titled `Prepared Release vX.Y.Z` with the line `Resolves #41.` that names the release issue. It goes into `development`, so it links the release issue without closing it.
 4. **The release pull request.** A pull request titled `Release vX.Y.Z`, the one pull request title that is not in the past tense, merges `development` into `main`. It carries `Type: Release` and the same `Resolves` line, and since it goes into the default branch, merging it closes the release issue. Its merge message names the release, as in ``Merged `development` for Release v1.1.0``.
-5. **After the merge.** The merge commit is marked with the release's [tag](git-workflow.md#tags), a GitHub Release is created from that tag, `development` is [brought back in step](git-workflow.md#bringing-development-back-in-step) with `main`, and the milestone is closed.
+5. **After the merge.** The `Release` workflow marks the merge commit with the release's [tag](git-workflow.md#tags) and creates a GitHub Release from that tag. Once it has succeeded, `development` is [brought back in step](git-workflow.md#bringing-development-back-in-step) with `main`, and the milestone is closed.
 
-The GitHub Release is titled like the tag's release, `Release vX.Y.Z`, and its notes are the tag message, which repeats the release's entry in the changelog. How the tag and the GitHub Release are created is covered in [creating the tag](versioning.md#creating-the-tag). The tag is what `copier update` moves a generated project to, so the release is not available to any consumer before it exists.
+The GitHub Release is titled like the tag's release, `Release vX.Y.Z`, and its notes are the release's bullets from the changelog, which the tag message repeats, wrapped. How the workflow creates the tag and the GitHub Release, and how both are created by hand when it fails, is covered in [creating the tag](versioning.md#creating-the-tag). The tag is what `copier update` moves a generated project to, so the release is not available to any consumer before it exists.
 
 ## Related
 

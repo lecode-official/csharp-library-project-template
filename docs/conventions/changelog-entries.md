@@ -49,7 +49,7 @@ A change that only touches the root is recorded too, since it is part of the rel
 
 ## The Changelog and the Tag Message
 
-The message of a release tag repeats the release's list of changes, so the changelog and the tag never disagree. The [tag message](commit-messages.md#tag-messages) rules cover how that list is wrapped, and [versioning](versioning.md#creating-the-tag) covers how the tag is created.
+The message of a release tag repeats the release's list of changes, so the changelog and the tag never disagree. The [tag message](commit-messages.md#tag-messages) rules cover how that list is wrapped, and [versioning](versioning.md#creating-the-tag) covers how the tag is created. The `Release` workflow writes the tag message and the release notes from the changelog itself, so the release's section has to keep the layout above exactly: the `Linters` workflow reads it on every pull request and fails when it cannot.
 
 ## Related
 

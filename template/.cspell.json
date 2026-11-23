@@ -1,4 +1,7 @@
 {
+    // The spell-checking configuration of the project, which the command-line interface and the Visual Studio Code extension both use (see
+    // Spell Checking (CSpell))
+
     // Version of the settings file, this should always be 0.2
     "version": "0.2",
 
@@ -24,7 +27,7 @@
     ],
 
     // A list of paths that are ignored when spell-checking (ignores the .git directory, but excludes the commit message file that is created by Git
-    // during a commit, and the cSpell configuration file itself)
+    // during a commit, and the CSpell configuration file itself)
     "ignorePaths": [
         // The CSpell configuration file is ignored, because it contains flag words that are always considered incorrect, which results in the
         // configuration file being marked as containing spelling errors
@@ -61,7 +64,7 @@
 
     // A list of dictionaries that should be added beyond the American English dictionary
     "dictionaries": [
-        // Dictionaries that contain common misspellings
+        // The dictionaries of the languages the code is checked against, and the dictionaries that contain common misspellings
         "en-us",
         "en-us-common-misspellings",
         "en-common-misspellings",
@@ -96,7 +99,7 @@
     ],
 
     // A list of words to be always considered incorrect (by default, only words that have 4 or more characters are spell-checked, so this list
-    // includes some common typos of words that are too short to be recognizes by CSpell)
+    // includes some common typos of words that are too short to be recognized by CSpell)
     "flagWords": [
         "adn",
         "fo",
@@ -116,6 +119,7 @@
         "cobertura",
         "codemod",
         "codezombiech",
+        "configfile",
         "Containerfile",
         "copier",
         "coreclr",
@@ -149,6 +153,7 @@
         "renderable",
         "reportgenerator",
         "reporttypes",
+        "retarget",
         "roslyn",
         "roslynator",
         "rsvg",

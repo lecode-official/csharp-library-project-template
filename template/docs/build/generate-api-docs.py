@@ -21,12 +21,12 @@ repository_root: pathlib.Path = pathlib.Path(__file__).resolve().parent.parent.p
 # output does not include its NuGet dependencies (they are only resolved, not copied), and xmldoc2md needs every dependency of the library assembly
 # loadable via reflection; building the sample app transitively builds the library and copies its assembly, its XML documentation file, and the full
 # dependency closure into one output folder
-documented_project: pathlib.Path = repository_root / 'source' / 'sample-app' / '[[ product_name ]] Sample App.csproj'
+documented_project: pathlib.Path = repository_root / 'source' / '[[ sample_app_slug ]]' / '[[ sample_app_name ]].csproj'
 build_configuration: str = 'Release'
 
-# "build/sample-app/bin/", not "source/sample-app/bin/"; "source/Directory.Build.props" redirects every project's own "bin/" and "obj/" into
+# "build/[[ sample_app_slug ]]/bin/", not "source/[[ sample_app_slug ]]/bin/"; "source/Directory.Build.props" redirects every project's own "bin/" and "obj/" into
 # "build/<project folder name>/" instead (see Architecture)
-build_output_directory: pathlib.Path = repository_root / 'build' / 'sample-app' / 'bin' / build_configuration / '[[ target_framework ]]'
+build_output_directory: pathlib.Path = repository_root / 'build' / '[[ sample_app_slug ]]' / 'bin' / build_configuration / '[[ target_framework ]]'
 library_assembly_path: pathlib.Path = build_output_directory / '[[ product_name ]].dll'
 library_xml_documentation_path: pathlib.Path = build_output_directory / '[[ product_name ]].xml'
 

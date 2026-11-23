@@ -5,15 +5,15 @@
     // committed, and Workspace Config Plus merges the two into the generated "launch.json"
     "configurations": [
         // Debugs the sample app; this builds the solution via the "Build" task (see "tasks.shared.json") before attaching the debugger to the
-        // resulting executable, whose output lives under "build/sample-app/" rather than next to the source (see Architecture)
+        // resulting executable, whose output lives under "build/[[ sample_app_slug ]]/" rather than next to the source (see Architecture)
         {
             "name": "Debug Sample App",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Build",
-            "program": "${workspaceFolder}/build/sample-app/bin/Debug/[[ target_framework ]]/[[ product_name ]] Sample App.dll",
+            "program": "${workspaceFolder}/build/[[ sample_app_slug ]]/bin/Debug/[[ target_framework ]]/[[ sample_app_name ]].dll",
             "args": [],
-            "cwd": "${workspaceFolder}/source/sample-app",
+            "cwd": "${workspaceFolder}/source/[[ sample_app_slug ]]",
             "console": "integratedTerminal",
             "stopAtEntry": false,
         },

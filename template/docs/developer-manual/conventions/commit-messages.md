@@ -68,7 +68,7 @@ Release tags carry a message too, and it follows every rule above — the 50/72 
 - **No co-author trailer.** A tag records a release, not authorship of the work, and every change in it is already attributed by the commits it tags.
 - **Never break a code span across a wrapped line.** Reword the bullet instead, so that the whole code span stays on one line.
 
-Write the message into a file and pass it with `-F`, so the wrapping survives verbatim:
+The release workflow writes the message from the changelog by itself, so these rules are what its script implements (see [versioning](versioning.md#the-release-tags)). A message written by hand goes into a file and is passed with `-F`, so the wrapping survives verbatim:
 
 ```text
 Release v0.4.0 (August 12, 2026)

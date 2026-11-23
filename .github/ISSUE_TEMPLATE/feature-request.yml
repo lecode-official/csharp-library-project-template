@@ -1,0 +1,48 @@
+# The issue form for a feature request, which GitHub offers when a new issue is opened; it asks for the sections an issue has (see
+# docs/conventions/github-workflow.md#issues), and presets the "Type: Idea or Request" label, which GitHub only applies when the label exists (see
+# docs/development-setup/setting-up-github.md); every other label, the milestone, and the assignee are left to whoever maintains the template, since
+# a contributor cannot set them
+name: Feature Request
+description: Suggest a new feature, or a change to an existing one, for the template.
+labels:
+  - "Type: Idea or Request"
+
+# The fields of the form, in the order in which they are shown; each field becomes a section of the issue, headed by its label
+body:
+  # The guidance for the title, which the form cannot check, and for the scope of an issue
+  - type: markdown
+    attributes:
+      value: >-
+        Give the issue a title in title case that says what is to be done, as in "Add an Article on the Changelog". An issue describes one
+        change, so two changes are two issues.
+
+  # The side of the split the issue concerns, which decides whether the change reaches every generated project
+  - type: dropdown
+    id: side
+    attributes:
+      label: Side of the Split
+      description: >-
+        A change to the template body reaches every generated project, and a change at the root of the template repository does not (see
+        docs/project-template/template-structure.md).
+      options:
+        - The template body, which is what a generated project contains
+        - The template repository itself, such as copier.yml, the documentation, or the continuous integration
+        - Not sure
+    validations:
+      required: true
+
+  # What is missing, and why it matters, before how to add it
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What is missing, and why it matters, before how it could be added.
+    validations:
+      required: true
+
+  # The details the work needs, which are optional
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Anything the work needs beyond the description, such as decisions already made or the files involved.

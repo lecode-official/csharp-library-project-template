@@ -13,7 +13,7 @@ Every section of the documentation is a directory under [`docs/`](../README.md) 
 Files with a conventional or tool-mandated name keep that name:
 
 - **Files everyone recognizes by their standard name**: `README.md`, `AGENTS.md`, `CHANGELOG.md`, `LICENSE`.
-- **Files whose name and place are dictated by the tool that reads them**: `copier.yml`, which Copier only ever looks for at the clone root, as well as `dprint.json`, `.cspell.json`, `.markdownlint.yml`, `.editorconfig`, `.gitignore` and `package.json`.
+- **Files whose name and place are dictated by the tool that reads them**: `copier.yml`, which Copier only ever looks for at the clone root, as well as `dprint.json`, `.cspell.json`, `.markdownlint.yml`, `.markdownlint-cli2.yaml`, `.editorconfig`, `.gitignore` and `package.json`, and GitHub's `.github/ISSUE_TEMPLATE/` and `.github/pull_request_template.md`.
 - **The vendored license texts**, which are named after their SPDX identifier exactly, as in `MIT.txt` and `LGPL-3.0-or-later.txt`. `template/LICENSE` builds the path from the answer with `"licenses/" ~ license ~ ".txt"`, so the file name *is* the identifier, casing included (see [licensing](../project-template/licensing.md)).
 
 ## The Body Uses the Generated Project's Names
@@ -26,8 +26,8 @@ No file in the body carries a `.jinja` suffix. `_templates_suffix` is empty, so 
 
 Copier renders path names too, and which answer goes into a path is decided by what the path is for:
 
-- **A directory takes a slug**, never the product name: `template/source/[[ library_slug ]]/`. A slug is lowercase and dash-separated by the question's contract, so the directory follows the kebab-case rule once rendered.
-- **A project or solution file takes the product name**, spaces included: `template/source/[[ product_name ]].slnx`, `template/source/[[ library_slug ]]/[[ product_name ]].csproj`, `template/tests/unit-tests/[[ product_name ]] Unit Tests.csproj`. The directory says where the project sits, and the file says what the product is called.
+- **A directory takes a slug**, never the product name: `template/source/[[ library_slug ]]/` and `template/source/[[ sample_app_slug ]]/`. A slug is lowercase and dash-separated by the question's contract, so the directory follows the kebab-case rule once rendered.
+- **A project or solution file takes the product name**, spaces included: `template/source/[[ product_name ]].slnx`, `template/source/[[ library_slug ]]/[[ product_name ]].csproj`, `template/tests/unit-tests/[[ product_name ]] Unit Tests.csproj`, except for the sample app, whose file takes its own name: `template/source/[[ sample_app_slug ]]/[[ sample_app_name ]].csproj`. The directory says where the project sits, and the file says what the product is called.
 - **Anything else takes no placeholder.** A file named after an answer is a file every consumer has to find under a different name, and every shell command that names it needs quoting.
 
 `[` and `]` are character-class syntax in a glob, so a shell pattern that spells out a placeholder path literally matches nothing. Quote such paths, or match the directory with a `*`.

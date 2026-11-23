@@ -64,7 +64,7 @@ The [documentation index](docs/README.md) lists every article. It is split into 
 
 ## Requirements
 
-- **Copier 9.6.0 or newer**, the floor `copier.yml` declares with `_min_copier_version`. The template's continuous integration renders it with Copier 9.19.1.
+- **Copier 9.10.3 or newer**, the floor `copier.yml` declares with `_min_copier_version`. The template's continuous integration renders and updates it with Copier 9.19.1, and with that floor.
 - **The .NET SDK** pinned by the generated project's `global.json`, to build what comes out.
 - **Node.js and Python**, for the generated project's linters and its documentation website respectively.
 - **The GitHub CLI**, optionally, to run the scripts that set up a repository on GitHub.
@@ -73,7 +73,7 @@ Working on the template's own files needs only Git and Node.js, for the formatte
 
 ## Continuous Integration
 
-The [`Template`](.github/workflows/template.yml) workflow runs on every push and pull request. It lints this repository's own files, then renders the template body with several answer sets, which together cover every license, and runs each generated project's linters, tests and packaging, exactly as a consumer would on day one. [Testing](docs/conventions/testing.md#continuous-integration) covers what it checks, and why it does not replace rendering a change locally before pushing it.
+Three workflows run on every pull request, and the first two also on every push to `main` and `development`. The [`Linters`](.github/workflows/linters.yml) workflow lints this repository's own files. The [`Tests`](.github/workflows/tests.yml) workflow renders the template body with several answer sets, which together cover every license, and updates a project rendered from the last release to the current commit, and runs each generated project's linters, tests and packaging, exactly as a consumer would. The [`Pull Requests`](.github/workflows/pull-requests.yml) workflow checks that a pull request into `main` comes from `development`, and the [`Dependabot Security Updates`](.github/workflows/dependabot-security-updates.yml) workflow points a Dependabot security update, which Dependabot opens against `main`, at `development` and labels it. The [`Release`](.github/workflows/release.yml) workflow tags a release and creates its GitHub Release once the release pull request is merged into `main`. [Testing](docs/conventions/testing.md#continuous-integration) covers what it checks, and why it does not replace rendering a change locally before pushing it.
 
 ## Use of AI
 

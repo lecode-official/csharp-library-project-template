@@ -1,0 +1,71 @@
+# Points a Dependabot security update at the integration branch and gives it the "Dependabot:" label of its ecosystem, since Dependabot applies
+# "target-branch" and "labels" only to version updates, and opens a security update against the default branch and without a label (see GitHub
+# Workflow); the name is the display name of the workflow, shown in the "Actions" tab of the GitHub repository and in the checks of a commit or pull
+# request
+name: Dependabot Security Updates
+
+# Defines the events that trigger this workflow; it runs when a pull request into the default branch is opened, on "pull_request_target" rather than
+# "pull_request", because a workflow that Dependabot triggers on "pull_request" gets a read-only token, which cannot change the pull request;
+# "pull_request_target" runs the workflow as it is on the default branch, in the context of this repository, which is only safe because the workflow
+# never checks out or runs the code of the pull request; so the workflow takes effect once it has reached the default branch
+on:
+  pull_request_target:
+    types:
+      - opened
+    branches:
+      - "[[ default_branch ]]"
+
+# Grants the workflow's token nothing but write access to pull requests, instead of whatever the repository's or organization's default is; changing a
+# pull request's base branch and adding a label to it need nothing else
+permissions:
+  pull-requests: write
+
+# Defines the jobs that make up the workflow
+jobs:
+  # Points a pull request that Dependabot opened against the default branch from a branch of this repository at the integration branch, and labels
+  # it; such a pull request is a security update, since a version update already targets the integration branch; every other pull request into the
+  # default branch skips the job
+  retarget:
+    name: Retarget Security Update
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository }}
+
+    # Stops a run that hangs instead of letting it use up the default limit of six hours; the job takes seconds
+    timeout-minutes: 5
+
+    # The sequence of tasks that are executed as part of the job; every action is pinned to the full commit SHA of a release, with the version in a
+    # comment, because a tag can be moved to point at different code, while a commit SHA cannot; Dependabot keeps the pins up to date (see Continuous
+    # Integration)
+    steps:
+      # Reads the package ecosystem of the update from the pull request, and verifies that every commit of the pull request was made by Dependabot; it
+      # only reads the pull request through the API, and checks nothing out
+      - name: Fetch Dependabot Metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+
+      # Maps Dependabot's name for the ecosystem to its label, points the pull request at the integration branch, and adds the label; the pull request
+      # is pointed at the integration branch even for an ecosystem without a label, and the job then fails, so that the missing label is noticed; the
+      # values are passed through environment variables rather than written into the script, so that none of them can ever be run as shell code; the
+      # REST API is called directly, since "gh pr edit" reads more of the pull request than "pull-requests: write" allows
+      - name: Retarget and Label Pull Request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PULL_REQUEST: ${{ github.event.pull_request.number }}
+          ECOSYSTEM: ${{ steps.metadata.outputs.package-ecosystem }}
+        run: |
+          case "$ECOSYSTEM" in
+            github_actions) label="Dependabot: GitHub Actions Update" ;;
+            nuget) label="Dependabot: NuGet Update" ;;
+            dotnet_sdk) label="Dependabot: .NET SDK Update" ;;
+            npm_and_yarn) label="Dependabot: npm Update" ;;
+            pip) label="Dependabot: pip Update" ;;
+            *) label="" ;;
+          esac
+          gh api --method PATCH "repos/$GITHUB_REPOSITORY/pulls/$PULL_REQUEST" --field base="[[ integration_branch ]]" --silent
+          echo "Pointed pull request #$PULL_REQUEST at [[ integration_branch ]]"
+          if [ -z "$label" ]; then
+            echo "::error::Dependabot's ecosystem \"$ECOSYSTEM\" has no \"Dependabot:\" label; label pull request #$PULL_REQUEST by hand"
+            exit 1
+          fi
+          gh api --method POST "repos/$GITHUB_REPOSITORY/issues/$PULL_REQUEST/labels" --field "labels[]=$label" --silent
+          echo "Labeled pull request #$PULL_REQUEST with \"$label\""

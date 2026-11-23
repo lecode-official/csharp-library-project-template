@@ -13,7 +13,7 @@ Every dependency is pinned to an exact version — never a floating range, a min
 not `Version="2.*"` or `Version="[2.0.2,)"`. A project file references the package without a version, `<PackageReference Include="SauceControl.InheritDoc" PrivateAssets="all" />`, so two projects can never depend on different versions of the same package. A package that every project needs, such as an analyzer, is declared as a `GlobalPackageReference` in the same file instead, and no project file mentions it at all. The same rule applies outside NuGet:
 
 - The dprint plugins in [`dprint.json`](../../../dprint.json) are pinned to an exact release URL.
-- `dprint`, `cspell`, its `@cspell/dict-*` dictionary packages, `markdownlint-cli2`, and `npm-run-all2` are pinned exactly in [`package.json`](../../../package.json).
+- `dprint`, `cspell`, its `@cspell/dict-*` dictionary packages, `markdownlint-cli2`, its link rule `markdownlint-rule-relative-links`, and `npm-run-all2` are pinned exactly in [`package.json`](../../../package.json).
 - The Python packages that build the documentation website are pinned exactly in [`requirements.txt`](../../../requirements.txt).
 - [`global.json`](../../../global.json) pins the exact .NET SDK version.
 
@@ -66,7 +66,7 @@ Install scripts are blocked by default. The one package that genuinely needs one
 
 ## Dependabot
 
-Pinning everything means nothing is ever upgraded implicitly, so [`.github/dependabot.yml`](../../../.github/dependabot.yml) is what keeps the pins from going stale. Once a week, Dependabot checks the GitHub Actions actions (their commit SHAs and version comments), the NuGet packages in `Directory.Packages.props`, the .NET SDK in `global.json`, the npm packages, and the Python packages in `requirements.txt`, and opens a pull request for whatever has a newer release. All updates of an ecosystem are grouped into a single pull request, so each arrives as one reviewable change rather than a pull request per package. Each pull request is labeled with the `Dependabot:` label of its ecosystem and opened against `[[ integration_branch ]]`, like every other pull request, except for a security update, which is pointed at the integration branch and labeled by hand (see [GitHub workflow](github-workflow.md#dependabot-pull-requests)).
+Pinning everything means nothing is ever upgraded implicitly, so [`.github/dependabot.yml`](../../../.github/dependabot.yml) is what keeps the pins from going stale. Once a week, Dependabot checks the GitHub Actions actions (their commit SHAs and version comments), the NuGet packages in `Directory.Packages.props`, the .NET SDK in `global.json`, the npm packages, and the Python packages in `requirements.txt`, and opens a pull request for whatever has a newer release. All updates of an ecosystem are grouped into a single pull request, so each arrives as one reviewable change rather than a pull request per package. Each pull request is labeled with the `Dependabot:` label of its ecosystem and opened against `[[ integration_branch ]]`, like every other pull request, except for a security update, which the `Dependabot Security Updates` workflow points at the integration branch and labels (see [GitHub workflow](github-workflow.md#dependabot-pull-requests)).
 
 A Dependabot pull request is reviewed like any other (see [GitHub workflow](github-workflow.md#dependabot-pull-requests)), and two things need a hand:
 
@@ -74,6 +74,19 @@ A Dependabot pull request is reviewed like any other (see [GitHub workflow](gith
 - **An analyzer upgrade** can bring new rules, and the Release build in continuous integration fails on their findings, so it may need the fixes or configuration described above before it can be merged.
 
 The NuGet pull request has to bring the `packages.lock.json` files up to date as well, which the lock-file verification in continuous integration checks (see [continuous integration](../tooling/continuous-integration.md#dependabot)).
+
+## Raising Every Dependency Before a Release
+
+Dependabot only opens its pull requests once a week, and it does not see everything that is pinned, such as the Node.js version or the Python version of the docs workflow. So every release has an issue that raises every dependency to its newest release, as the last item of its order (see [planning a release](github-workflow.md#planning-a-release)). It works through this list:
+
+- **The open Dependabot pull requests**, which are completed as described [above](#dependabot), assigned to the release's milestone and to the user who approves them, and merged (see [GitHub workflow](github-workflow.md#dependabot-pull-requests)).
+- **The NuGet packages and analyzers** in `Directory.Packages.props`, and the local .NET tools in `.config/dotnet-tools.json`, with the lock files restored again.
+- **The .NET SDK** in `global.json`, to the newest patch of its feature band, which also carries the newest security fixes of the runtime.
+- **The npm packages** in `package.json`, including `packageManager`, the Node.js version in `.nvmrc` and the `engines` that go with it, and the dprint plugins in `dprint.json`, whose new versions can format differently, so every file is checked with them.
+- **The actions** of the workflows, each pinned to the commit SHA of its newest release, and the Python version of the docs workflow.
+- **The Python packages** in `requirements.txt`.
+
+Each new version's release notes are read for anything that breaks, and a major release that needs more than a version bump gets an issue of its own instead.
 
 ## Python Dependencies
 

@@ -13,6 +13,96 @@ Some steps apply to every update, whatever changed (see [rendering and updating]
 - **Read the changelog.** The [changelog](../../CHANGELOG.md) of every release in between lists what changed, from the point of view of a generated project.
 - **Update the files the project owns by hand.** Copier never updates the [files the template only creates](rendering-and-updating.md#files-the-template-only-creates), such as `README.md` and the logo. The sections below say when one of them changed, and how to carry the change over.
 
+## Migrate from v1.1.0 to v1.2.0
+
+### The .NET SDK 10.0.404
+
+The default SDK is now 10.0.404, and the newest patch of the 10.0.1xx band is 10.0.115. Both carry the security fixes of .NET 10.0.15. The pinned SDK is the answer to `dotnet_sdk_version`, so an update keeps the recorded version. Raise it with the update itself, which rewrites `global.json`:
+
+```shell
+copier update --defaults --data dotnet_sdk_version=10.0.404
+```
+
+A project on the 10.0.1xx band passes `10.0.115` instead. Install the new SDK before building (see the project's `docs/developer-manual/development-setup/installing-the-tools.md`).
+
+### Node.js 26
+
+The linters and the formatter now run on Node.js 26, the active long-term support release, which `.nvmrc` pins and `engines` in `package.json` requires. The update raises both, and continuous integration reads the version from `.nvmrc`, but every developer of the project installs Node.js 26 by hand, and then installs the npm packages again:
+
+```shell
+nvm install
+npm install
+```
+
+### Copier 9.10.3
+
+The template now needs Copier 9.10.3 or newer, and Copier refuses to update to it with an older version. Upgrade Copier first, for example with `pipx upgrade copier` or `uv tool upgrade copier`.
+
+Before 9.10.3, an update from v1.0.0 deleted every [file the template only creates](rendering-and-updating.md#files-the-template-only-creates), such as `README.md`, `CHANGELOG.md`, and the logo, instead of leaving them alone. A project that was updated from v1.0.0 to v1.1.0 with an older Copier checks whether that update deleted any of them, and restores them from the commit before the update:
+
+```shell
+git restore --source <commit-before-the-update> -- README.md CHANGELOG.md
+```
+
+### Continuous Integration
+
+The `Linters` and `Tests` workflows no longer run on a push to a work branch, only on pull requests and on pushes to the default and the integration branch. A work branch is checked once its pull request is open, so open a draft pull request to have it checked early. The update brings the changed workflows and the new `Pull Requests` workflow along by itself.
+
+### Branch Protection
+
+Optionally, protect the default and the integration branch with the rulesets of the new branch protection script in `docs/developer-manual/development-setup/setting-up-github.md`. It needs a public repository, or a paid GitHub plan for a private one. Run it after the update is merged into both branches, so that the checks it requires already exist.
+
+### Releases
+
+A new `Release` workflow creates the annotated tag and the GitHub Release once the release pull request is merged into the default branch, and attaches the library's package and symbol package to it (see the generated project's `docs/developer-manual/conventions/versioning.md`). The update brings the workflow and its script, `.github/scripts/prepare-release.py`, along by itself, so the next release is tagged by the workflow, and the tag and the GitHub Release are no longer created by hand.
+
+The script reads the newest release from `CHANGELOG.md`, which is only created by the template, so it keeps whatever layout the project gave it. The `Linters` workflow now runs the script as a dry run on every pull request, and fails when it cannot read the changelog. Run it before the update is committed, and fix what it reports, so that the newest release has its `## Release vX.Y.Z` heading, its date paragraph, and a flat list of bullets:
+
+```shell
+python3 .github/scripts/prepare-release.py --dry-run
+```
+
+### NuGet Publishing
+
+The new question `publish_to_nuget` asks whether the library is published to nuget.org, and defaults to yes, unless the project is licensed as `UNLICENSED`, which nuget.org rejects. With yes, the `Release` workflow gets a second job that publishes the package and the symbol package of every GitHub Release to nuget.org through NuGet's trusted publishing, which needs no API key in the repository. Set it up before the next release, as the generated project's `docs/developer-manual/development-setup/setting-up-github.md` describes in its "NuGet Trusted Publishing" section: a trusted publishing policy on nuget.org for the repository, `release.yml`, and the `nuget` environment, and the `NUGET_USER` secret of that environment. Without it, the release is still tagged and created, and only its publish job fails.
+
+A library under any other license that is not published answers no on the update:
+
+```shell
+copier update --defaults --data publish_to_nuget=false
+```
+
+The package is then still packed and attached to every GitHub Release, under its recorded `package_id`. `README.md`, and the user manual's `README.md` and `getting-started.md`, are only created by the template, so they keep describing the installation from nuget.org. Copy the "Installation" section of `README.md`, the "Installing the Package" section of `getting-started.md`, and the sentence on where the package is distributed in the user manual's `README.md` from a fresh render with the same answers.
+
+### Link Checking
+
+MarkdownLint now also checks that every relative link points to a file that exists, and every link to a heading of another file to a heading that exists (see the generated project's `docs/developer-manual/tooling/linting-markdownlint.md`). The update brings the rule along, in `package.json`, `.markdownlint.yml`, and the new `.markdownlint-cli2.yaml`. Install it, and fix every broken link the linters then report, before the update is committed, since continuous integration fails on them:
+
+```shell
+npm install
+npm run lint:markdownlint
+```
+
+`README.md` is only created by the template, so its "Linting" section keeps describing MarkdownLint without the link check. Optionally, copy the MarkdownLint line of that section from a fresh render.
+
+### The Sample App
+
+The name, the directory, and the namespace of the sample app are now answers, `sample_app_name`, `sample_app_slug`, and `sample_app_namespace` (see [questions](questions.md#the-sample-app)). Their defaults are the names the sample app had so far, so an update with `--defaults` changes nothing.
+
+A project that wants to rename its sample app passes the new answers to the update:
+
+```shell
+copier update --defaults --data sample_app_name="CLI.NET Core Playground" --data sample_app_slug=playground --data sample_app_namespace=CliNetCore.Playground
+```
+
+The update moves the project file, the `.globalconfig`, and every path that names the sample app to the new directory, but it leaves `Program.cs` and `README.md` in `source/sample-app/`, since the template only creates them. Move both into the new directory, delete the old one, and change the title of the read me to the new name:
+
+```shell
+git mv source/sample-app/Program.cs source/sample-app/README.md source/playground/
+```
+
+A project that already renamed its sample app by hand can answer with its own names instead, which brings the template's paths in line with them.
+
 ## Migrate from v1.0.0 to v1.1.0
 
 ### The Lock Files

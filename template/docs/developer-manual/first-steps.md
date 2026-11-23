@@ -34,6 +34,14 @@ git push --set-upstream origin [[ integration_branch ]]
 
 Finally, enable [GitHub Pages](development-setup/setting-up-github.md#github-pages), or the workflow that publishes the documentation website fails on every push to `[[ default_branch ]]`.
 
+[%- if publish_to_nuget %]
+
+Before the first release, set up [NuGet trusted publishing](development-setup/setting-up-github.md#nuget-trusted-publishing), or the release workflow fails to publish the package to nuget.org.
+
+[%- endif %]
+
+Optionally, once both branches exist, [protect them](development-setup/setting-up-github.md#branch-protection), so that a change only reaches them through a pull request whose checks passed. Branch protection needs a public repository, or a paid GitHub plan for a private one.
+
 ## Setting up Visual Studio Code
 
 Visual Studio Code is optional, but the repository ships a configuration for it. [Setting up Visual Studio Code](development-setup/setting-up-visual-studio-code.md) covers installing it and its extensions.
@@ -43,7 +51,7 @@ Visual Studio Code is optional, but the repository ships a configuration for it.
 The template provides a few things that only exist so that the project works on day one. Replace them with the real thing:
 
 - **The library.** The `Greeter` class in `source/[[ library_slug ]]/` and its `GreeterTests` in `tests/unit-tests/` only exist to make the build and the tests pass. Replace them with the library's real code and tests.
-- **The sample app.** `source/sample-app/Program.cs` demonstrates the `Greeter` class. Rewrite it to demonstrate the real library.
+- **The sample app.** `source/[[ sample_app_slug ]]/Program.cs` demonstrates the `Greeter` class. Rewrite it to demonstrate the real library.
 - **The documentation.** The [getting started](../user-manual/getting-started.md) article of the User Manual and the read mes under `source/` describe the placeholder library. Rewrite them for the real one.
 - **The logo.** Every generated project ships an open book with C# on its pages as its mark, used in the read me, the documentation website, the favicon, and the package icon. [Replacing the placeholder](logo-design.md#replacing-the-placeholder) lists the files and the steps.
 

@@ -1,0 +1,32 @@
+# The issue form for a feature request, which GitHub offers when a new issue is opened; it asks for the sections an issue has (see GitHub Workflow),
+# and presets the "Type: Idea or Request" label, which GitHub only applies when the label exists (see Setting up GitHub); every other label, the
+# milestone, and the assignee are left to whoever maintains the project, since a contributor cannot set them
+name: Feature Request
+description: Suggest a new feature, or a change to an existing one, for [[ product_name ]].
+labels:
+  - "Type: Idea or Request"
+
+# The fields of the form, in the order in which they are shown; each field becomes a section of the issue, headed by its label
+body:
+  # The guidance for the title, which the form cannot check, and for the scope of an issue
+  - type: markdown
+    attributes:
+      value: >-
+        Give the issue a title in title case that says what is to be done, as in "Make the Greeting Configurable". An issue describes one change,
+        so two changes are two issues.
+
+  # What is missing, and why it matters, before how to add it
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What is missing, and why it matters, before how it could be added.
+    validations:
+      required: true
+
+  # The details the work needs, which are optional
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Anything the work needs beyond the description, such as decisions already made or the files involved.

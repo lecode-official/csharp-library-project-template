@@ -1,29 +1,36 @@
 # Continuous Integration
 
-This article covers the GitHub Actions workflows in [`.github/workflows/`](../../../.github/workflows/): [`linters.yml`](../../../.github/workflows/linters.yml), [`tests.yml`](../../../.github/workflows/tests.yml), and [`docs.yml`](../../../.github/workflows/docs.yml), and the [Dependabot configuration](../../../.github/dependabot.yml) that keeps their pinned versions current. The workflows are independent of each other — any one can fail, be re-run, or be extended without touching the others, and a commit or pull request shows them as separate checks.
+This article covers the GitHub Actions workflows in [`.github/workflows/`](../../../.github/workflows/): [`linters.yml`](../../../.github/workflows/linters.yml), [`tests.yml`](../../../.github/workflows/tests.yml), [`pull-requests.yml`](../../../.github/workflows/pull-requests.yml), [`dependabot-security-updates.yml`](../../../.github/workflows/dependabot-security-updates.yml), [`release.yml`](../../../.github/workflows/release.yml), and [`docs.yml`](../../../.github/workflows/docs.yml), and the [Dependabot configuration](../../../.github/dependabot.yml) that keeps their pinned versions current. The workflows are independent of each other — any one can fail, be re-run, or be extended without touching the others, and a commit or pull request shows them as separate checks.
 
 A project hosted somewhere other than GitHub replaces these files with the equivalent for its own platform. What the workflows *do* is the part worth keeping: the same tools, the same pinned versions, the same never-stop-at-the-first-failure behavior.
 
 ## What Every Workflow Shares
 
-- **Least-privilege permissions.** Each workflow declares `permissions` explicitly instead of inheriting the repository's or organization's default, which may be write access to everything. The linters and tests workflows get `contents: read` and nothing else. The docs workflow additionally gets `pages: write` and `id-token: write`, which the GitHub Pages deployment needs.
+- **Least-privilege permissions.** Each workflow declares `permissions` explicitly instead of inheriting the repository's or organization's default, which may be write access to everything. The linters and tests workflows get `contents: read` and nothing else, the pull requests workflow gets no permission at all, the Dependabot security updates workflow gets `pull-requests: write` alone, since it changes a pull request, and the release workflow gets `contents: write` alone, since it pushes a tag and creates a GitHub Release[% if publish_to_nuget %], except for its publish job, which gets `contents: read` and `id-token: write`, the permission to request the token that NuGet's trusted publishing needs[% endif %]. The docs workflow additionally gets `pages: write` and `id-token: write`, which the GitHub Pages deployment needs.
 - **A timeout on every job.** `timeout-minutes` stops a run that hangs instead of letting it use up GitHub's default limit of six hours.
 - **Actions pinned to a commit SHA.** Every action is referenced by the full commit SHA of a release, with the version in a comment next to it, because a tag can be moved to point at different code, while a commit SHA cannot. [Dependabot](#dependabot) keeps the pins up to date.
 - **Versions read from the repository.** The Node.js version is read from [`.nvmrc`](../../../.nvmrc) and the .NET SDK version from [`global.json`](../../../global.json), rather than being written into a workflow. A version duplicated in two places is a version that eventually disagrees with itself.
 
 ## When the Linters and Tests Workflows Run
 
-Both run on every `push`, to any branch, and on every `pull_request`. A pull request from a fork has to be checked by the `pull_request` event, because its pushes happen in another repository. A pull request from a branch of this repository, however, is already checked by the push to that branch, so each job carries a condition that skips it for such a pull request instead of running the same checks twice:
+Both run on every `pull_request`, and on every `push` to `[[ default_branch ]]` and `[[ integration_branch ]]`:
 
 ```yaml
-if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+on:
+  push:
+    branches:
+      - "[[ default_branch ]]"
+      - "[[ integration_branch ]]"
+  pull_request:
 ```
+
+A pull request is checked by the `pull_request` event, whether it comes from a branch of this repository or from a fork, whose pushes happen in another repository. A push to a work branch runs nothing on its own, since its pull request checks it, and the pushes to the two protected branches check what the merge of a pull request produced. So every check runs once, and no job has to be skipped to avoid checking a pull request twice. That matters once the branches are [protected](../development-setup/setting-up-github.md#branch-protection): GitHub counts a job that was skipped by its condition as a passed check, so a skipped job with the same name as a required check would let a pull request through, whatever the other run found. Open a draft pull request early to have a work branch checked before it is ready.
 
 A `concurrency` group per workflow and ref cancels a run that is still in progress when a newer commit arrives on the same branch or pull request, since only the result for the newest commit matters.
 
 ## Linters Workflow
 
-A single job on the latest Ubuntu runner checks out the repository, installs Node.js, runs `npm ci`, and then runs each check as its own step, through the same npm scripts a developer runs locally: `npm run lint:dprint`, `npm run lint:markdownlint`, and `npm run lint:cspell`. It does not set up .NET, because none of these tools needs it. The C# code is checked by the analyzers in the tests workflow's build instead.
+A single job on the latest Ubuntu runner checks out the repository, installs Node.js, runs `npm ci`, and then runs each check as its own step, through the same npm scripts a developer runs locally: `npm run lint:dprint`, `npm run lint:markdownlint`, and `npm run lint:cspell`. A last step runs the release script of the [release workflow](#release-workflow) as a dry run. It does not set up .NET, because none of these tools needs it. The C# code is checked by the analyzers in the tests workflow's build instead.
 
 Every step after the first carries `if: ${{ !cancelled() }}`, so a single failing tool does not hide the findings of the ones after it. One run reports everything it can, which is the same reason `npm run lint` uses `run-s --continue-on-error` (see [tooling](README.md)). Each check being its own step also shows at a glance which tool failed.
 
@@ -42,9 +49,43 @@ A separate workflow rather than a step in the linters one, so that "the tests fa
 
 There is no enforced minimum coverage percentage that fails the build. See [testing](../conventions/testing.md) for what is expected of a change instead of a numeric threshold.
 
+## Pull Requests Workflow
+
+A single job, `Check Source Branch`, which fails a pull request into `[[ default_branch ]]` unless it comes from the `[[ integration_branch ]]` branch of this repository, as the [GitHub workflow](../conventions/github-workflow.md#pull-requests) requires. A pull request into any other branch passes it. It runs when a pull request is opened, reopened, or pushed to, and when it is edited, since changing a pull request's base branch is an edit, so a pull request that is moved onto `[[ default_branch ]]` is checked again. It needs neither a checkout nor any permission, because it only reads the branch names from the event.
+
+The check only stops anything once a ruleset requires it (see [branch protection](../development-setup/setting-up-github.md#branch-protection)). Then a pull request opened against `[[ default_branch ]]` by mistake cannot be merged there until its base branch is changed to `[[ integration_branch ]]`. For a Dependabot security update, the next workflow changes it.
+
+## Dependabot Security Updates Workflow
+
+Dependabot applies `target-branch` and `labels` only to version updates, so it opens a security update against `[[ default_branch ]]` and without a label. A single job, `Retarget Security Update`, points such a pull request at `[[ integration_branch ]]` and gives it the `Dependabot:` label of its ecosystem as soon as it is opened (see [GitHub workflow](../conventions/github-workflow.md#dependabot-pull-requests)). It only acts on a pull request into `[[ default_branch ]]` that Dependabot opened from a branch of this repository, and skips every other one.
+
+It runs on `pull_request_target` rather than `pull_request`, because a workflow that Dependabot triggers on `pull_request` gets a read-only token, which cannot change the pull request. `pull_request_target` runs the workflow as it is on `[[ default_branch ]]`, with a token of this repository, so the workflow only takes effect once it has reached `[[ default_branch ]]`. What makes it safe is that it never checks out or runs the code of the pull request: `dependabot/fetch-metadata` reads the ecosystem through the API, and verifies that every commit of the pull request comes from Dependabot, and the pull request is changed through the REST API, with `pull-requests: write` as the only permission.
+
+A `case` statement maps Dependabot's name of each ecosystem in [`.github/dependabot.yml`](../../../.github/dependabot.yml) to its label. An ecosystem it does not know still has its pull request pointed at `[[ integration_branch ]]`, and then fails the job, so that the missing label is noticed. A new ecosystem therefore gets its label there, too.
+
+## Release Workflow
+
+Runs when a pull request into `[[ default_branch ]]` is merged, which only the release pull request ever is (see [GitHub workflow](../conventions/github-workflow.md#releases)). A pull request into `[[ default_branch ]]` merged without a new release in the changelog fails the job, because its tag already exists. A single job, `Create Release`, tags the merge commit and creates the GitHub Release (see [the release tags](../conventions/versioning.md#the-release-tags)):
+
+1. [`.github/scripts/prepare-release.py`](../../../.github/scripts/prepare-release.py) reads the newest release from [`CHANGELOG.md`](../../../CHANGELOG.md). It fails unless the release's date paragraph is set and the version is the same in the library's project file, `package.json`, and `package-lock.json`, and it writes the tag message and the release notes.
+2. The job fails if the tag already exists.
+3. The library is restored in locked mode and packed in the Release configuration, into the package and the symbol package.
+4. The annotated tag is created on the merge commit by `github-actions[bot]`, unsigned, and pushed.
+5. The GitHub Release is created from the pushed tag with `gh release create --verify-tag`, titled `Release vX.Y.Z`, with the release's bullets as its notes and the package and the symbol package attached.
+
+Everything that can fail is checked or built before the tag is created, so a release that is not ready leaves nothing behind. A tag pushed with the workflow's token starts no other workflow, so everything the release does happens in this one workflow. The workflow's file name stays `release.yml`, because a NuGet trusted publishing policy is bound to the file name of the workflow that publishes. Its concurrency group runs one release at a time and never cancels one that is running, because a cancelled release can leave a tag without its GitHub Release.
+
+[%- if publish_to_nuget %]
+
+A second job, `Publish to NuGet`, runs once the GitHub Release exists, in the `nuget` environment, and is the only job with `id-token: write`. It downloads the package and the symbol package from the GitHub Release, so that nuget.org gets exactly what the release carries, logs in to nuget.org with the [`NuGet/login`](https://github.com/NuGet/login) action, which exchanges the token GitHub issues for the run for a temporary API key, and pushes the package with `dotnet nuget push`, which uploads the symbol package next to it too. It pushes with `--skip-duplicate`, so that re-running a failed job does not fail on a package that already reached nuget.org. It only works once trusted publishing is set up (see [one-time setup](#one-time-setup)).
+
+[%- endif %]
+
+The linters workflow runs the same script with `--dry-run` on every pull request. A dry run reports a release that is not ready yet, which is what the changelog looks like between two releases, without failing, and fails only on a changelog it cannot read, or on a code span too long for a line of the tag message.
+
 ## Docs Workflow
 
-Runs only on pushes to the default branch — unlike the other two, it deploys to GitHub Pages, so it only ever needs to run against what is actually published.
+Runs only on pushes to the default branch — unlike the linters and tests workflows, it deploys to GitHub Pages, so it only ever needs to run against what is actually published.
 
 It is split into a build job and a deploy job, so that the deployment goes through the dedicated `github-pages` environment and gets its own audit trail. The build job installs the .NET SDK, restores the local .NET tools, installs the pinned Python dependencies from [`requirements.txt`](../../../requirements.txt), and runs `properdocs build --strict`, which regenerates the API section from the source's own documentation comments (see [documentation website](documentation-website.md)). `--strict` turns every warning into an error, above all a link to a page or file that does not exist, so a broken link fails the deployment instead of being published.
 
@@ -53,6 +94,12 @@ Its concurrency group ensures at most one deployment runs at a time, and an in-p
 ## One-Time Setup
 
 The docs workflow cannot deploy until GitHub Pages is enabled for the repository. In the repository's settings, under "Pages", set the source to "GitHub Actions". Until then, the workflow's "Configure Pages" step fails on every push to the default branch.
+
+[%- if publish_to_nuget %]
+
+The release workflow cannot publish to nuget.org until a trusted publishing policy on nuget.org names the repository, `release.yml`, and the `nuget` environment, and the environment has the `NUGET_USER` secret (see [NuGet trusted publishing](../development-setup/setting-up-github.md#nuget-trusted-publishing)). Until then, the release itself is still tagged and created, and only its publish job fails.
+
+[%- endif %]
 
 ## Dependabot
 
@@ -67,4 +114,5 @@ Every ecosystem is checked once a week: the GitHub Actions actions, the NuGet pa
 - [Testing and code coverage](testing-and-code-coverage.md) — the commands the tests workflow runs, in more detail.
 - [Static code analysis](static-code-analysis.md) — the rules a Release build enforces.
 - [Documentation website](documentation-website.md) — what the docs workflow builds and deploys.
+- [Versioning](../conventions/versioning.md) — the release tags and the GitHub Release the release workflow creates.
 - [Dependency management](../conventions/dependency-management.md) — how the pinned versions these workflows use are kept exact.

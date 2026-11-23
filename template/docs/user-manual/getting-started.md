@@ -4,11 +4,29 @@ This article covers installing [[ product_name ]] and using it for the first tim
 
 ## Installing the Package
 
+[%- if publish_to_nuget %]
+
 Add the package to a project with the .NET CLI:
 
 ```shell
 dotnet add package [[ package_id ]]
 ```
+
+[%- else %]
+
+[[ product_name ]] is not published on NuGet. Every release attaches the package to its [GitHub Release]([[ repository_url ]]/releases), together with its symbol package. Download both into a directory, and add that directory as a package source, either for a single command:
+
+```shell
+dotnet add package [[ package_id ]] --source <directory>
+```
+
+Or for every restore of the consuming solution, in its `nuget.config`, so that a build on another machine or in continuous integration finds the package too:
+
+```shell
+dotnet nuget add source <directory> --name [[ package_id ]] --configfile nuget.config
+```
+
+[%- endif %]
 
 Or reference it directly in the project file, pinned to an exact version as [[ product_name ]]'s own dependencies are (see [dependency management](../developer-manual/conventions/dependency-management.md)):
 
@@ -41,7 +59,7 @@ Greeter greeter = new("Good morning");
 Console.WriteLine(greeter.Greet("Ada"));     // Good morning, Ada!
 ```
 
-See [`source/sample-app/Program.cs`](../../source/sample-app/Program.cs) for the runnable version of the above, and run it with `npm start`.
+See [`source/[[ sample_app_slug ]]/Program.cs`](../../source/[[ sample_app_slug ]]/Program.cs) for the runnable version of the above, and run it with `npm start`.
 
 ## What's Missing Today
 

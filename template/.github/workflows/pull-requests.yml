@@ -1,0 +1,54 @@
+# The check that every pull request into the default branch comes from the integration branch (see GitHub Workflow); the name is the display name of
+# the workflow, shown in the "Actions" tab of the GitHub repository and in the checks of a commit or pull request
+name: Pull Requests
+
+# Defines the events that trigger this workflow; it runs on every pull request, and again whenever one is edited, since changing a pull request's base
+# branch is an edit; a pull request into another branch than the default branch passes the check, so that a ruleset can require it on both protected
+# branches alike (see Setting up GitHub)
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - edited
+
+# Grants the workflow's token no access at all, instead of whatever the repository's or organization's default is; the check only reads the event's
+# own data
+permissions: {}
+
+# Cancels a run that is still in progress when the same pull request changes again, since only the result for its newest state matters
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Defines the jobs that make up the workflow
+jobs:
+  # Fails a pull request into the default branch unless it comes from the integration branch of this repository, so that a pull request opened against
+  # the default branch by mistake, such as a Dependabot security update, cannot be merged there once a ruleset requires the check (see GitHub
+  # Workflow); a branch of a fork that happens to have the same name does not count
+  source-branch:
+    name: Check Source Branch
+    runs-on: ubuntu-latest
+
+    # Stops a run that hangs instead of letting it use up the default limit of six hours; the check takes seconds
+    timeout-minutes: 5
+
+    steps:
+      # The branch names are passed through environment variables rather than written into the script, so that a branch name can never be run as shell
+      # code
+      - name: Check Source Branch
+        env:
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+          HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
+        run: |
+          if [ "$BASE_BRANCH" != "[[ default_branch ]]" ]; then
+            echo "The pull request goes into $BASE_BRANCH, which any branch may go into"
+            exit 0
+          fi
+          if [ "$HEAD_BRANCH" != "[[ integration_branch ]]" ] || [ "$HEAD_REPOSITORY" != "$GITHUB_REPOSITORY" ]; then
+            echo "::error::A pull request into [[ default_branch ]] has to come from [[ integration_branch ]], not from $HEAD_REPOSITORY:$HEAD_BRANCH"
+            exit 1
+          fi
+          echo "The pull request goes from [[ integration_branch ]] into [[ default_branch ]]"

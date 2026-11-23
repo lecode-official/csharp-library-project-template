@@ -1,11 +1,16 @@
-# The display name of the workflow, shown in the "Actions" tab of the GitHub repository and in the checks of a commit or pull request
+# The formatting check, the Markdown linting, and the spell checking of the project's files (see Continuous Integration); the name is the display name
+# of the workflow, shown in the "Actions" tab of the GitHub repository and in the checks of a commit or pull request
 name: Linters
 
-# Defines the events that trigger this workflow; it runs on every push to any branch of the repository, and on every pull request, so that a pull
-# request from a fork, whose pushes happen in another repository, is checked as well (see the condition on the job below, which keeps a pull request
-# from a branch of this repository from being checked twice)
+# Defines the events that trigger this workflow; it runs on every pull request, including one from a fork, whose pushes happen in another repository,
+# and on every push to the default and the integration branch, which checks what the merge of a pull request produced; a push to a work branch is
+# checked by its pull request instead, so that no job has to be skipped to keep a pull request from being checked twice, since a ruleset counts a
+# skipped job as a passed check (see Continuous Integration)
 on:
   push:
+    branches:
+      - "[[ default_branch ]]"
+      - "[[ integration_branch ]]"
   pull_request:
 
 # Grants the workflow's token nothing but read access to the repository contents, instead of whatever the repository's or organization's default is,
@@ -27,10 +32,6 @@ jobs:
   lint:
     name: Run Linters
     runs-on: ubuntu-latest
-
-    # A pull request from a branch of this repository is already checked by the push to that branch, so the job only runs for a pull request when it
-    # comes from a fork
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
 
     # Stops a run that hangs instead of letting it use up the default limit of six hours; linting takes about a minute
     timeout-minutes: 10
@@ -70,3 +71,10 @@ jobs:
       - name: Spell Check (CSpell)
         if: ${{ !cancelled() }}
         run: npm run lint:cspell
+
+      # Reads the newest release from the changelog and wraps it into a tag message, as the "Release" workflow does once the release pull request is
+      # merged, so that a changelog the script cannot read, or a bullet it cannot wrap, fails here rather than during the release; as a dry run, it
+      # only reports a release that is not ready yet, which is what the changelog looks like between two releases (see Versioning)
+      - name: Check Release Notes
+        if: ${{ !cancelled() }}
+        run: python3 .github/scripts/prepare-release.py --dry-run

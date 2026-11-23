@@ -33,6 +33,34 @@ This is load-bearing for the C# layout, where a project file is named after the 
 
 One consequence to keep in mind: `[` and `]` are character-class syntax in a glob, so a shell pattern that spells out a literal placeholder path matches nothing. Quote such paths, or match the directory with a `*`.
 
+## Conditional Blocks
+
+Content that only exists for some answers, such as the publishing to NuGet, which only exists when `publish_to_nuget` is true, goes into a `[% if %]` block. The template does not set `trim_blocks` in `_envops`, so a block tag leaves its line break behind, and every rendered file would get blank lines where a tag stood. Put each tag on a line of its own, with a blank line before it, and open it with `[%-`, which strips every whitespace character before the tag, the blank line and the line break above it included. What follows the tag is kept as it is, so a blank line after the tag is a blank line in the rendered file:
+
+````markdown
+Add the package to a project.
+
+[%- if publish_to_nuget %]
+
+```shell
+dotnet add package [[ package_id ]]
+```
+
+[%- else %]
+
+Download the package from the GitHub Release.
+
+[%- endif %]
+
+Then call it.
+````
+
+Laid out like this, the template and both renderings have exactly one blank line around every paragraph and every fenced code block, so the generated project's MarkdownLint accepts all three, and the template can be linted with it as it is. In a file where the conditional content continues the lines above it without a blank line, such as a comment in a workflow, leave out the blank line after the tag instead. A clause inside a sentence stays inline, as in `packed [% if publish_to_nuget %]and published [% endif %]as`, and a comment that differs in more than a clause is given in full in each branch of an `[% if %]`/`[% else %]` block, rather than split across a tag in the middle of its sentence.
+
+A placeholder breaks a URL in Markdown, since its spaces end the link: `<https://www.nuget.org/packages/[[ package_id ]]>` is neither an autolink in the template nor a link MarkdownLint accepts. Put such an address in a code span instead.
+
+Render the file once with each answer, and check that neither rendering has a missing or a doubled blank line. A Markdown article that only exists for some answers would get a conditional file name, but a section is usually enough. Never use an `[% if false %]` block to hide something, though (see [template structure](template-structure.md)).
+
 ## Adding a File to the Body
 
 1. Put it under [`template/`](../../template/), at the path it should have in the generated project.

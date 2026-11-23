@@ -6,7 +6,7 @@ Guidance for AI assistants working on [[ product_name ]]. Humans should read the
 
 [[ product_description ]]
 
-The repository holds one solution, [`source/[[ product_name ]].slnx`](source/), with three projects — the library itself (`[[ library_slug ]]`), a sample app that references it (`sample-app`), and its xUnit test project (`tests/unit-tests`). All three target `[[ target_framework ]]` with nullable reference types and implicit usings enabled.
+The repository holds one solution, [`source/[[ product_name ]].slnx`](source/), with three projects — the library itself (`[[ library_slug ]]`), a sample app that references it (`[[ sample_app_slug ]]`), and its xUnit test project (`tests/unit-tests`). All three target `[[ target_framework ]]` with nullable reference types and implicit usings enabled.
 
 Start from [docs/developer-manual/architecture.md](docs/developer-manual/architecture.md).
 
@@ -34,6 +34,7 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
   ```
 
 - **Never run a Git command that changes state or history unless asked for that exact thing** — `git commit`, `git push`, `git tag`, `git rebase`, `git reset`, `git cherry-pick`, and `git add`/`git restore --staged` alike. Edit the files and stop. Each instruction authorizes only itself: "write a commit message" means write it and stop, so the user can review it before anything is committed, and "commit this" does not authorize a push ([docs/developer-manual/conventions/git-workflow.md](docs/developer-manual/conventions/git-workflow.md)).
+- **"Start the next issue" and "finish the issue" each name a whole sequence.** The first picks the issue, skipping and reporting one that is assigned to someone else, assigns it, creates and checks out its linked branch, implements it, and writes the commit message. The second commits, pushes, opens the pull request, assigns it to the user, merges it once its checks pass, closes the issue, and deletes the branch. Both are spelled out in [docs/developer-manual/conventions/git-workflow.md](docs/developer-manual/conventions/git-workflow.md#ask-for-the-thing-you-want).
 - **The staging area is the user's review record**, not a step on the way to a commit. Staging or unstaging on their behalf destroys it.
 - **Delegating to subagents is pre-approved.** [`.claude/settings.json`](.claude/settings.json) allows the agent tool by default, so use one whenever a task genuinely benefits from parallel or isolated work, without asking first.
 
@@ -43,10 +44,10 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 - **C# source code** → [docs/developer-manual/conventions/csharp-style.md](docs/developer-manual/conventions/csharp-style.md) and [comments and documentation comments](docs/developer-manual/conventions/comments-and-documentation.md).
 - **Setting up a freshly generated project, or replacing the placeholder library and logo** → [docs/developer-manual/first-steps.md](docs/developer-manual/first-steps.md).
 - **Installing the SDK, Node.js, or the editor** → [docs/developer-manual/development-setup/installing-the-tools.md](docs/developer-manual/development-setup/installing-the-tools.md) and [setting up Visual Studio Code](docs/developer-manual/development-setup/setting-up-visual-studio-code.md).
-- **The labels, the repository settings, or GitHub Pages, and the scripts that set them up** → [docs/developer-manual/development-setup/setting-up-github.md](docs/developer-manual/development-setup/setting-up-github.md).
+- **The labels, the repository settings, GitHub Pages, or the branch protection, and the scripts that set them up** → [docs/developer-manual/development-setup/setting-up-github.md](docs/developer-manual/development-setup/setting-up-github.md).
 - **Linting, formatting, spell checking, editor setup** → [docs/developer-manual/tooling/](docs/developer-manual/tooling/README.md).
 - **An analyzer finding, or changing a rule's severity** → [docs/developer-manual/tooling/static-code-analysis.md](docs/developer-manual/tooling/static-code-analysis.md).
-- **The GitHub Actions workflows, a failing check, or Dependabot** → [docs/developer-manual/tooling/continuous-integration.md](docs/developer-manual/tooling/continuous-integration.md).
+- **The GitHub Actions workflows, a failing check, the release workflow and its script, or Dependabot** → [docs/developer-manual/tooling/continuous-integration.md](docs/developer-manual/tooling/continuous-integration.md).
 - **The Claude Code hooks that run after you edit a file** → [docs/developer-manual/tooling/claude-code-hooks.md](docs/developer-manual/tooling/claude-code-hooks.md).
 - **The documentation website, its navigation, or the generated API reference** → [docs/developer-manual/tooling/documentation-website.md](docs/developer-manual/tooling/documentation-website.md).
 - **The logo and the brand assets in `design/`, or the static files in `docs/assets/`** → [docs/developer-manual/logo-design.md](docs/developer-manual/logo-design.md) and [docs/assets/README.md](docs/assets/README.md).
@@ -57,10 +58,10 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 - **Writing or running unit tests, measuring code coverage** → [docs/developer-manual/conventions/testing.md](docs/developer-manual/conventions/testing.md) and [testing and code coverage](docs/developer-manual/tooling/testing-and-code-coverage.md).
 - **Writing commit messages** → [docs/developer-manual/conventions/commit-messages.md](docs/developer-manual/conventions/commit-messages.md).
 - **Preparing or making a release: the release issue, the release branch, and the release pull request** → [docs/developer-manual/conventions/github-workflow.md](docs/developer-manual/conventions/github-workflow.md#releases).
-- **Releasing, or raising the version** → [docs/developer-manual/conventions/versioning.md](docs/developer-manual/conventions/versioning.md).
+- **Releasing, the release tags and the GitHub Release, or raising the version** → [docs/developer-manual/conventions/versioning.md](docs/developer-manual/conventions/versioning.md).
 - **Writing a changelog entry, or the date of an unreleased version** → [docs/developer-manual/conventions/changelog-entries.md](docs/developer-manual/conventions/changelog-entries.md).
 - **Branches, branch names, committing, pushing, rebasing, or anything else touching Git** → [docs/developer-manual/conventions/git-workflow.md](docs/developer-manual/conventions/git-workflow.md).
-- **Issues, their titles, labels, milestones, pull requests, merging a pull request, or GitHub Releases** → [docs/developer-manual/conventions/github-workflow.md](docs/developer-manual/conventions/github-workflow.md).
+- **Issues, their titles, labels, milestones, the issue forms, pull requests, the pull request template, merging a pull request, or GitHub Releases** → [docs/developer-manual/conventions/github-workflow.md](docs/developer-manual/conventions/github-workflow.md).
 - **A formatting-only commit, or `.git-blame-ignore-revs`** → [docs/developer-manual/conventions/git-blame.md](docs/developer-manual/conventions/git-blame.md).
 - **Opening an issue, submitting a pull request, the AI-contribution policy** → [CONTRIBUTING.md](CONTRIBUTING.md).
 - **How consumers use the library** → [docs/user-manual/](docs/user-manual/README.md), starting with [getting started](docs/user-manual/getting-started.md).
@@ -79,6 +80,7 @@ Files use file-scoped namespaces and always group members into `#region` blocks 
 - A change to the public API updates the User Manual (how consumers use it), not only the Developer Manual (how the codebase itself is built) — the two serve different audiences, and the same change often needs a separate edit to each.
 - If a change introduces a topic that does not fit an existing article, add a new small, single-topic article, link it from the relevant index, and reference it here if relevant.
 - If a change invalidates something a doc says, fix the doc — do not leave it stale.
-- A new ecosystem in [`.github/dependabot.yml`](.github/dependabot.yml) gets its own `Dependabot:` label, in the [GitHub workflow](docs/developer-manual/conventions/github-workflow.md#labels) and in the label script of [setting up GitHub](docs/developer-manual/development-setup/setting-up-github.md#labels).
+- A new ecosystem in [`.github/dependabot.yml`](.github/dependabot.yml) gets its own `Dependabot:` label, in the [GitHub workflow](docs/developer-manual/conventions/github-workflow.md#labels) in the label script of [setting up GitHub](docs/developer-manual/development-setup/setting-up-github.md#labels), and in the `case` statement of [`.github/workflows/dependabot-security-updates.yml`](.github/workflows/dependabot-security-updates.yml).
+- A renamed job that a ruleset requires (`Run Linters`, `Run Tests`, or `Check Source Branch`) updates the branch protection script of [setting up GitHub](docs/developer-manual/development-setup/setting-up-github.md#branch-protection).
 
 Treat the docs as part of the code: a change is not done until the docs and this file reflect it.

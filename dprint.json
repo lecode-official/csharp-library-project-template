@@ -72,8 +72,8 @@
         // The vendored license texts are verbatim copies of upstream documents and must never be reformatted
         "licenses/",
 
-        // Generated files: the npm and NuGet lock files, and the Copier answers file, whose contents and quoting style are written by the tool that
-        // owns them rather than by hand; note that "*-lock.json" does not match "packages.lock.json", so both patterns are needed
+        // Generated files: the npm and NuGet lock files, whose contents and quoting style are written by the tool that owns them rather than by hand;
+        // note that "*-lock.json" does not match "packages.lock.json", so both patterns are needed
         "**/*-lock.json",
         "**/packages.lock.json",
     ],
@@ -81,8 +81,8 @@
     // A list of plugins that should be used by dprint
     "plugins": [
         "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.6.0.wasm",
-        "https://plugins.dprint.dev/json-0.25.2.wasm",
-        "https://plugins.dprint.dev/markdown-0.28.2.wasm",
-        "https://plugins.dprint.dev/toml-0.9.0.wasm",
+        "https://plugins.dprint.dev/json-0.26.0.wasm",
+        "https://plugins.dprint.dev/markdown-0.29.0.wasm",
+        "https://plugins.dprint.dev/toml-0.10.0.wasm",
     ],
 }

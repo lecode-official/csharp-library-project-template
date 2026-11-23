@@ -21,11 +21,23 @@ The solution, [`source/[[ product_name ]].slnx`](source/), groups three projects
 
 ## Installation
 
+[%- if publish_to_nuget %]
+
 [[ product_name ]] is published on NuGet as `[[ package_id ]]`:
 
 ```shell
 dotnet add package [[ package_id ]]
 ```
+
+[%- else %]
+
+[[ product_name ]] is not published on NuGet. Every release attaches the package, `[[ package_id ]]`, to its [GitHub Release]([[ repository_url ]]/releases). Download it into a directory, and add the package from there:
+
+```shell
+dotnet add package [[ package_id ]] --source <directory>
+```
+
+[%- endif %]
 
 See the [User Manual](docs/user-manual/README.md) for how to use it.
 
@@ -82,7 +94,7 @@ npm run format
 
 The linter configuration lives at the repository root, where each tool discovers it on its own:
 
-- **MarkdownLint** ([`.markdownlint.yml`](.markdownlint.yml)) — lints the Markdown files across the repository, including this read me.
+- **MarkdownLint** ([`.markdownlint.yml`](.markdownlint.yml)) — lints the Markdown files across the repository, including this read me, and checks that their relative links point to files and headings that exist.
 - **CSpell** ([`.cspell.json`](.cspell.json)) — checks the spelling of code, comments, and documentation.
 - **The static code analyzers** ([`.globalconfig`](.globalconfig)) — check the C# code on every build.
 

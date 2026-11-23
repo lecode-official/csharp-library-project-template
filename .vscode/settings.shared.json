@@ -56,12 +56,12 @@
     },
 
     // Configures the nesting of files that belong together in the explorer (the nested files are not expanded by default); this configuration nests
-    // all Node.js-related configuration files under the "package.json" file, and all linter and code formatter configuration files under the
-    // ".editorconfig" file
+    // all Node.js-related configuration files, and "package.json" itself, under the "copier.yml" file, which is what the template repository is
+    // about, and all linter and code formatter configuration files under the ".editorconfig" file
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.expand": false,
     "explorer.fileNesting.patterns": {
-        ".editorconfig": ".copier-answers.yml, .cspell.json, .git-blame-ignore-revs, .gitattributes, .gitignore, .markdownlint.yml, dprint.json, .globalconfig, global.json",
+        ".editorconfig": ".copier-answers.yml, .cspell.json, .git-blame-ignore-revs, .gitattributes, .gitignore, .markdownlint.yml, .markdownlint-cli2.yaml, dprint.json, .globalconfig, global.json",
         "*.slnx": "*.Build.props",
         "copier.yml": ".npmrc, .nvmrc, global.json, package-lock.json, package.json, properdocs.yml, requirements.txt",
         "launch.json": "launch.local.json, launch.shared.json",
@@ -93,8 +93,9 @@
     "git.rebaseWhenSync": true,
 
     // Disables the Python linters in Visual Studio Code, as Python is only used very sparingly here and therefore does not need extensive linting
-    "pylint.enabled": false,
     "flake8.enabled": false,
+    "pylint.enabled": false,
+    "python.analysis.ignore": ["*"],
 
     // Imports the external settings for the code spell checker CSpell, furthermore, the "ignorePaths" and the "useGitignore" settings are reset,
     // because they overwrite the settings in the imported configuration, also the diagnostic level is increased from "Information" to "Error" to
