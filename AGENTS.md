@@ -32,7 +32,7 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 - **Adding a file to the body, or verifying a change** → [docs/project-template/authoring.md](docs/project-template/authoring.md) and [docs/conventions/testing.md](docs/conventions/testing.md).
 - **What a consumer does with the template, the files an update leaves alone, or the messages after copying and updating** → [docs/project-template/rendering-and-updating.md](docs/project-template/rendering-and-updating.md).
 - **What a project does by hand when it updates to a release** → [docs/project-template/migration-guide.md](docs/project-template/migration-guide.md).
-- **The template's own continuous integration, `.github/workflows/linters.yml`, `.github/workflows/tests.yml`, `.github/workflows/pull-requests.yml`, and `.github/workflows/dependabot-security-updates.yml`** → [docs/conventions/testing.md](docs/conventions/testing.md#continuous-integration).
+- **The template's own continuous integration, `.github/workflows/linters.yml`, `.github/workflows/tests.yml`, `.github/workflows/pull-requests.yml`, `.github/workflows/dependabot-security-updates.yml`, and `.github/workflows/release.yml`** → [docs/conventions/testing.md](docs/conventions/testing.md#continuous-integration).
 - **Dependabot, at the root or in the body, or the Copier version the workflow pins** → [docs/conventions/dependency-management.md](docs/conventions/dependency-management.md).
 - **C# in the body, and placeholders in code** → [docs/conventions/csharp-style.md](docs/conventions/csharp-style.md).
 - **Comments, documentation comments, docstrings, or deciding where an explanation belongs** → [docs/conventions/comments-and-documentation.md](docs/conventions/comments-and-documentation.md).
@@ -43,7 +43,7 @@ Start from [docs/project-template/template-structure.md](docs/project-template/t
 - **Branches, branch names, rebasing, committing, staging, tagging, or anything else touching Git** → [docs/conventions/git-workflow.md](docs/conventions/git-workflow.md).
 - **Issues, their titles, labels, milestones, the issue forms, pull requests, the pull request template, merging a pull request, or GitHub Releases** → [docs/conventions/github-workflow.md](docs/conventions/github-workflow.md).
 - **Preparing or making a release: the release issue, the release branch, and the release pull request** → [docs/conventions/github-workflow.md](docs/conventions/github-workflow.md#releases).
-- **Releasing a template version: the version number and the tag** → [docs/conventions/versioning.md](docs/conventions/versioning.md).
+- **Releasing a template version: the version number, the tag, the `Release` workflow, and `.github/scripts/prepare-release.py`** → [docs/conventions/versioning.md](docs/conventions/versioning.md).
 - **Writing a changelog entry, or the date of an unreleased version** → [docs/conventions/changelog-entries.md](docs/conventions/changelog-entries.md).
 - **Adding or upgrading a dependency, at the root or in the body** → [docs/conventions/dependency-management.md](docs/conventions/dependency-management.md).
 - **Installing what working on the template needs** → [docs/development-setup/installing-the-tools.md](docs/development-setup/installing-the-tools.md).

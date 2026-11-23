@@ -71,3 +71,10 @@ jobs:
       - name: Spell Check (CSpell)
         if: ${{ !cancelled() }}
         run: npm run lint:cspell
+
+      # Reads the newest release from the changelog and wraps it into a tag message, as the "Release" workflow does once the release pull request is
+      # merged, so that a changelog the script cannot read, or a bullet it cannot wrap, fails here rather than during the release; as a dry run, it
+      # only reports a release that is not ready yet, which is what the changelog looks like between two releases (see Versioning)
+      - name: Check Release Notes
+        if: ${{ !cancelled() }}
+        run: python3 .github/scripts/prepare-release.py --dry-run

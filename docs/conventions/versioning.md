@@ -22,26 +22,37 @@ When a change is several of these, the highest one wins. Updating a project is a
 
 The body carries version numbers of its own: `<Version>` in the library's project file, `version` in `template/package.json`, and the first release in `template/CHANGELOG.md`. Those are the **generated project's** starting version, not the template's. A template release never touches them. They only change when the template decides that new projects should start at a different version, which is a body change like any other.
 
-The template's own version lives at the root: in the tag, in the root [`CHANGELOG.md`](../../CHANGELOG.md), and in the `version` field of the root [`package.json`](../../package.json). All three carry the same number, and they are raised together, in the branch, before the pull request. A bump that is left for after the merge is a bump that eventually does not happen.
+The template's own version lives at the root: in the tag, in the root [`CHANGELOG.md`](../../CHANGELOG.md), and in the `version` field of the root [`package.json`](../../package.json). All three carry the same number, and `package-lock.json` repeats the one in `package.json`. They are raised together, in the branch, before the pull request. A bump that is left for after the merge is a bump that eventually does not happen.
 
 ## Creating the Tag
 
-The tag points at the merge commit that brought the release into `main`, so it is created after the release pull request is merged. The tag message repeats the release's [changelog](changelog-entries.md) entry and follows the [tag message](commit-messages.md#tag-messages) rules. Write it into a file and pass it with `-F`, then push the tag explicitly, since pushing a branch does not carry its tags along:
+The tag points at the merge commit that brought the release into `main`, so it is created after the release pull request is merged. The [`Release`](../../.github/workflows/release.yml) workflow does that by itself: when a pull request into `main` is merged, it reads the newest release from the [changelog](changelog-entries.md), creates the annotated tag on the merge commit, pushes it, and creates the GitHub Release from it. Before it creates anything, it checks that the tag does not exist yet, that the release's date paragraph is set, and that the version in the root `package.json` and `package-lock.json` is the release's.
+
+The workflow writes both texts with [`.github/scripts/prepare-release.py`](../../.github/scripts/prepare-release.py):
+
+- **The tag message** follows the [tag message](commit-messages.md#tag-messages) rules: the subject `Release vX.Y.Z (Month D, YYYY)`, with the date from the changelog, and the release's bullets, wrapped at 72 characters without breaking a code span.
+- **The release notes** are the same bullets exactly as the changelog has them, unwrapped, since GitHub wraps them itself. The GitHub Release is titled `Release vX.Y.Z`.
+
+The tag is created by `github-actions[bot]` and is not signed. A tag pushed with the workflow's token starts no other workflow, so everything a release does happens in that one workflow. The `Linters` workflow runs the same script as a dry run on every pull request, so a changelog it cannot read fails long before the release (see [testing](testing.md#continuous-integration)). To see the tag message the next release will get, run it locally:
 
 ```shell
-git tag -a v0.2.0 <commit> -F <message-file>
+python3 .github/scripts/prepare-release.py --dry-run
+```
+
+When the workflow fails, the tag and the GitHub Release are created by hand instead, from the same texts. The script writes them into a directory, and the tag is pushed explicitly, since pushing a branch does not carry its tags along:
+
+```shell
+python3 .github/scripts/prepare-release.py --output-directory /tmp/release
+git tag -a v0.2.0 <merge-commit> -F /tmp/release/tag-message.txt
 git push origin v0.2.0
+gh release create v0.2.0 --verify-tag --title "Release v0.2.0" --notes-file /tmp/release/release-notes.md
 ```
 
-The GitHub Release is created after the tag is pushed, from that existing tag. Typing a new tag name into GitHub's release form makes GitHub create the tag itself, and a tag GitHub creates is always lightweight, so the release would lose its tag message. Pick the pushed tag in the form instead, or create the release from it with the GitHub CLI, which also takes the release notes from the tag message:
-
-```shell
-gh release create v0.2.0 --verify-tag --notes-from-tag --title "Release v0.2.0"
-```
+The GitHub Release is always created from the existing tag. Typing a new tag name into GitHub's release form makes GitHub create the tag itself, and a tag GitHub creates is always lightweight, so the release would lose its tag message. `--verify-tag` makes the GitHub CLI fail instead.
 
 A tag that turns out to be wrong is deleted with `git tag -d` and recreated, but only while it is still local. Once it is pushed, generated projects may already record it in their answers file, so it is treated as immutable. Release a new version instead.
 
-After the release pull request is merged, `development` is fast-forwarded to `main` (see [bringing `development` back in step](git-workflow.md#bringing-development-back-in-step)). Creating and pushing a tag, and the fast-forward, only ever happen when they were asked for (see [Git workflow](git-workflow.md#the-working-tree-belongs-to-the-author)).
+After the release pull request is merged, `development` is fast-forwarded to `main` (see [bringing `development` back in step](git-workflow.md#bringing-development-back-in-step)). Creating and pushing a tag by hand, and the fast-forward, only ever happen when they were asked for (see [Git workflow](git-workflow.md#the-working-tree-belongs-to-the-author)).
 
 ## Related
 

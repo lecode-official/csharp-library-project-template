@@ -1,12 +1,12 @@
 # Continuous Integration
 
-This article covers the GitHub Actions workflows in [`.github/workflows/`](../../../.github/workflows/): [`linters.yml`](../../../.github/workflows/linters.yml), [`tests.yml`](../../../.github/workflows/tests.yml), [`pull-requests.yml`](../../../.github/workflows/pull-requests.yml), [`dependabot-security-updates.yml`](../../../.github/workflows/dependabot-security-updates.yml), and [`docs.yml`](../../../.github/workflows/docs.yml), and the [Dependabot configuration](../../../.github/dependabot.yml) that keeps their pinned versions current. The workflows are independent of each other — any one can fail, be re-run, or be extended without touching the others, and a commit or pull request shows them as separate checks.
+This article covers the GitHub Actions workflows in [`.github/workflows/`](../../../.github/workflows/): [`linters.yml`](../../../.github/workflows/linters.yml), [`tests.yml`](../../../.github/workflows/tests.yml), [`pull-requests.yml`](../../../.github/workflows/pull-requests.yml), [`dependabot-security-updates.yml`](../../../.github/workflows/dependabot-security-updates.yml), [`release.yml`](../../../.github/workflows/release.yml), and [`docs.yml`](../../../.github/workflows/docs.yml), and the [Dependabot configuration](../../../.github/dependabot.yml) that keeps their pinned versions current. The workflows are independent of each other — any one can fail, be re-run, or be extended without touching the others, and a commit or pull request shows them as separate checks.
 
 A project hosted somewhere other than GitHub replaces these files with the equivalent for its own platform. What the workflows *do* is the part worth keeping: the same tools, the same pinned versions, the same never-stop-at-the-first-failure behavior.
 
 ## What Every Workflow Shares
 
-- **Least-privilege permissions.** Each workflow declares `permissions` explicitly instead of inheriting the repository's or organization's default, which may be write access to everything. The linters and tests workflows get `contents: read` and nothing else, the pull requests workflow gets no permission at all, and the Dependabot security updates workflow gets `pull-requests: write` alone, since it changes a pull request. The docs workflow additionally gets `pages: write` and `id-token: write`, which the GitHub Pages deployment needs.
+- **Least-privilege permissions.** Each workflow declares `permissions` explicitly instead of inheriting the repository's or organization's default, which may be write access to everything. The linters and tests workflows get `contents: read` and nothing else, the pull requests workflow gets no permission at all, the Dependabot security updates workflow gets `pull-requests: write` alone, since it changes a pull request, and the release workflow gets `contents: write` alone, since it pushes a tag and creates a GitHub Release. The docs workflow additionally gets `pages: write` and `id-token: write`, which the GitHub Pages deployment needs.
 - **A timeout on every job.** `timeout-minutes` stops a run that hangs instead of letting it use up GitHub's default limit of six hours.
 - **Actions pinned to a commit SHA.** Every action is referenced by the full commit SHA of a release, with the version in a comment next to it, because a tag can be moved to point at different code, while a commit SHA cannot. [Dependabot](#dependabot) keeps the pins up to date.
 - **Versions read from the repository.** The Node.js version is read from [`.nvmrc`](../../../.nvmrc) and the .NET SDK version from [`global.json`](../../../global.json), rather than being written into a workflow. A version duplicated in two places is a version that eventually disagrees with itself.
@@ -30,7 +30,7 @@ A `concurrency` group per workflow and ref cancels a run that is still in progre
 
 ## Linters Workflow
 
-A single job on the latest Ubuntu runner checks out the repository, installs Node.js, runs `npm ci`, and then runs each check as its own step, through the same npm scripts a developer runs locally: `npm run lint:dprint`, `npm run lint:markdownlint`, and `npm run lint:cspell`. It does not set up .NET, because none of these tools needs it. The C# code is checked by the analyzers in the tests workflow's build instead.
+A single job on the latest Ubuntu runner checks out the repository, installs Node.js, runs `npm ci`, and then runs each check as its own step, through the same npm scripts a developer runs locally: `npm run lint:dprint`, `npm run lint:markdownlint`, and `npm run lint:cspell`. A last step runs the release script of the [release workflow](#release-workflow) as a dry run. It does not set up .NET, because none of these tools needs it. The C# code is checked by the analyzers in the tests workflow's build instead.
 
 Every step after the first carries `if: ${{ !cancelled() }}`, so a single failing tool does not hide the findings of the ones after it. One run reports everything it can, which is the same reason `npm run lint` uses `run-s --continue-on-error` (see [tooling](README.md)). Each check being its own step also shows at a glance which tool failed.
 
@@ -63,6 +63,20 @@ It runs on `pull_request_target` rather than `pull_request`, because a workflow 
 
 A `case` statement maps Dependabot's name of each ecosystem in [`.github/dependabot.yml`](../../../.github/dependabot.yml) to its label. An ecosystem it does not know still has its pull request pointed at `[[ integration_branch ]]`, and then fails the job, so that the missing label is noticed. A new ecosystem therefore gets its label there, too.
 
+## Release Workflow
+
+Runs when a pull request into `[[ default_branch ]]` is merged, which only the release pull request ever is (see [GitHub workflow](../conventions/github-workflow.md#releases)). A pull request into `[[ default_branch ]]` merged without a new release in the changelog fails the job, because its tag already exists. A single job, `Create Release`, tags the merge commit and creates the GitHub Release (see [the release tags](../conventions/versioning.md#the-release-tags)):
+
+1. [`.github/scripts/prepare-release.py`](../../../.github/scripts/prepare-release.py) reads the newest release from [`CHANGELOG.md`](../../../CHANGELOG.md). It fails unless the release's date paragraph is set and the version is the same in the library's project file, `package.json`, and `package-lock.json`, and it writes the tag message and the release notes.
+2. The job fails if the tag already exists.
+3. The library is restored in locked mode and packed in the Release configuration, into the package and the symbol package.
+4. The annotated tag is created on the merge commit by `github-actions[bot]`, unsigned, and pushed.
+5. The GitHub Release is created from the pushed tag with `gh release create --verify-tag`, titled `Release vX.Y.Z`, with the release's bullets as its notes and the package and the symbol package attached.
+
+Everything that can fail is checked or built before the tag is created, so a release that is not ready leaves nothing behind. A tag pushed with the workflow's token starts no other workflow, so everything the release does happens in this one job. The workflow's file name stays `release.yml`, because a NuGet trusted publishing policy is bound to the file name of the workflow that publishes. Its concurrency group runs one release at a time and never cancels one that is running, because a cancelled release can leave a tag without its GitHub Release.
+
+The linters workflow runs the same script with `--dry-run` on every pull request. A dry run reports a release that is not ready yet, which is what the changelog looks like between two releases, without failing, and fails only on a changelog it cannot read, or on a code span too long for a line of the tag message.
+
 ## Docs Workflow
 
 Runs only on pushes to the default branch — unlike the linters and tests workflows, it deploys to GitHub Pages, so it only ever needs to run against what is actually published.
@@ -88,4 +102,5 @@ Every ecosystem is checked once a week: the GitHub Actions actions, the NuGet pa
 - [Testing and code coverage](testing-and-code-coverage.md) — the commands the tests workflow runs, in more detail.
 - [Static code analysis](static-code-analysis.md) — the rules a Release build enforces.
 - [Documentation website](documentation-website.md) — what the docs workflow builds and deploys.
+- [Versioning](../conventions/versioning.md) — the release tags and the GitHub Release the release workflow creates.
 - [Dependency management](../conventions/dependency-management.md) — how the pinned versions these workflows use are kept exact.

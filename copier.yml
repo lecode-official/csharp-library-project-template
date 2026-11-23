@@ -110,6 +110,9 @@ _message_after_update: |-
     draft pull request to have a work branch checked early.
   - GitHub: optionally protect both branches with the branch protection script in
     docs/developer-manual/development-setup/setting-up-github.md, which needs a public repository or a paid GitHub plan.
+  - Releases: the new Release workflow creates the tag and the GitHub Release once the release pull request is merged, so neither is
+    created by hand any more. It reads the newest release from CHANGELOG.md, which the Linters workflow now checks on every pull request;
+    run "python3 .github/scripts/prepare-release.py --dry-run" and fix what it reports.
   - Linting: "npm run lint" now also checks that relative links point to files and headings that exist; run it after "npm install" and
     fix the broken links it reports. README.md mentions the link check in its "Linting" section, which can be copied from a fresh render.
   - Sample app: its name, directory, and namespace are now the answers sample_app_name, sample_app_slug, and sample_app_namespace, whose

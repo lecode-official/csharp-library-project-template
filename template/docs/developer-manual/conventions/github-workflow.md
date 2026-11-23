@@ -143,9 +143,9 @@ A release is prepared and merged in a fixed order:
    - It checks that the version is the same everywhere it has to be (see [versioning](versioning.md#everything-that-has-to-move-together)).
 3. **The pull request into `[[ integration_branch ]]`.** The release branch is merged into `[[ integration_branch ]]` like any other work branch, through a pull request titled `Prepared Release vX.Y.Z` with the line `Resolves #12.` that names the release issue. It goes into `[[ integration_branch ]]`, so it links the release issue without closing it.
 4. **The release pull request.** A pull request titled `Release vX.Y.Z`, the one pull request title that is not in the past tense, merges `[[ integration_branch ]]` into `[[ default_branch ]]`. It carries `Type: Release` and the same `Resolves` line, and since it goes into the default branch, merging it closes the release issue. Its merge message names the release, as in ``Merged `[[ integration_branch ]]` for Release v1.2.0``.
-5. **After the merge.** The merge commit is marked with the release's [tag](git-workflow.md#tags), a GitHub Release is created from that tag, `[[ integration_branch ]]` is [brought back in step](git-workflow.md#bringing-the-integration-branch-back-in-step) with `[[ default_branch ]]`, and the milestone is closed.
+5. **After the merge.** The `Release` workflow marks the merge commit with the release's [tag](git-workflow.md#tags) and creates a GitHub Release from that tag, with the library's package and symbol package attached. Once it has succeeded, `[[ integration_branch ]]` is [brought back in step](git-workflow.md#bringing-the-integration-branch-back-in-step) with `[[ default_branch ]]`, and the milestone is closed.
 
-The GitHub Release is titled like the tag's release, `Release vX.Y.Z`, and its notes are the tag message, which repeats the release's entry in the changelog. How the tag and the GitHub Release are created is covered in [the release tags](versioning.md#the-release-tags).
+The GitHub Release is titled like the tag's release, `Release vX.Y.Z`, and its notes are the release's bullets from the changelog, which the tag message repeats, wrapped. How the workflow creates the tag and the GitHub Release, and how both are created by hand when it fails, is covered in [the release tags](versioning.md#the-release-tags).
 
 ## Related
 

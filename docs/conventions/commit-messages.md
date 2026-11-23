@@ -49,7 +49,7 @@ Every release of the template is an annotated tag, and its message follows the g
 - No co-author trailer, since a tag records a release rather than authorship.
 - A code span is never broken across a wrapped line. Reword the bullet instead.
 
-Write the message into a file and pass it with `-F`, so the wrapping survives verbatim.
+The `Release` workflow writes the message from the changelog by itself, so these rules are what [`.github/scripts/prepare-release.py`](../../.github/scripts/prepare-release.py) implements (see [versioning](versioning.md#creating-the-tag)). A message written by hand goes into a file and is passed with `-F`, so the wrapping survives verbatim.
 
 ## Example
 

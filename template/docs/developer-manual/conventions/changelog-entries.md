@@ -48,7 +48,7 @@ The entries follow the same prose rules as everything else here (see [Markdown s
 
 ## The Changelog and the Tag Message
 
-The message of a release tag repeats the release's list of changes, one bullet per change, so the changelog and the tag never disagree. The [tag message](commit-messages.md#tag-messages) rules cover how that list is wrapped, and [versioning](versioning.md#the-release-tags) covers how the tag is created.
+The message of a release tag repeats the release's list of changes, one bullet per change, so the changelog and the tag never disagree. The [tag message](commit-messages.md#tag-messages) rules cover how that list is wrapped, and [versioning](versioning.md#the-release-tags) covers how the tag is created. The release workflow writes the tag message and the release notes from the changelog itself, so the release's section has to keep its [layout](#the-layout-of-a-release) exactly: the linters workflow reads it on every pull request and fails when it cannot.
 
 ## Related
 

@@ -36,9 +36,11 @@ When a change is both, the highest one wins. A release that adds three capabilit
 The version lives in two manifests, and nowhere else by default:
 
 - **`source/[[ library_slug ]]/[[ product_name ]].csproj`** — the `<Version>` property, which is what NuGet publishes.
-- **`package.json`** — the `"version"` field. The npm manifest is private and only declares the tooling, so nothing publishes it, but it is a manifest of this repository all the same, and it carries the same number rather than one of its own.
+- **`package.json`** — the `"version"` field. The npm manifest is private and only declares the tooling, so nothing publishes it, but it is a manifest of this repository all the same, and it carries the same number rather than one of its own. `package-lock.json` repeats it, and `npm install` keeps the two in step.
 - **`CHANGELOG.md`** — the release's own heading and date line (see [changelog](changelog-entries.md)).
 - **Any version literal in the source** — a version a running program reports about itself.
+
+The release workflow checks that the project file, both npm manifests, and the changelog agree before it tags a release (see [the release tags](#the-release-tags)). A version literal in the source it cannot check.
 
 The sample app and the unit test project deliberately carry **no** version: neither is published, both set `IsPackable` to `false`, so a version on them would be a number nobody reads and everybody forgets to bump.
 
@@ -50,12 +52,28 @@ A version literal in the source is kept in step by nothing but this list. It is 
 
 Every release has an annotated Git tag named exactly like the version, prefixed with `v` (`v0.1.0`, `v0.2.0`, and so on), pointing at the merge commit that brought the release into `[[ default_branch ]]`. The [Git workflow](git-workflow.md#tags) explains what a tag is and the rules every tag follows. A release is not complete until its tag exists and is pushed.
 
-The tag message repeats the release's [changelog](changelog-entries.md) entry in plain text, and follows the rules in [tag messages](commit-messages.md#tag-messages). Write it into a file first and pass it with `-F`, so the wrapping is preserved exactly rather than being re-wrapped or mangled by a shell quoting mistake. Tags are pushed explicitly — pushing a branch does not carry its tags along:
+The [`Release`](../../../.github/workflows/release.yml) workflow creates the tag by itself once the release pull request is merged, and creates the GitHub Release from it (see [continuous integration](../tooling/continuous-integration.md#release-workflow)). Before it creates anything, it checks that the tag does not exist yet, that the release's date paragraph in the [changelog](changelog-entries.md) is set, and that the version is the same everywhere [it has to be](#everything-that-has-to-move-together), and it packs the library. Both texts come from [`.github/scripts/prepare-release.py`](../../../.github/scripts/prepare-release.py):
+
+- **The tag message** repeats the release's changelog entry in plain text and follows the rules in [tag messages](commit-messages.md#tag-messages): the subject `Release vX.Y.Z (Month D, YYYY)`, with the date from the changelog, and the release's bullets, wrapped at 72 characters without breaking a code span.
+- **The release notes** are the same bullets exactly as the changelog has them, unwrapped, since GitHub wraps them itself. The GitHub Release is titled `Release vX.Y.Z`, and the library's package and symbol package are attached to it.
+
+The tag is created by `github-actions[bot]` and is not signed. The linters workflow runs the same script as a dry run on every pull request, so a changelog it cannot read fails long before the release. To see the tag message the next release will get, run it locally:
 
 ```shell
-git tag -a v0.1.0 <commit> -F <message-file>
-git push origin v0.1.0
+python3 .github/scripts/prepare-release.py --dry-run
 ```
+
+When the workflow fails, the tag and the GitHub Release are created by hand instead, from the same texts. The script writes them into a directory, and the tag is pushed explicitly, since pushing a branch does not carry its tags along:
+
+```shell
+python3 .github/scripts/prepare-release.py --output-directory /tmp/release
+git tag -a v0.1.0 <merge-commit> -F /tmp/release/tag-message.txt
+git push origin v0.1.0
+dotnet pack "source/[[ product_name ]].slnx" --configuration Release --output /tmp/packages
+gh release create v0.1.0 --verify-tag --title "Release v0.1.0" --notes-file /tmp/release/release-notes.md /tmp/packages/*
+```
+
+The GitHub Release is always created from the existing tag. Typing a new tag name into GitHub's release form makes GitHub create the tag itself, and a tag GitHub creates is always lightweight, so the release would lose its tag message. `--verify-tag` makes the GitHub CLI fail instead.
 
 To read the messages back:
 
@@ -65,15 +83,9 @@ git tag -n99 v0.1.0    # one tag's message
 git show v0.1.0        # the message plus the commit it points at
 ```
 
-The GitHub Release is created after the tag is pushed, from that existing tag. Typing a new tag name into GitHub's release form makes GitHub create the tag itself, and a tag GitHub creates is always lightweight, so the release would lose its tag message. Pick the pushed tag in the form instead, or create the release from it with the GitHub CLI, which also takes the release notes from the tag message:
-
-```shell
-gh release create v0.1.0 --verify-tag --notes-from-tag --title "Release v0.1.0"
-```
-
 A tag that turns out to be wrong is deleted with `git tag -d v0.1.0` and recreated. Do that only while the tag is still local. Once it is pushed, other clones have it and it is treated as immutable — release a new version instead.
 
-After the release pull request is merged, `[[ integration_branch ]]` is fast-forwarded to `[[ default_branch ]]` (see [bringing the integration branch back in step](git-workflow.md#bringing-the-integration-branch-back-in-step)). Creating and pushing a tag, and the fast-forward, only happen when they were asked for (see [Git workflow](git-workflow.md#the-working-tree-belongs-to-the-author)).
+After the release pull request is merged, `[[ integration_branch ]]` is fast-forwarded to `[[ default_branch ]]` (see [bringing the integration branch back in step](git-workflow.md#bringing-the-integration-branch-back-in-step)). Creating and pushing a tag by hand, and the fast-forward, only happen when they were asked for (see [Git workflow](git-workflow.md#the-working-tree-belongs-to-the-author)).
 
 ## Package Validation
 
