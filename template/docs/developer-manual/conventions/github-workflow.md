@@ -92,7 +92,7 @@ GitHub only closes an issue through `Resolves #12.` when the pull request goes i
 
 ## Dependabot Pull Requests
 
-Dependabot opens a pull request whenever a newer version of a dependency is released (see [dependency management](dependency-management.md)). Such a pull request has no issue, so it carries the `Dependabot:` label of its ecosystem instead of a `Type:` label, and it is assigned to the milestone of the next release like every other pull request. Dependabot opens it against `[[ integration_branch ]]`, like every other pull request, because its configuration sets `target-branch`.
+Dependabot opens a pull request whenever a newer version of a dependency is released (see [dependency management](dependency-management.md)). Such a pull request has no issue, so it carries the `Dependabot:` label of its ecosystem instead of a `Type:` label. Dependabot sets neither a milestone nor an assignee, so whoever approves its merge assigns it to the milestone of the release it is merged into, and to themselves, since they are responsible for it. Dependabot opens it against `[[ integration_branch ]]`, like every other pull request, because its configuration sets `target-branch`.
 
 A security update is the exception. Dependabot applies its configuration only to version updates, so it opens a security update against the default branch, `[[ default_branch ]]`, and without a label. As soon as it is opened, the [`Dependabot Security Updates`](../../../.github/workflows/dependabot-security-updates.yml) workflow points it at `[[ integration_branch ]]` and gives it the label of its ecosystem (see [continuous integration](../tooling/continuous-integration.md#dependabot-security-updates-workflow)). Dependabot computed the update against `[[ default_branch ]]`, which `[[ integration_branch ]]` always contains, so the diff stays the same.
 
@@ -112,6 +112,8 @@ Before it is merged, it is reviewed like any other change:
 
 It is then merged with a merge commit and a message written by hand, like every other pull request. Its body names the pull request alone, as in `Merged pull request #14.`, since there is no issue to resolve.
 
+A Dependabot pull request is always merged into the release it was opened in, together with the release's [dependency issue](#planning-a-release), unless there is a really good reason not to, such as a version conflict, or a major update that needs changes to more than the version. Such an update gets an issue of its own, in the milestone of the release that will do the work, and the pull request is closed with a comment that names that issue.
+
 ## Planning a Release
 
 A release is planned at its start, not at its end. Before the work on its first issue begins, its [milestone](#milestones) is created, together with its issues and its [release issue](#releases), so that the plan the release issue keeps is there for every issue that follows.
@@ -124,12 +126,14 @@ The release issue lists the order in which the release's other issues are implem
 1. #13.
 2. #14, #15, #16, and #17.
 3. #18.
+4. #19.
 ```
 
 - **The items are worked through from top to bottom.** An item is only started once every issue of the item above it is closed, so an issue that another one builds on goes into an earlier item.
 - **The issues of one item can be worked on at the same time**, by different people. They are listed in their suggested order.
 - **A short note may say why an issue comes where it does**, as in `#18 (adds to the workflow of #17)`. It explains the order, but the items alone decide it.
 - **An issue added to the milestone later**, such as a bug found along the way, is added to the order too.
+- **The dependency issue comes last.** Every milestone has an issue titled `Update the Dependencies for Release vX.Y.Z`, labeled `Type: Implementation`, which raises every dependency to its newest release, as [dependency management](dependency-management.md#raising-every-dependency-before-a-release) describes, and merges the open [Dependabot pull requests](#dependabot-pull-requests). It is the last item of the order, so that the versions are as new as possible when the release is made, even when the work on the release takes longer than planned.
 
 The next issue to work on is found by reading the order from top to bottom and from left to right. It is the first issue that is open and assigned to nobody else, within the first item that still has open issues. An issue that is assigned to someone else is their work, so it is skipped. When every open issue of that item is assigned, there is no next issue until one of them is closed. The release issue itself comes last, once every other issue of the milestone is closed.
 
@@ -138,7 +142,7 @@ The next issue to work on is found by reading the order from top to bottom and f
 A release is prepared and merged in a fixed order:
 
 1. **The release issue.** A release has an issue of its own, titled `Release vX.Y.Z`, labeled `Type: Release`, and assigned to the release's milestone. It is created when the release is [planned](#planning-a-release), at the start of the release, and it lists the order in which the release's other issues are implemented.
-2. **The release branch.** Once every other issue of the milestone is closed, a work branch named `release/vX.Y.Z` is created from `[[ integration_branch ]]` and linked to the release issue. Its commit finishes the release:
+2. **The release branch.** Once every other issue of the milestone is closed, and no pull request into `[[ integration_branch ]]` is still open, a work branch named `release/vX.Y.Z` is created from `[[ integration_branch ]]` and linked to the release issue. A Dependabot pull request that was opened after the dependency issue was closed is merged first, as [Dependabot pull requests](#dependabot-pull-requests) describes. Any other open pull request may stay open when it is meant for a later release, and is then assigned to that release's milestone. The branch's commit finishes the release:
    - It replaces the date paragraph of the release in the [changelog](changelog-entries.md#an-unreleased-version) with the release date, and tidies up the release's entries. They are written one change at a time, so just before the release, entries that describe the same work are merged, and the entries a consumer has to act on come first.
    - It checks that the version is the same everywhere it has to be (see [versioning](versioning.md#everything-that-has-to-move-together)).
 3. **The pull request into `[[ integration_branch ]]`.** The release branch is merged into `[[ integration_branch ]]` like any other work branch, through a pull request titled `Prepared Release vX.Y.Z` with the line `Resolves #12.` that names the release issue. It goes into `[[ integration_branch ]]`, so it links the release issue without closing it.

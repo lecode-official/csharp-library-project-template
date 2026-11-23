@@ -15,6 +15,25 @@ Some steps apply to every update, whatever changed (see [rendering and updating]
 
 ## Migrate from v1.1.0 to v1.2.0
 
+### The .NET SDK 10.0.404
+
+The default SDK is now 10.0.404, and the newest patch of the 10.0.1xx band is 10.0.115. Both carry the security fixes of .NET 10.0.15. The pinned SDK is the answer to `dotnet_sdk_version`, so an update keeps the recorded version. Raise it with the update itself, which rewrites `global.json`:
+
+```shell
+copier update --defaults --data dotnet_sdk_version=10.0.404
+```
+
+A project on the 10.0.1xx band passes `10.0.115` instead. Install the new SDK before building (see the project's `docs/developer-manual/development-setup/installing-the-tools.md`).
+
+### Node.js 26
+
+The linters and the formatter now run on Node.js 26, the active long-term support release, which `.nvmrc` pins and `engines` in `package.json` requires. The update raises both, and continuous integration reads the version from `.nvmrc`, but every developer of the project installs Node.js 26 by hand, and then installs the npm packages again:
+
+```shell
+nvm install
+npm install
+```
+
 ### Copier 9.10.3
 
 The template now needs Copier 9.10.3 or newer, and Copier refuses to update to it with an older version. Upgrade Copier first, for example with `pipx upgrade copier` or `uv tool upgrade copier`.

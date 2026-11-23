@@ -13,7 +13,7 @@ Four sets of analyzers run in every project — the library, the sample app, and
 
 The library also sets `<IsAotCompatible>true</IsAotCompatible>`, which adds the trim, AOT, and single-file analyzers (`IL2*`, `IL3*`). Code that a consumer could not trim or compile ahead of time is reported in the library, instead of in the consumer's application.
 
-The analyzer packages are declared once, as `GlobalPackageReference` items in [`Directory.Packages.props`](../../../Directory.Packages.props), which adds them to every project as build-time-only dependencies, so they never become a dependency of the published package. They are pinned like every other dependency (see [dependency management](../conventions/dependency-management.md)). StyleCop Analyzers has only ever published modern C# support in prerelease versions, so it is the one dependency pinned to a `-beta` version.
+The analyzer packages are declared once, as `GlobalPackageReference` items in [`Directory.Packages.props`](../../../Directory.Packages.props), which adds them to every project as build-time-only dependencies, so they never become a dependency of the published package. They are pinned like every other dependency (see [dependency management](../conventions/dependency-management.md)).
 
 The build settings themselves live in [`Directory.Build.props`](../../../Directory.Build.props) at the repository root, which every project imports. Besides the analysis settings above, it treats warnings as errors in Release builds, turns on the compiler's `strict` mode, and audits the transitive dependencies for known vulnerabilities as well (`NuGetAuditMode`). A Debug build shows the findings without stopping, and [continuous integration](continuous-integration.md), which builds in Release, fails on any of them.
 
@@ -43,6 +43,8 @@ The configuration encodes the [conventions](../conventions/README.md), so a rule
 - **`this.` qualification.** `SA1101` enforces it in the build. The `dotnet_style_qualification_*` options keep the editor from suggesting the opposite.
 - **Primary constructors.** They are not used, because their parameters cannot carry XML documentation comments of their own.
 - **Private members are documented.** StyleCop checks private members and private fields too, not just the public surface.
+
+One rule that is off by default is turned on: `SX1412` reports a C# file that starts with a UTF-8 byte order mark. `.editorconfig` already asks every editor to save files as UTF-8 without one, so the rule is a safety net for a file copied from elsewhere, or written by an editor that ignores `.editorconfig`.
 
 ## One Problem, One Warning
 

@@ -65,6 +65,19 @@ An analyzer package (StyleCop Analyzers, Roslynator) needs more than a passing r
 
 The upgrade reaches existing generated projects through `copier update`, as an ordinary change to their version strings.
 
+## Raising Every Dependency Before a Release
+
+Dependabot only covers the root's own actions and npm packages, and Dependabot pull requests only arrive once a week. So every release has an issue that raises every dependency of both sides to its newest release, as the last item of its order (see [planning a release](github-workflow.md#planning-a-release)). It works through this list:
+
+- **The open Dependabot pull requests**, which are completed as described [above](#dependabot-at-the-root), assigned to the release's milestone and to the user who approves them, and merged (see [GitHub workflow](github-workflow.md#dependabot-pull-requests)).
+- **The npm packages** of the root `package.json` and of `template/package.json`, including `packageManager`, raised together.
+- **The dprint plugins** in the root's and the body's `dprint.json`, whose new versions can format differently, so both sides are formatted and checked with them.
+- **The actions** of the root's and the body's workflows, each pinned to the commit SHA of its newest release.
+- **The Copier version** that `PINNED_COPIER_VERSION` in `.github/workflows/tests.yml` names, and **the Python version** of the root's and the body's workflows.
+- **The body's own dependencies:** its NuGet packages and analyzers, its .NET tools, its Python packages, the Node.js version in `template/.nvmrc` and the `engines` of both `package.json` files, and the default and the serviced bands of `dotnet_sdk_version` (see [questions](../project-template/questions.md#dotnet_sdk_version)).
+
+Each new version is raised as described in [upgrading a body dependency](#upgrading-a-body-dependency), its release notes read for anything that breaks, and the template rendered with it. A major release that needs more than a version bump gets an issue of its own instead. A new SDK is an answer, so a generated project only gets it when it updates with the new version, which the update message and the [migration guide](../project-template/migration-guide.md) tell it to do.
+
 ## Related
 
 - [Questions](../project-template/questions.md) — the SDK version and the target framework.
