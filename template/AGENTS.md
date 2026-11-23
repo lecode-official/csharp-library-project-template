@@ -6,7 +6,7 @@ Guidance for AI assistants working on [[ product_name ]]. Humans should read the
 
 [[ product_description ]]
 
-The repository holds one solution, [`source/[[ product_name ]].slnx`](source/), with three projects — the library itself (`[[ library_slug ]]`), a sample app that references it (`sample-app`), and its xUnit test project (`tests/unit-tests`). All three target `[[ target_framework ]]` with nullable reference types and implicit usings enabled.
+The repository holds one solution, [`source/[[ product_name ]].slnx`](source/), with three projects — the library itself (`[[ library_slug ]]`), a sample app that references it (`[[ sample_app_slug ]]`), and its xUnit test project (`tests/unit-tests`). All three target `[[ target_framework ]]` with nullable reference types and implicit usings enabled.
 
 Start from [docs/developer-manual/architecture.md](docs/developer-manual/architecture.md).
 

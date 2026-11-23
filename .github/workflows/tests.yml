@@ -36,8 +36,8 @@ env:
 # can be moved to point at different code, while a commit SHA cannot; Dependabot keeps the pins up to date (see .github/dependabot.yml)
 jobs:
   # Renders the template body once per answer set and verifies the generated project; between them, the answer sets cover every license, both serviced
-  # SDK bands, a product name with spaces and a dot, which is the answer most likely to break a file name or a quoted command, and the oldest Copier
-  # version the template supports
+  # SDK bands, a product name and a sample app name with spaces and a dot, the derived defaults of the namespaces as well as answers of their own, a
+  # sample app slug other than the default, and the oldest Copier version the template supports
   render:
     name: Render (${{ matrix.name }})
     runs-on: ubuntu-latest
@@ -50,18 +50,27 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # The default answers, which is also the one answer set that builds the documentation website
+          # The default answers, which leave the library's and the sample app's namespaces to their defaults, derived from the slugs
           - name: Default Answers
             product_name: Render Test
-            root_namespace: RenderTest
             license: LGPL-3.0-or-later
             dotnet_sdk_version: 10.0.403
             build_documentation: true
+
+          # A product name and a sample app name with spaces and a dot, which are the answers most likely to break a file name or a quoted command,
+          # a sample app slug other than the default, and namespaces of their own; it builds the documentation website as well, since the API
+          # reference is generated from the sample app's build output
           - name: Spaces and Dots
             product_name: Render.Test Library
             root_namespace: RenderTest.Library
+            sample_app_name: Render.Test Playground
+            sample_app_slug: playground-app
+            sample_app_namespace: RenderTest.Playground
             license: MIT
             dotnet_sdk_version: 10.0.114
+            build_documentation: true
+
+          # One answer set per remaining license, with the default answers otherwise
           - name: Apache-2.0
             license: Apache-2.0
           - name: BSD-2-Clause
@@ -85,10 +94,13 @@ jobs:
             copier_version: minimum
 
     # The generated project is rendered into a directory of its own, next to the checkout, so that its tools never pick up the template repository's
-    # configuration files
+    # configuration files; an answer the answer set leaves empty is not passed to Copier, so that its default is used
     env:
       PRODUCT_NAME: ${{ matrix.product_name || 'Render Test' }}
-      ROOT_NAMESPACE: ${{ matrix.root_namespace || 'RenderTest' }}
+      ROOT_NAMESPACE: ${{ matrix.root_namespace }}
+      SAMPLE_APP_NAME: ${{ matrix.sample_app_name }}
+      SAMPLE_APP_SLUG: ${{ matrix.sample_app_slug }}
+      SAMPLE_APP_NAMESPACE: ${{ matrix.sample_app_namespace }}
       DOTNET_SDK_VERSION: ${{ matrix.dotnet_sdk_version || '10.0.403' }}
       RENDER_DIRECTORY: ${{ github.workspace }}/../render
 
@@ -125,17 +137,24 @@ jobs:
       # Renders the template without "--trust"; if Copier ever demands it, an unsafe feature has crept into the template, and the render fails here,
       # which is exactly what should happen (see AGENTS.md)
       - name: Render Template
-        run: >
-          copier copy --defaults --vcs-ref HEAD
-          --data product_name="$PRODUCT_NAME"
-          --data root_namespace="$ROOT_NAMESPACE"
-          --data product_description="A project rendered by the continuous integration of the template."
-          --data author="Continuous Integration"
-          --data repository_url=https://github.com/lecode-official/render-test
-          --data maintainer_url=https://github.com/lecode-official
-          --data license="${{ matrix.license }}"
-          --data dotnet_sdk_version="$DOTNET_SDK_VERSION"
-          . "$RENDER_DIRECTORY"
+        env:
+          LICENSE: ${{ matrix.license }}
+        run: |
+          answers=()
+          [ -n "$ROOT_NAMESPACE" ] && answers+=(--data root_namespace="$ROOT_NAMESPACE")
+          [ -n "$SAMPLE_APP_NAME" ] && answers+=(--data sample_app_name="$SAMPLE_APP_NAME")
+          [ -n "$SAMPLE_APP_SLUG" ] && answers+=(--data sample_app_slug="$SAMPLE_APP_SLUG")
+          [ -n "$SAMPLE_APP_NAMESPACE" ] && answers+=(--data sample_app_namespace="$SAMPLE_APP_NAMESPACE")
+          copier copy --defaults --vcs-ref HEAD \
+            --data product_name="$PRODUCT_NAME" \
+            --data product_description="A project rendered by the continuous integration of the template." \
+            --data author="Continuous Integration" \
+            --data repository_url=https://github.com/lecode-official/render-test \
+            --data maintainer_url=https://github.com/lecode-official \
+            --data license="$LICENSE" \
+            --data dotnet_sdk_version="$DOTNET_SDK_VERSION" \
+            "${answers[@]}" \
+            . "$RENDER_DIRECTORY"
 
       # The two placeholder checks from docs/project-template/authoring.md: no placeholder survived, and none was rendered as a Python list
       - name: Check for Surviving Placeholders
@@ -312,7 +331,8 @@ jobs:
           exit $status
 
       # The files the template only creates are the paths that "_exclude" in "copier.yml" only excludes on an update; they are read from "copier.yml"
-      # itself, so that the check cannot fall behind the list (see docs/project-template/rendering-and-updating.md)
+      # itself, so that the check cannot fall behind the list, and a placeholder in a path, such as the sample app's slug, is read as "*" (see
+      # docs/project-template/rendering-and-updating.md)
       - name: Check Files the Template Only Creates
         if: ${{ !cancelled() && steps.update.outcome == 'success' }}
         working-directory: ${{ env.RENDER_DIRECTORY }}
@@ -320,7 +340,8 @@ jobs:
           pathspecs=()
           while read -r path; do
             pathspecs+=(":(top,glob)$path")
-          done < <(sed -n "s/.*_copier_operation == 'update' %\]\/\([^[]*\)\[% endif %\].*/\1/p" "$GITHUB_WORKSPACE/copier.yml")
+          done < <(sed -n "/^ *- \"\[% if _copier_operation == 'update' %\]\//{s/.*%\]\/\(.*\)\[% endif %\]\".*/\1/;s/\[\[ [a-z_]* \]\]/*/g;p;}" \
+            "$GITHUB_WORKSPACE/copier.yml")
           if [ ${#pathspecs[@]} -eq 0 ]; then
             echo "::error::No update-only pattern was found in the \"_exclude\" list of copier.yml"
             exit 1

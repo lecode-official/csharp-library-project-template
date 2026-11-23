@@ -175,7 +175,7 @@
         {
             "label": "Run Sample App",
             "type": "shell",
-            "command": "dotnet run --project \"source/sample-app/[[ product_name ]] Sample App.csproj\"",
+            "command": "dotnet run --project \"source/[[ sample_app_slug ]]/[[ sample_app_name ]].csproj\"",
             "problemMatcher": ["$msCompile"],
             "icon": {
                 "id": "play",

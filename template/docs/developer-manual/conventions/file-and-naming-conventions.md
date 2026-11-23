@@ -4,7 +4,7 @@ This article covers how files and directories are named throughout the repositor
 
 ## Kebab-Case by Default
 
-Files and directories are named in **kebab-case** — lowercase words separated by hyphens — for example `sample-app`, `unit-tests`, `developer-manual`, `formatting-dprint.md`. This applies repository-wide: the project directories under [`source/`](../../../source/), the [`docs/`](../README.md) tree, and every Markdown article.
+Files and directories are named in **kebab-case** — lowercase words separated by hyphens — for example `[[ sample_app_slug ]]`, `unit-tests`, `developer-manual`, `formatting-dprint.md`. This applies repository-wide: the project directories under [`source/`](../../../source/), the [`docs/`](../README.md) tree, and every Markdown article.
 
 ## Well-Known Exceptions
 
@@ -21,18 +21,18 @@ The project's own top-level folder still follows the repository's kebab-case rul
 
 ## Project and Solution Files Are Named After the Product
 
-The `.csproj` and `.slnx` files are named after the product, **spaces included**, rather than after either convention:
+The `.csproj` and `.slnx` files are named after the product, and the sample app's after its own name, **spaces included**, rather than after either convention:
 
 - The solution — `source/[[ product_name ]].slnx`
 - The library — `source/[[ library_slug ]]/[[ product_name ]].csproj`
-- The sample app — `source/sample-app/[[ product_name ]] Sample App.csproj`
+- The sample app — `source/[[ sample_app_slug ]]/[[ sample_app_name ]].csproj`
 - The unit tests — `tests/unit-tests/[[ product_name ]] Unit Tests.csproj`
 
-So a project file's base name deliberately does **not** match its directory name. The directory says where the project sits in the repository. The file says what the product is called.
+So a project file's base name deliberately does **not** match its directory name. The directory says where the project sits in the repository. The file says what the product, or the sample app, is called.
 
 ## Namespaces and Assembly Names
 
-- The **root namespace** is PascalCase with no spaces and no dots beyond the ones it deliberately nests with: `[[ root_namespace ]]` for the library, `[[ root_namespace ]].SampleApp` and `[[ root_namespace ]].UnitTests` for the other two.
+- The **root namespace** is PascalCase with no spaces and no dots beyond the ones it deliberately nests with: `[[ root_namespace ]]` for the library, `[[ sample_app_namespace ]]` for the sample app, and `[[ root_namespace ]].UnitTests` for the unit tests.
 - The **assembly name** is the project file's base name, so it keeps the spaces: `[[ product_name ]] Unit Tests`. This is the name `InternalsVisibleTo` references, which is why that attribute names the assembly rather than the package.
 - The **package id** is PascalCase with no spaces: `[[ package_id ]]`. NuGet ids cannot contain spaces.
 

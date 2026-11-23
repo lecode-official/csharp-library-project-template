@@ -30,7 +30,7 @@ A `.globalconfig` is a *global analyzer configuration file*, not an EditorConfig
 Two projects need settings of their own. Each has a `.globalconfig` in its own directory with `global_level = 101`, which outranks the root file's `global_level = 100`. Without different levels, two files setting the same key would cancel each other out, and the key would fall back to its default.
 
 - **[`tests/unit-tests/.globalconfig`](../../../tests/unit-tests/.globalconfig)** reverses the Roslynator rule `RCS1090`, so that it reports `ConfigureAwait` calls instead of asking for them, because xUnit's own analyzer (`xUnit1030`) forbids `ConfigureAwait(false)` in test methods. It also exempts asynchronous test methods from the `Async` suffix, because a test method's name follows the [testing](../conventions/testing.md) naming scheme.
-- **[`source/sample-app/.globalconfig`](../../../source/sample-app/.globalconfig)** reverses `RCS1090` as well, because an application owns its synchronization context.
+- **[`source/[[ sample_app_slug ]]/.globalconfig`](../../../source/[[ sample_app_slug ]]/.globalconfig)** reverses `RCS1090` as well, because an application owns its synchronization context.
 
 ## The Rule Set Follows the Conventions
 
