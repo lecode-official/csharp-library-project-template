@@ -13,7 +13,7 @@
         "lint": "run-s --continue-on-error lint:dprint lint:markdownlint lint:cspell",
         "test": "dotnet test --solution \"source/[[ product_name ]].slnx\"",
         "build": "dotnet build \"source/[[ product_name ]].slnx\"",
-        "start": "dotnet run --project \"source/sample-app/[[ product_name ]] Sample App.csproj\""
+        "start": "dotnet run --project \"source/[[ sample_app_slug ]]/[[ sample_app_name ]].csproj\""
     },
     "devDependencies": {
         "@cspell/dict-de-de": "4.1.3",

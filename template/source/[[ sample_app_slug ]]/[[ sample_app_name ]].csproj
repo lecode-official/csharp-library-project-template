@@ -5,7 +5,7 @@
         <OutputType>Exe</OutputType>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>[[ root_namespace ]].SampleApp</RootNamespace>
+        <RootNamespace>[[ sample_app_namespace ]]</RootNamespace>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 
         <!--
@@ -21,7 +21,7 @@
 
     <!-- Assembly Info -->
     <PropertyGroup>
-        <AssemblyTitle>[[ product_name ]] Sample App</AssemblyTitle>
+        <AssemblyTitle>[[ sample_app_name ]]</AssemblyTitle>
         <Product>[[ product_name ]]</Product>
         <NeutralLanguage>en-US</NeutralLanguage>
     </PropertyGroup>

@@ -19,7 +19,7 @@ The reason is that the body's C# is the only C# a generated project starts with.
 
 Only a few answers are safe inside C# code, because a placeholder is substituted textually and the result has to compile for every answer a consumer might give:
 
-- **`[[ root_namespace ]]` is the one placeholder that becomes an identifier.** It appears in namespace declarations and `using` directives, and the sample app's and the unit tests' namespaces derive from it as `[[ root_namespace ]].SampleApp` and `[[ root_namespace ]].UnitTests`. Its `help` string asks for PascalCase without spaces, which is what makes it a valid identifier.
+- **`[[ root_namespace ]]` and `[[ sample_app_namespace ]]` are the only placeholders that become identifiers.** `[[ root_namespace ]]` appears in namespace declarations and `using` directives, and the unit tests' namespace derives from it as `[[ root_namespace ]].UnitTests`. `[[ sample_app_namespace ]]` is only the sample app's `RootNamespace`, since `Program.cs` uses top-level statements and declares no namespace of its own. The validators of both only accept PascalCase identifiers separated by dots, which is what makes them valid.
 - **`[[ product_name ]]` never becomes an identifier.** It may contain spaces and dots. It is fine inside a string literal, as the sample app's `Greet("[[ product_name ]]")` shows, and in project and assembly names, which are allowed to contain spaces.
 - **Anything else stays out of code.** If a C# file seems to need another answer, it usually belongs in the project file instead, where the answers already feed `AssemblyTitle`, `Product`, `PackageId` and the rest (see [questions](../project-template/questions.md)).
 

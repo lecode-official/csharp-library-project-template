@@ -44,6 +44,24 @@ npm run lint:markdownlint
 
 `README.md` is only created by the template, so its "Linting" section keeps describing MarkdownLint without the link check. Optionally, copy the MarkdownLint line of that section from a fresh render.
 
+### The Sample App
+
+The name, the directory, and the namespace of the sample app are now answers, `sample_app_name`, `sample_app_slug`, and `sample_app_namespace` (see [questions](questions.md#the-sample-app)). Their defaults are the names the sample app had so far, so an update with `--defaults` changes nothing.
+
+A project that wants to rename its sample app passes the new answers to the update:
+
+```shell
+copier update --defaults --data sample_app_name="CLI.NET Core Playground" --data sample_app_slug=playground --data sample_app_namespace=CliNetCore.Playground
+```
+
+The update moves the project file, the `.globalconfig`, and every path that names the sample app to the new directory, but it leaves `Program.cs` and `README.md` in `source/sample-app/`, since the template only creates them. Move both into the new directory, delete the old one, and change the title of the read me to the new name:
+
+```shell
+git mv source/sample-app/Program.cs source/sample-app/README.md source/playground/
+```
+
+A project that already renamed its sample app by hand can answer with its own names instead, which brings the template's paths in line with them.
+
 ## Migrate from v1.0.0 to v1.1.0
 
 ### The Lock Files

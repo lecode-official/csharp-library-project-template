@@ -57,7 +57,8 @@ _exclude:
   # docs/project-template/rendering-and-updating.md); this replaces "_skip_if_exists", which re-creates a listed file that a project has deleted on
   # every update; the placeholder "Greeter" class and its tests are deliberately not listed, so that a template change they have to follow, such as a
   # new analyzer rule, still reaches a project that keeps them; the "Tests" workflow reads these patterns to check that an update leaves the files
-  # alone, so every one of them keeps exactly this form, on a line of its own, with the anchored path between "%]" and "[%"
+  # alone, so every one of them keeps exactly this form, on a line of its own, with the anchored path between "%]" and "[%"; a placeholder in the
+  # path, such as the sample app's slug, is read as "*"
   - "[% if _copier_operation == 'update' %]/README.md[% endif %]"
   - "[% if _copier_operation == 'update' %]/CHANGELOG.md[% endif %]"
   - "[% if _copier_operation == 'update' %]/CONTRIBUTORS.md[% endif %]"
@@ -69,7 +70,7 @@ _exclude:
   - "[% if _copier_operation == 'update' %]/docs/user-manual/README.md[% endif %]"
   - "[% if _copier_operation == 'update' %]/docs/user-manual/getting-started.md[% endif %]"
   - "[% if _copier_operation == 'update' %]/source/*/README.md[% endif %]"
-  - "[% if _copier_operation == 'update' %]/source/sample-app/Program.cs[% endif %]"
+  - "[% if _copier_operation == 'update' %]/source/[[ sample_app_slug ]]/Program.cs[% endif %]"
 
 # The message shown after a project is generated; it only lists what has to happen before the first commit, because continuous integration fails
 # without the lock files, and points to the generated project's first steps article for everything else, so that the steps are written down in one
@@ -111,6 +112,9 @@ _message_after_update: |-
     docs/developer-manual/development-setup/setting-up-github.md, which needs a public repository or a paid GitHub plan.
   - Linting: "npm run lint" now also checks that relative links point to files and headings that exist; run it after "npm install" and
     fix the broken links it reports. README.md mentions the link check in its "Linting" section, which can be copied from a fresh render.
+  - Sample app: its name, directory, and namespace are now the answers sample_app_name, sample_app_slug, and sample_app_namespace, whose
+    defaults keep them as they are. An update that changes them leaves Program.cs and README.md in source/sample-app/; move both into
+    the new directory by hand.
 
   When updating from a version before v1.1.0:
 
@@ -162,6 +166,9 @@ product_description:
     [% if not product_description | trim %]The product description must not be empty.[% elif product_description | regex_search('["\\\\<>&]')
     %]The product description must not contain double quotes, backslashes, or the characters "<", ">", and "&".[% endif %]
 
+# The build output of every project goes to "build/<directory>", next to the unit tests' "build/unit-tests" and the documentation website's
+# "build/documentation-website", so the slug must differ from both; that it differs from the sample app's slug is checked by "sample_app_slug", which
+# is asked after it
 library_slug:
   type: str
   default: "[[ product_slug ]]"
@@ -170,13 +177,18 @@ library_slug:
     directory ("build/<slug>").
   validator: >-
     [% if not library_slug | regex_search('^[a-z0-9]+(-[a-z0-9]+)*$') %]The library slug may only contain lowercase letters and digits, separated by
-    single dashes.[% elif library_slug == 'sample-app' %]The library slug must differ from "sample-app", the directory of the sample app.[% endif %]
+    single dashes.[% elif library_slug in ['unit-tests', 'documentation-website'] %]The library slug must differ from "unit-tests" and
+    "documentation-website", which name other directories in "build/".[% endif %]
 
+# The default capitalizes every dash-separated part of the library slug and joins them, so "cli-net-core" becomes "CliNetCore"; a part that starts
+# with a digit, as in "2d-engine", gives a namespace the validator rejects, so its author types one by hand; an update reuses the recorded answer, so
+# the default only reaches new projects
 root_namespace:
   type: str
+  default: "[[ library_slug.split('-') | map('capitalize') | join ]]"
   help: >-
-    The root namespace of the library, in PascalCase and without spaces (e.g., "CliNetCore" or "LeCode.CliNetCore"). The sample app and the unit test
-    project derive their own namespaces from it.
+    The root namespace of the library, in PascalCase and without spaces (e.g., "CliNetCore" or "LeCode.CliNetCore"). The unit test project derives
+    its own namespace from it, and the sample app's namespace starts with it by default.
   validator: >-
     [% if not root_namespace | regex_search('^[A-Z][A-Za-z0-9]*(\\.[A-Z][A-Za-z0-9]*)*$') %]The root namespace must consist of one or more PascalCase
     identifiers separated by dots, each starting with an uppercase letter and containing only letters and digits.[% endif %]
@@ -190,6 +202,43 @@ package_id:
   validator: >-
     [% if not package_id | regex_search('^[A-Za-z0-9_]+([.-][A-Za-z0-9_]+)*$') %]The package ID may only contain letters, digits, and underscores,
     separated by single dots or hyphens.[% elif package_id | length > 100 %]The package ID must not be longer than 100 characters.[% endif %]
+
+# The sample app's name names its project file, its assembly, and its assembly title, so it follows the rules of the product name; it must differ from
+# the product name, since the sample app's build output holds the library's assembly as well, which is named after the product
+sample_app_name:
+  type: str
+  default: "[[ product_name ]] Sample App"
+  help: >-
+    The human-readable name of the sample app that demonstrates the library (e.g., "CLI.NET Core Sample App" or "CLI.NET Core Playground"). It names
+    the sample app's project file and its assembly, so it follows the same rules as the product name.
+  validator: >-
+    [% if not sample_app_name | regex_search('^[A-Za-z0-9]([A-Za-z0-9 ._+-]*[A-Za-z0-9+])?$') %]The sample app name must start with a letter or a
+    digit, must not end with a space, a dot, a hyphen, or an underscore, and may only contain letters, digits, spaces, dots, hyphens, underscores, and
+    plus signs.[% elif sample_app_name == product_name %]The sample app name must differ from the product name.[% endif %]
+
+# The sample app's build output goes to "build/<slug>", like the library's, so the slug must differ from every other directory in "build/"
+sample_app_slug:
+  type: str
+  default: sample-app
+  help: >-
+    A lowercase, dash-separated identifier for the sample app's own directory ("source/<slug>"), which is also the name of its build output directory
+    ("build/<slug>").
+  validator: >-
+    [% if not sample_app_slug | regex_search('^[a-z0-9]+(-[a-z0-9]+)*$') %]The sample app slug may only contain lowercase letters and digits,
+    separated by single dashes.[% elif sample_app_slug == library_slug %]The sample app slug must differ from the library slug.[% elif sample_app_slug
+    in ['unit-tests', 'documentation-website'] %]The sample app slug must differ from "unit-tests" and "documentation-website", which name other
+    directories in "build/".[% endif %]
+
+# The default appends the sample app's slug, with every dash-separated part capitalized and joined, to the library's root namespace, so "sample-app"
+# becomes "CliNetCore.SampleApp"
+sample_app_namespace:
+  type: str
+  default: "[[ root_namespace ]].[[ sample_app_slug.split('-') | map('capitalize') | join ]]"
+  help: The root namespace of the sample app, in PascalCase and without spaces (e.g., "CliNetCore.SampleApp").
+  validator: >-
+    [% if not sample_app_namespace | regex_search('^[A-Z][A-Za-z0-9]*(\\.[A-Z][A-Za-z0-9]*)*$') %]The sample app namespace must consist of one or
+    more PascalCase identifiers separated by dots, each starting with an uppercase letter and containing only letters and digits.[% elif
+    sample_app_namespace == root_namespace %]The sample app namespace must differ from the root namespace of the library.[% endif %]
 
 author:
   type: str

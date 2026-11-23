@@ -41,7 +41,7 @@ Greeter greeter = new("Good morning");
 Console.WriteLine(greeter.Greet("Ada"));     // Good morning, Ada!
 ```
 
-See [`source/sample-app/Program.cs`](../../source/sample-app/Program.cs) for the runnable version of the above, and run it with `npm start`.
+See [`source/[[ sample_app_slug ]]/Program.cs`](../../source/[[ sample_app_slug ]]/Program.cs) for the runnable version of the above, and run it with `npm start`.
 
 ## What's Missing Today
 

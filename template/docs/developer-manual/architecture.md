@@ -18,7 +18,7 @@ Top-level files round out the repository. [`README.md`](../../README.md) is the 
 [`source/[[ product_name ]].slnx`](../../source/) is the solution file, in the newer XML-based `.slnx` format rather than the classic `.sln` format. It sits in `source/` rather than at the repository root, and reaches back out with a relative path to pull in the test project. It groups three projects:
 
 - **`[[ library_slug ]]`** — the library itself, packed and published as the `[[ package_id ]]` NuGet package.
-- **`sample-app`** — a runnable sample application that references the library through a project reference and demonstrates how it is used.
+- **`[[ sample_app_slug ]]`** — a runnable sample application that references the library through a project reference and demonstrates how it is used.
 - **`unit-tests`** — the xUnit test project, living under [`tests/`](../../tests/) rather than `source/` (see [testing and code coverage](tooling/testing-and-code-coverage.md)).
 
 All three target `[[ target_framework ]]`, and all three enable `<Nullable>` and `<ImplicitUsings>`.
@@ -45,7 +45,7 @@ Deleting the sample app therefore breaks the API reference. If it ever goes, the
 
 ## Build Output
 
-Two `Directory.Build.props` files redirect every project's `bin`/`obj` output out of its own folder and into the repository root's `build/<project folder name>/` instead — `build/[[ library_slug ]]/`, `build/sample-app/` and `build/unit-tests/` — so that the source tree stays free of build output:
+Two `Directory.Build.props` files redirect every project's `bin`/`obj` output out of its own folder and into the repository root's `build/<project folder name>/` instead — `build/[[ library_slug ]]/`, `build/[[ sample_app_slug ]]/` and `build/unit-tests/` — so that the source tree stays free of build output:
 
 - [`source/Directory.Build.props`](../../source/Directory.Build.props) covers every project under `source/`, using `$([System.IO.Path]::GetFileName($(MSBuildProjectDirectory)))` to read each project's own folder name at evaluation time, so the one file covers them all without listing them individually.
 - [`tests/unit-tests/Directory.Build.props`](../../tests/unit-tests/Directory.Build.props) covers the test project alone, so it hard-codes `build/unit-tests/` — there is only the one project under `tests/`, so the folder-name lookup would be needless indirection.

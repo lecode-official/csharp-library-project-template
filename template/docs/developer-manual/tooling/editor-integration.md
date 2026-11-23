@@ -45,7 +45,7 @@ Every linter task carries a problem matcher, so findings land in the Problems pa
 
 ## Launch Configuration
 
-[`launch.shared.json`](../../../.vscode/launch.shared.json) holds the debug configurations everyone shares. It ships with one, Debug Sample App, which runs the Build task first and then launches the sample app under the `coreclr` debugger, from its output under `build/sample-app/` (see [architecture](../architecture.md#build-output)), with `source/sample-app` as the working directory and the integrated terminal as its console. A personal debug configuration goes into `launch.local.json` instead.
+[`launch.shared.json`](../../../.vscode/launch.shared.json) holds the debug configurations everyone shares. It ships with one, Debug Sample App, which runs the Build task first and then launches the sample app under the `coreclr` debugger, from its output under `build/[[ sample_app_slug ]]/` (see [architecture](../architecture.md#build-output)), with `source/[[ sample_app_slug ]]` as the working directory and the integrated terminal as its console. A personal debug configuration goes into `launch.local.json` instead.
 
 ## Extensions
 
