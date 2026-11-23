@@ -57,7 +57,15 @@ The [`Release`](../../../.github/workflows/release.yml) workflow creates the tag
 - **The tag message** repeats the release's changelog entry in plain text and follows the rules in [tag messages](commit-messages.md#tag-messages): the subject `Release vX.Y.Z (Month D, YYYY)`, with the date from the changelog, and the release's bullets, wrapped at 72 characters without breaking a code span.
 - **The release notes** are the same bullets exactly as the changelog has them, unwrapped, since GitHub wraps them itself. The GitHub Release is titled `Release vX.Y.Z`, and the library's package and symbol package are attached to it.
 
-The tag is created by `github-actions[bot]` and is not signed. The linters workflow runs the same script as a dry run on every pull request, so a changelog it cannot read fails long before the release. To see the tag message the next release will get, run it locally:
+The tag is created by `github-actions[bot]` and is not signed.
+
+[%- if publish_to_nuget %]
+
+Once the GitHub Release exists, a second job of the workflow publishes its package and symbol package to nuget.org, through NuGet's trusted publishing, which needs no API key in the repository (see [NuGet trusted publishing](../development-setup/setting-up-github.md#nuget-trusted-publishing)). A published version can never be replaced or deleted on nuget.org, only unlisted, so a version that turns out to be broken is fixed by releasing a new one.
+
+[%- endif %]
+
+The linters workflow runs the same script as a dry run on every pull request, so a changelog it cannot read fails long before the release. To see the tag message the next release will get, run it locally:
 
 ```shell
 python3 .github/scripts/prepare-release.py --dry-run
@@ -72,6 +80,12 @@ git push origin v0.1.0
 dotnet pack "source/[[ product_name ]].slnx" --configuration Release --output /tmp/packages
 gh release create v0.1.0 --verify-tag --title "Release v0.1.0" --notes-file /tmp/release/release-notes.md /tmp/packages/*
 ```
+
+[%- if publish_to_nuget %]
+
+When only the publishing to nuget.org failed, re-run the failed job of the workflow run instead. It pushes with `--skip-duplicate`, so a package that already reached nuget.org does not fail it again. A trusted publishing token is only issued to the workflow itself, so a package is pushed by hand only with an API key created on nuget.org for that purpose.
+
+[%- endif %]
 
 The GitHub Release is always created from the existing tag. Typing a new tag name into GitHub's release form makes GitHub create the tag itself, and a tag GitHub creates is always lightweight, so the release would lose its tag message. `--verify-tag` makes the GitHub CLI fail instead.
 
@@ -89,11 +103,11 @@ After the release pull request is merged, `[[ integration_branch ]]` is fast-for
 
 ## Package Validation
 
-The library's project file sets `EnablePackageValidation`, so `dotnet pack` checks the package for consistency. Once a version has been published, set `<PackageValidationBaselineVersion>` in the library's project file to that version: every later package is then also compared against it, and a breaking change to the public API fails the pack. A breaking change that is intended, together with a raised major version, is accepted by generating a suppression file with `dotnet pack -p:GenerateCompatibilitySuppressionFile=true` and committing it.
+The library's project file sets `EnablePackageValidation`, so `dotnet pack` checks the package for consistency. Once a version has been released, set `<PackageValidationBaselineVersion>` in the library's project file to that version: every later package is then also compared against it, and a breaking change to the public API fails the pack.[% if not publish_to_nuget %] Package validation downloads the baseline package from a package source, and the package is not published on NuGet, so the directory that holds the package from that version's GitHub Release has to be a package source of the build, in a `nuget.config` next to the solution, or set `<PackageValidationBaselinePath>` to the package file instead.[% endif %] A breaking change that is intended, together with a raised major version, is accepted by generating a suppression file with `dotnet pack -p:GenerateCompatibilitySuppressionFile=true` and committing it.
 
 ## The Package and Its Symbols
 
-`dotnet pack` writes two files for the library: the package itself, a `.nupkg`, and next to it a symbol package, a `.snupkg`, because the library's project file sets `IncludeSymbols` and `SymbolPackageFormat`. The symbol package is published alongside the package. `dotnet nuget push` picks up a `.snupkg` lying next to the `.nupkg` and uploads it too, and nuget.org then serves it to debuggers through its symbol server, so that a consumer can step into the library's code.
+`dotnet pack` writes two files for the library: the package itself, a `.nupkg`, and next to it a symbol package, a `.snupkg`, because the library's project file sets `IncludeSymbols` and `SymbolPackageFormat`. [% if publish_to_nuget %]The symbol package is published alongside the package. `dotnet nuget push` picks up a `.snupkg` lying next to the `.nupkg` and uploads it too, and nuget.org then serves it to debuggers through its symbol server, so that a consumer can step into the library's code.[% else %]Both are attached to every GitHub Release. A consumer who wants to step into the library's code adds the directory that holds the symbol package to the symbol paths of their debugger.[% endif %]
 
 A package built on a GitHub Actions runner is deterministic. The root [`Directory.Build.props`](../../../Directory.Build.props) sets `ContinuousIntegrationBuild` to `true` whenever `GITHUB_ACTIONS` is `true`, which maps the runner's local source paths to repository-relative ones in the symbol files, so that a debugger finds the sources through Source Link. The setting is off everywhere else, because it makes local debugging harder, so a package built on a developer's machine carries that machine's paths instead.
 
