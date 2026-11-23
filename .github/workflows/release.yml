@@ -1,0 +1,87 @@
+# Creates the annotated tag and the GitHub Release of a template release once its release pull request has been merged into "main" (see
+# docs/conventions/versioning.md); the name is the display name of the workflow, shown in the "Actions" tab of the GitHub repository and in the checks
+# of a commit or pull request
+name: Release
+
+# Defines the events that trigger this workflow; it runs when a pull request into "main" is closed, and its job only when the pull request was merged;
+# only a release pull request goes into "main", since the "Pull Requests" workflow fails every pull request into it that does not come from
+# "development" (see docs/conventions/github-workflow.md)
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+# Grants the workflow's token write access to the repository contents, which pushing the tag and creating the GitHub Release need, and nothing else
+permissions:
+  contents: write
+
+# Never runs two releases at the same time, and never cancels one that is running, since a release that is cancelled halfway may have pushed its tag
+# without creating its GitHub Release
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+# Defines the jobs that make up the workflow
+jobs:
+  # Checks the release, then tags the merge commit and creates the GitHub Release; everything is checked before anything is created, so that a release
+  # that is not ready fails without leaving a tag behind; a tag pushed with the workflow's token starts no other workflow, which is why everything
+  # happens in this one job; runs on the latest Ubuntu image, which is the fastest and cheapest of the available runners, and whose Python runs the
+  # script, which needs nothing but the standard library
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged && github.event.pull_request.head.repo.full_name == github.repository }}
+
+    # Stops a run that hangs instead of letting it use up the default limit of six hours; the job takes seconds
+    timeout-minutes: 10
+
+    # The sequence of tasks that are executed as part of the job; every action is pinned to the full commit SHA of a release, with the version in a
+    # comment, because a tag can be moved to point at different code, while a commit SHA cannot; Dependabot keeps the pins up to date (see
+    # .github/dependabot.yml)
+    steps:
+      # Checks out the merge commit that brought the release into "main", which is the commit the tag points at; the checkout keeps the workflow's
+      # token in the repository's Git configuration, which is what pushing the tag uses
+      - name: Checkout Repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      # Reads the newest release from the changelog, checks that its date is set and that the version is the same everywhere it has to be, and
+      # writes the tag message and the release notes; it sets the "version" and "tag" outputs the later steps use (see the script)
+      - name: Prepare Release
+        id: release
+        run: python3 .github/scripts/prepare-release.py --output-directory "$RUNNER_TEMP/release"
+
+      # Fails if the tag already exists, which means that the release was tagged before, or that a pull request into "main" was merged without a new
+      # release in the changelog; a pushed tag is never moved (see docs/conventions/versioning.md)
+      - name: Check That the Tag Does Not Exist
+        env:
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" > /dev/null; then
+            echo "::error::The tag $TAG already exists; add the next release to the changelog, or create the GitHub Release by hand"
+            exit 1
+          fi
+
+      # Creates the annotated tag on the merge commit, with the tag message the script wrote, and pushes it; the tag is created by the
+      # "github-actions[bot]" account, and it is not signed
+      - name: Create and Push Tag
+        env:
+          TAG: ${{ steps.release.outputs.tag }}
+          MERGE_COMMIT: ${{ github.event.pull_request.merge_commit_sha }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag --annotate "$TAG" "$MERGE_COMMIT" --file "$RUNNER_TEMP/release/tag-message.txt"
+          git push origin "refs/tags/$TAG"
+
+      # Creates the GitHub Release from the pushed tag; "--verify-tag" fails instead of letting GitHub create a lightweight tag of its own, and the
+      # notes are the release's bullets, unwrapped, rather than the tag message, whose subject repeats the title and whose lines are wrapped
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: gh release create "$TAG" --verify-tag --title "Release v$VERSION" --notes-file "$RUNNER_TEMP/release/release-notes.md"

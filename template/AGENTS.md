@@ -47,7 +47,7 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 - **The labels, the repository settings, GitHub Pages, or the branch protection, and the scripts that set them up** → [docs/developer-manual/development-setup/setting-up-github.md](docs/developer-manual/development-setup/setting-up-github.md).
 - **Linting, formatting, spell checking, editor setup** → [docs/developer-manual/tooling/](docs/developer-manual/tooling/README.md).
 - **An analyzer finding, or changing a rule's severity** → [docs/developer-manual/tooling/static-code-analysis.md](docs/developer-manual/tooling/static-code-analysis.md).
-- **The GitHub Actions workflows, a failing check, or Dependabot** → [docs/developer-manual/tooling/continuous-integration.md](docs/developer-manual/tooling/continuous-integration.md).
+- **The GitHub Actions workflows, a failing check, the release workflow and its script, or Dependabot** → [docs/developer-manual/tooling/continuous-integration.md](docs/developer-manual/tooling/continuous-integration.md).
 - **The Claude Code hooks that run after you edit a file** → [docs/developer-manual/tooling/claude-code-hooks.md](docs/developer-manual/tooling/claude-code-hooks.md).
 - **The documentation website, its navigation, or the generated API reference** → [docs/developer-manual/tooling/documentation-website.md](docs/developer-manual/tooling/documentation-website.md).
 - **The logo and the brand assets in `design/`, or the static files in `docs/assets/`** → [docs/developer-manual/logo-design.md](docs/developer-manual/logo-design.md) and [docs/assets/README.md](docs/assets/README.md).
@@ -58,7 +58,7 @@ Start from [docs/developer-manual/architecture.md](docs/developer-manual/archite
 - **Writing or running unit tests, measuring code coverage** → [docs/developer-manual/conventions/testing.md](docs/developer-manual/conventions/testing.md) and [testing and code coverage](docs/developer-manual/tooling/testing-and-code-coverage.md).
 - **Writing commit messages** → [docs/developer-manual/conventions/commit-messages.md](docs/developer-manual/conventions/commit-messages.md).
 - **Preparing or making a release: the release issue, the release branch, and the release pull request** → [docs/developer-manual/conventions/github-workflow.md](docs/developer-manual/conventions/github-workflow.md#releases).
-- **Releasing, or raising the version** → [docs/developer-manual/conventions/versioning.md](docs/developer-manual/conventions/versioning.md).
+- **Releasing, the release tags and the GitHub Release, or raising the version** → [docs/developer-manual/conventions/versioning.md](docs/developer-manual/conventions/versioning.md).
 - **Writing a changelog entry, or the date of an unreleased version** → [docs/developer-manual/conventions/changelog-entries.md](docs/developer-manual/conventions/changelog-entries.md).
 - **Branches, branch names, committing, pushing, rebasing, or anything else touching Git** → [docs/developer-manual/conventions/git-workflow.md](docs/developer-manual/conventions/git-workflow.md).
 - **Issues, their titles, labels, milestones, the issue forms, pull requests, the pull request template, merging a pull request, or GitHub Releases** → [docs/developer-manual/conventions/github-workflow.md](docs/developer-manual/conventions/github-workflow.md).

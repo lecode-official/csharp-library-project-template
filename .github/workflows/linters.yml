@@ -28,8 +28,9 @@ concurrency:
 # Defines the jobs that make up the workflow; every action is pinned to the full commit SHA of a release, with the version in a comment, because a tag
 # can be moved to point at different code, while a commit SHA cannot; Dependabot keeps the pins up to date (see .github/dependabot.yml)
 jobs:
-  # Lints the template repository's own files with the root configuration, and checks that no "if false" block crept back into the body (see
-  # AGENTS.md); runs on the latest Ubuntu image, which is the fastest and cheapest of the available runners
+  # Lints the template repository's own files with the root configuration, checks that no "if false" block crept back into the body (see
+  # AGENTS.md), and that the "Release" workflow can read the changelog; runs on the latest Ubuntu image, which is the fastest and cheapest of the
+  # available runners
   lint:
     name: Lint Template Repository
     runs-on: ubuntu-latest
@@ -68,3 +69,11 @@ jobs:
             echo "::error::The template body contains an \"if false\" block (see docs/project-template/template-structure.md)"
             exit 1
           fi
+
+      # Reads the newest release from the changelog and wraps it into a tag message, as the "Release" workflow does once the release pull request is
+      # merged, so that a changelog the script cannot read, or a bullet it cannot wrap, fails here rather than during the release; as a dry run, it
+      # only reports a release that is not ready yet, which is what the changelog looks like between two releases (see docs/conventions/testing.md);
+      # runs even when an earlier check failed, for the same reason
+      - name: Check Release Notes
+        if: ${{ !cancelled() }}
+        run: python3 .github/scripts/prepare-release.py --dry-run

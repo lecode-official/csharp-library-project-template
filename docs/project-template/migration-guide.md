@@ -33,6 +33,16 @@ The `Linters` and `Tests` workflows no longer run on a push to a work branch, on
 
 Optionally, protect the default and the integration branch with the rulesets of the new branch protection script in `docs/developer-manual/development-setup/setting-up-github.md`. It needs a public repository, or a paid GitHub plan for a private one. Run it after the update is merged into both branches, so that the checks it requires already exist.
 
+### Releases
+
+A new `Release` workflow creates the annotated tag and the GitHub Release once the release pull request is merged into the default branch, and attaches the library's package and symbol package to it (see the generated project's `docs/developer-manual/conventions/versioning.md`). The update brings the workflow and its script, `.github/scripts/prepare-release.py`, along by itself, so the next release is tagged by the workflow, and the tag and the GitHub Release are no longer created by hand.
+
+The script reads the newest release from `CHANGELOG.md`, which is only created by the template, so it keeps whatever layout the project gave it. The `Linters` workflow now runs the script as a dry run on every pull request, and fails when it cannot read the changelog. Run it before the update is committed, and fix what it reports, so that the newest release has its `## Release vX.Y.Z` heading, its date paragraph, and a flat list of bullets:
+
+```shell
+python3 .github/scripts/prepare-release.py --dry-run
+```
+
 ### Link Checking
 
 MarkdownLint now also checks that every relative link points to a file that exists, and every link to a heading of another file to a heading that exists (see the generated project's `docs/developer-manual/tooling/linting-markdownlint.md`). The update brings the rule along, in `package.json`, `.markdownlint.yml`, and the new `.markdownlint-cli2.yaml`. Install it, and fix every broken link the linters then report, before the update is committed, since continuous integration fails on them:

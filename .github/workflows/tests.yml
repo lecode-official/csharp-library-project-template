@@ -190,6 +190,13 @@ jobs:
           npm install
           npm run lint
 
+      # Runs the generated project's release script as a dry run, as its "Linters" workflow does, after "npm install" has created the
+      # "package-lock.json" whose version the script compares
+      - name: Check Release Notes of Generated Project
+        if: ${{ !cancelled() }}
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: python3 .github/scripts/prepare-release.py --dry-run
+
       # The Release configuration is what the generated project's own continuous integration builds, and the only configuration in which an analyzer
       # warning fails the build
       - name: Test Generated Project
@@ -382,13 +389,18 @@ jobs:
         with:
           global-json-file: ${{ env.RENDER_DIRECTORY }}/global.json
 
-      # Lints, tests, and packs the updated project, as the render job does a freshly rendered one
+      # Lints, tests, and packs the updated project, and checks its release notes, as the render job does a freshly rendered one
       - name: Lint Updated Project
         if: ${{ !cancelled() && steps.update.outcome == 'success' }}
         working-directory: ${{ env.RENDER_DIRECTORY }}
         run: |
           npm install
           npm run lint
+
+      - name: Check Release Notes of Updated Project
+        if: ${{ !cancelled() && steps.update.outcome == 'success' }}
+        working-directory: ${{ env.RENDER_DIRECTORY }}
+        run: python3 .github/scripts/prepare-release.py --dry-run
 
       - name: Test Updated Project
         if: ${{ !cancelled() && steps.update.outcome == 'success' }}

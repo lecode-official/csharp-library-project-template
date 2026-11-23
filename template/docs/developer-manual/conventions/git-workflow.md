@@ -65,7 +65,7 @@ This project uses tags for one thing only, releases:
 - **Tags are pushed explicitly.** Pushing a branch does not carry its tags along, so a tag is pushed by name.
 - **A pushed tag is immutable.** A tag that turns out to be wrong is deleted and recreated only while it is still local. Once it is pushed, other clones have it, so a mistake is corrected by releasing a new version instead.
 
-How the release tag is created, and the GitHub Release that goes with it, is part of the release itself (see [the release tags](versioning.md#the-release-tags)).
+The release workflow creates the release tag, and the GitHub Release that goes with it, once the release pull request is merged. A tag is only created by hand when that workflow fails (see [the release tags](versioning.md#the-release-tags)).
 
 ## The Working Tree Belongs to the Author
 
