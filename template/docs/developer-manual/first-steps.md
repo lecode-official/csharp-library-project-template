@@ -34,6 +34,12 @@ git push --set-upstream origin [[ integration_branch ]]
 
 Finally, enable [GitHub Pages](development-setup/setting-up-github.md#github-pages), or the workflow that publishes the documentation website fails on every push to `[[ default_branch ]]`.
 
+[%- if publish_to_nuget %]
+
+Before the first release, set up [NuGet trusted publishing](development-setup/setting-up-github.md#nuget-trusted-publishing), or the release workflow fails to publish the package to nuget.org.
+
+[%- endif %]
+
 Optionally, once both branches exist, [protect them](development-setup/setting-up-github.md#branch-protection), so that a change only reaches them through a pull request whose checks passed. Branch protection needs a public repository, or a paid GitHub plan for a private one.
 
 ## Setting up Visual Studio Code

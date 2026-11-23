@@ -113,6 +113,11 @@ _message_after_update: |-
   - Releases: the new Release workflow creates the tag and the GitHub Release once the release pull request is merged, so neither is
     created by hand any more. It reads the newest release from CHANGELOG.md, which the Linters workflow now checks on every pull request;
     run "python3 .github/scripts/prepare-release.py --dry-run" and fix what it reports.
+  - NuGet: the new question publish_to_nuget defaults to yes, unless the license is UNLICENSED, and adds a job to the Release workflow
+    that publishes every release to nuget.org through trusted publishing; set it up before the next release, as
+    docs/developer-manual/development-setup/setting-up-github.md describes. A library that is not published updates with
+    "--data publish_to_nuget=false" and copies the installation sections of README.md, docs/user-manual/README.md, and
+    getting-started.md from a fresh render.
   - Linting: "npm run lint" now also checks that relative links point to files and headings that exist; run it after "npm install" and
     fix the broken links it reports. README.md mentions the link check in its "Linting" section, which can be copied from a fresh render.
   - Sample app: its name, directory, and namespace are now the answers sample_app_name, sample_app_slug, and sample_app_namespace, whose
@@ -196,12 +201,14 @@ root_namespace:
     [% if not root_namespace | regex_search('^[A-Z][A-Za-z0-9]*(\\.[A-Z][A-Za-z0-9]*)*$') %]The root namespace must consist of one or more PascalCase
     identifiers separated by dots, each starting with an uppercase letter and containing only letters and digits.[% endif %]
 
+# Asked whether or not the library is published to nuget.org, since the package attached to every GitHub Release has an identifier too, which a
+# consumer installs it by; a question skipped with "when" would also lose its recorded answer on an update that skips it, and change the identifier
 package_id:
   type: str
   default: "[[ root_namespace ]]"
   help: >-
-    The NuGet package identifier the library is published under. It may contain letters, digits, underscores, dots, and hyphens, and is at most 100
-    characters long.
+    The NuGet package identifier the library is packed and published under. It may contain letters, digits, underscores, dots, and hyphens, and is
+    at most 100 characters long.
   validator: >-
     [% if not package_id | regex_search('^[A-Za-z0-9_]+([.-][A-Za-z0-9_]+)*$') %]The package ID may only contain letters, digits, and underscores,
     separated by single dots or hyphens.[% elif package_id | length > 100 %]The package ID must not be longer than 100 characters.[% endif %]
@@ -351,3 +358,17 @@ license:
     GNU General Public License v3.0 or later: GPL-3.0-or-later
     GNU General Public License v3.0 only: GPL-3.0-only
     Proprietary, all rights reserved: UNLICENSED
+
+# Whether the release workflow publishes the library to nuget.org; a project that does not publish still packs the library and attaches the package to
+# every GitHub Release, and only the publishing, its setup, and the installation from nuget.org are left out; it is asked after the license, and not
+# checked by the license's validator, because an update with "--defaults" replaces a recorded answer that fails its validator with the default, which
+# would silently relicense an "UNLICENSED" project; its default follows the license instead, so that such a project does not publish
+publish_to_nuget:
+  type: bool
+  default: "[[ license != 'UNLICENSED' ]]"
+  help: >-
+    Whether the library is published to nuget.org. If it is, every release is pushed there by the release workflow through NuGet's trusted
+    publishing. Either way, the package is attached to every GitHub Release.
+  validator: >-
+    [% if publish_to_nuget and license == 'UNLICENSED' %]nuget.org rejects a package licensed as "UNLICENSED"; choose another license, or do not
+    publish the library to nuget.org.[% endif %]

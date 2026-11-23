@@ -6,7 +6,7 @@ A project hosted somewhere other than GitHub replaces these files with the equiv
 
 ## What Every Workflow Shares
 
-- **Least-privilege permissions.** Each workflow declares `permissions` explicitly instead of inheriting the repository's or organization's default, which may be write access to everything. The linters and tests workflows get `contents: read` and nothing else, the pull requests workflow gets no permission at all, the Dependabot security updates workflow gets `pull-requests: write` alone, since it changes a pull request, and the release workflow gets `contents: write` alone, since it pushes a tag and creates a GitHub Release. The docs workflow additionally gets `pages: write` and `id-token: write`, which the GitHub Pages deployment needs.
+- **Least-privilege permissions.** Each workflow declares `permissions` explicitly instead of inheriting the repository's or organization's default, which may be write access to everything. The linters and tests workflows get `contents: read` and nothing else, the pull requests workflow gets no permission at all, the Dependabot security updates workflow gets `pull-requests: write` alone, since it changes a pull request, and the release workflow gets `contents: write` alone, since it pushes a tag and creates a GitHub Release[% if publish_to_nuget %], except for its publish job, which gets `contents: read` and `id-token: write`, the permission to request the token that NuGet's trusted publishing needs[% endif %]. The docs workflow additionally gets `pages: write` and `id-token: write`, which the GitHub Pages deployment needs.
 - **A timeout on every job.** `timeout-minutes` stops a run that hangs instead of letting it use up GitHub's default limit of six hours.
 - **Actions pinned to a commit SHA.** Every action is referenced by the full commit SHA of a release, with the version in a comment next to it, because a tag can be moved to point at different code, while a commit SHA cannot. [Dependabot](#dependabot) keeps the pins up to date.
 - **Versions read from the repository.** The Node.js version is read from [`.nvmrc`](../../../.nvmrc) and the .NET SDK version from [`global.json`](../../../global.json), rather than being written into a workflow. A version duplicated in two places is a version that eventually disagrees with itself.
@@ -73,7 +73,13 @@ Runs when a pull request into `[[ default_branch ]]` is merged, which only the r
 4. The annotated tag is created on the merge commit by `github-actions[bot]`, unsigned, and pushed.
 5. The GitHub Release is created from the pushed tag with `gh release create --verify-tag`, titled `Release vX.Y.Z`, with the release's bullets as its notes and the package and the symbol package attached.
 
-Everything that can fail is checked or built before the tag is created, so a release that is not ready leaves nothing behind. A tag pushed with the workflow's token starts no other workflow, so everything the release does happens in this one job. The workflow's file name stays `release.yml`, because a NuGet trusted publishing policy is bound to the file name of the workflow that publishes. Its concurrency group runs one release at a time and never cancels one that is running, because a cancelled release can leave a tag without its GitHub Release.
+Everything that can fail is checked or built before the tag is created, so a release that is not ready leaves nothing behind. A tag pushed with the workflow's token starts no other workflow, so everything the release does happens in this one workflow. The workflow's file name stays `release.yml`, because a NuGet trusted publishing policy is bound to the file name of the workflow that publishes. Its concurrency group runs one release at a time and never cancels one that is running, because a cancelled release can leave a tag without its GitHub Release.
+
+[%- if publish_to_nuget %]
+
+A second job, `Publish to NuGet`, runs once the GitHub Release exists, in the `nuget` environment, and is the only job with `id-token: write`. It downloads the package and the symbol package from the GitHub Release, so that nuget.org gets exactly what the release carries, logs in to nuget.org with the [`NuGet/login`](https://github.com/NuGet/login) action, which exchanges the token GitHub issues for the run for a temporary API key, and pushes the package with `dotnet nuget push`, which uploads the symbol package next to it too. It pushes with `--skip-duplicate`, so that re-running a failed job does not fail on a package that already reached nuget.org. It only works once trusted publishing is set up (see [one-time setup](#one-time-setup)).
+
+[%- endif %]
 
 The linters workflow runs the same script with `--dry-run` on every pull request. A dry run reports a release that is not ready yet, which is what the changelog looks like between two releases, without failing, and fails only on a changelog it cannot read, or on a code span too long for a line of the tag message.
 
@@ -88,6 +94,12 @@ Its concurrency group ensures at most one deployment runs at a time, and an in-p
 ## One-Time Setup
 
 The docs workflow cannot deploy until GitHub Pages is enabled for the repository. In the repository's settings, under "Pages", set the source to "GitHub Actions". Until then, the workflow's "Configure Pages" step fails on every push to the default branch.
+
+[%- if publish_to_nuget %]
+
+The release workflow cannot publish to nuget.org until a trusted publishing policy on nuget.org names the repository, `release.yml`, and the `nuget` environment, and the environment has the `NUGET_USER` secret (see [NuGet trusted publishing](../development-setup/setting-up-github.md#nuget-trusted-publishing)). Until then, the release itself is still tagged and created, and only its publish job fails.
+
+[%- endif %]
 
 ## Dependabot
 

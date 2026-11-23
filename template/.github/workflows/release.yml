@@ -1,7 +1,13 @@
 # Creates the annotated tag and the GitHub Release of a release once its release pull request has been merged into the default branch, and attaches
-# the library's package and symbol package to the GitHub Release (see Versioning); the file name stays "release.yml", because a NuGet trusted
-# publishing policy is bound to it; the name is the display name of the workflow, shown in the "Actions" tab of the GitHub repository and in the
+# the library's package and symbol package to the GitHub Release (see Versioning); the file name stays "release.yml", because a trusted publishing
+# policy on nuget.org is bound to it; the name is the display name of the workflow, shown in the "Actions" tab of the GitHub repository and in the
 # checks of a commit or pull request
+
+[%- if publish_to_nuget %]
+#
+# After the GitHub Release, a second job publishes both packages to nuget.org
+
+[%- endif %]
 name: Release
 
 # Defines the events that trigger this workflow; it runs when a pull request into the default branch is closed, and its job only when the pull request
@@ -14,7 +20,16 @@ on:
     branches:
       - "[[ default_branch ]]"
 
+[%- if publish_to_nuget %]
+
+# Grants the workflow's token write access to the repository contents, which pushing the tag and creating the GitHub Release need, and nothing else;
+# the job that publishes to nuget.org narrows this down to what it needs itself
+
+[%- else %]
+
 # Grants the workflow's token write access to the repository contents, which pushing the tag and creating the GitHub Release need, and nothing else
+
+[%- endif %]
 permissions:
   contents: write
 
@@ -37,6 +52,14 @@ jobs:
 
     # Stops a run that hangs instead of letting it use up the default limit of six hours
     timeout-minutes: 20
+
+[%- if publish_to_nuget %]
+
+    # Passes the tag on to the job that publishes the packages of its GitHub Release
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
+
+[%- endif %]
 
     # The sequence of tasks that are executed as part of the job; the steps run sequentially in the same runner and share the same file system; every
     # action is pinned to the full commit SHA of a release, with the version in a comment, because a tag can be moved to point at different code,
@@ -80,8 +103,7 @@ jobs:
         run: dotnet restore "source/[[ product_name ]].slnx" --locked-mode
 
       # Packs every packable project of the solution, which is only the library, in the Release configuration, into the package and the symbol
-      # package, and runs its package validation (see Versioning); the packages are attached to the GitHub Release whether or not the library is
-      # published to NuGet
+      # package, and runs its package validation (see Versioning)
       - name: Pack Library
         run: dotnet pack "source/[[ product_name ]].slnx" --no-restore --configuration Release --output "$RUNNER_TEMP/packages"
 
@@ -108,3 +130,56 @@ jobs:
         run: >
           gh release create "$TAG" --verify-tag --title "Release v$VERSION" --notes-file "$RUNNER_TEMP/release/release-notes.md"
           "$RUNNER_TEMP"/packages/*.nupkg "$RUNNER_TEMP"/packages/*.snupkg
+
+[%- if publish_to_nuget %]
+
+  # Publishes the package and the symbol package of the GitHub Release to nuget.org, through NuGet's trusted publishing, which exchanges a token that
+  # GitHub issues for this run for a short-lived API key, so that no API key is stored in the repository (see Setting up GitHub); it is a job of its
+  # own, so that only it can request that token, and it publishes exactly the packages attached to the GitHub Release
+  publish:
+    name: Publish to NuGet
+    runs-on: ubuntu-latest
+    needs: release
+
+    # Runs in the "nuget" environment, which a trusted publishing policy can be restricted to, and which can require a reviewer to approve every
+    # publication (see Setting up GitHub); GitHub creates the environment the first time a job uses it
+    environment: nuget
+
+    # Reads the packages from the GitHub Release, and requests the token that NuGet's trusted publishing exchanges for an API key
+    permissions:
+      contents: read
+      id-token: write
+
+    # Stops a run that hangs instead of letting it use up the default limit of six hours; the job takes about a minute
+    timeout-minutes: 10
+
+    # The steps run on the runner's own .NET SDK, since pushing a package needs no particular version, and there is no checkout whose "global.json"
+    # could name one
+    steps:
+      # Downloads the package and the symbol package from the GitHub Release the release job created, rather than packing the library again, so
+      # that what is published to nuget.org is exactly what is attached to the release
+      - name: Download Packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.release.outputs.tag }}
+        run: gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "*.nupkg" --pattern "*.snupkg" --dir "$RUNNER_TEMP/packages"
+
+      # Exchanges the token GitHub issued for this run for a temporary nuget.org API key, which is valid for an hour; nuget.org only issues it if a
+      # trusted publishing policy matches this repository, this workflow file, and, if the policy names one, this environment; "user" is the
+      # nuget.org profile name of the user who created the policy, read from the "NUGET_USER" secret
+      - name: Log In to NuGet
+        id: login
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      # Pushes the package, and with it the symbol package lying next to it, to nuget.org; "--skip-duplicate" lets a re-run of the job succeed when
+      # an earlier run already pushed the package, since a published version can never be pushed again
+      - name: Push Packages
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: >
+          dotnet nuget push "$RUNNER_TEMP"/packages/*.nupkg --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
+
+[%- endif %]

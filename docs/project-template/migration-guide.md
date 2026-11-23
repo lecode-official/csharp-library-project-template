@@ -43,6 +43,18 @@ The script reads the newest release from `CHANGELOG.md`, which is only created b
 python3 .github/scripts/prepare-release.py --dry-run
 ```
 
+### NuGet Publishing
+
+The new question `publish_to_nuget` asks whether the library is published to nuget.org, and defaults to yes, unless the project is licensed as `UNLICENSED`, which nuget.org rejects. With yes, the `Release` workflow gets a second job that publishes the package and the symbol package of every GitHub Release to nuget.org through NuGet's trusted publishing, which needs no API key in the repository. Set it up before the next release, as the generated project's `docs/developer-manual/development-setup/setting-up-github.md` describes in its "NuGet Trusted Publishing" section: a trusted publishing policy on nuget.org for the repository, `release.yml`, and the `nuget` environment, and the `NUGET_USER` secret of that environment. Without it, the release is still tagged and created, and only its publish job fails.
+
+A library under any other license that is not published answers no on the update:
+
+```shell
+copier update --defaults --data publish_to_nuget=false
+```
+
+The package is then still packed and attached to every GitHub Release, under its recorded `package_id`. `README.md`, and the user manual's `README.md` and `getting-started.md`, are only created by the template, so they keep describing the installation from nuget.org. Copy the "Installation" section of `README.md`, the "Installing the Package" section of `getting-started.md`, and the sentence on where the package is distributed in the user manual's `README.md` from a fresh render with the same answers.
+
 ### Link Checking
 
 MarkdownLint now also checks that every relative link points to a file that exists, and every link to a heading of another file to a heading that exists (see the generated project's `docs/developer-manual/tooling/linting-markdownlint.md`). The update brings the rule along, in `package.json`, `.markdownlint.yml`, and the new `.markdownlint-cli2.yaml`. Install it, and fix every broken link the linters then report, before the update is committed, since continuous integration fails on them:

@@ -21,11 +21,23 @@ The solution, [`source/[[ product_name ]].slnx`](source/), groups three projects
 
 ## Installation
 
+[%- if publish_to_nuget %]
+
 [[ product_name ]] is published on NuGet as `[[ package_id ]]`:
 
 ```shell
 dotnet add package [[ package_id ]]
 ```
+
+[%- else %]
+
+[[ product_name ]] is not published on NuGet. Every release attaches the package, `[[ package_id ]]`, to its [GitHub Release]([[ repository_url ]]/releases). Download it into a directory, and add the package from there:
+
+```shell
+dotnet add package [[ package_id ]] --source <directory>
+```
+
+[%- endif %]
 
 See the [User Manual](docs/user-manual/README.md) for how to use it.
 
